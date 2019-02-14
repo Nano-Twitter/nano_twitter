@@ -2,5 +2,8 @@
 
 ## API Design
 
-API design is as follows:
-https://documenter.getpostman.com/view/6634355/RztrJmd7
+See routes.md
+
+## UI Design
+
+See ui.md
