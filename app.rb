@@ -13,7 +13,7 @@ class App < Sinatra::Base
   set :bind, '0.0.0.0'
   # Endpoints
   # sign up
-  post 'api/user/signup' do
+  post '/api/user/signup' do
     user = User.new(params)
     if user.save
       {message: "Signup success!"}.to_json
@@ -23,7 +23,7 @@ class App < Sinatra::Base
   end
   
   # sign in
-  post 'api/user/signin' do
+  post '/api/user/signin' do
     if User.authenticate(params[:email], params[:password])
       User.find_by_email(params[:email]).to_json
     else
