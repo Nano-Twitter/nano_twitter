@@ -23,7 +23,7 @@ class App < Sinatra::Base
     else
       # status 403
       # body user.errors
- s      error 404 , {error: user.errors.full_messages[0]}.to_json
+      error 404 , {error: user.errors.full_messages[0]}.to_json
     end
   end
   
