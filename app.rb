@@ -10,7 +10,7 @@ enable :sessions
 Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
-
+  set :bind, '0.0.0.0'
   # Endpoints
   # sign up
   post 'api/user/signup' do
