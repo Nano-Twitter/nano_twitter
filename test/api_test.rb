@@ -10,7 +10,7 @@ def app
   App
 end
 
-describe "user_model" do
+describe "api" do
 
   before do
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
