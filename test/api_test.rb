@@ -17,7 +17,7 @@ describe "user_model" do
   end
 
   it "can create a user" do
-    post '/user/signup', {
+    post 'api/user/signup', {
       name: "Adam Stone",
       email: "bad@gmail.com",
       password: "qwer123456ty",
@@ -30,7 +30,7 @@ describe "user_model" do
   end
 
   it "can authenticate a user" do
-    post '/user/signin', {
+    post 'api/user/signin', {
       email: "goo@gmail.com",
       password: "qwer123456ty"
     }
@@ -38,7 +38,7 @@ describe "user_model" do
     last_response.status.must_equal 404
     JSON.parse(last_response.body)["error"].must_equal "Username and password do not match!"
 
-    post '/user/signin', {
+    post 'api/user/signin', {
       email: "good@gmail.com",
       password: "qwer123456ty"
     }
@@ -48,7 +48,7 @@ describe "user_model" do
 
 
   it "cannot create user with duplicate username" do
-    post '/user/signup', {
+    post 'api/user/signup', {
       name: "Adam Stark",
       email: "g@gmail.com",
       password: "qwer123456ty",
@@ -60,7 +60,7 @@ describe "user_model" do
   end
 
   it "cannot create user with duplicate email" do
-    post '/user/signup', {
+    post 'api/user/signup', {
       name: "Adam Stark1",
       email: "good@gmail.com",
       password: "qwer123456ty",
