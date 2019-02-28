@@ -21,7 +21,9 @@ class App < Sinatra::Base
     if user.save
       {message: "Signup success!"}.to_json
     else
-      error 404 , {error: user.errors.full_messages[0]}.to_json
+      # status 403
+      # body user.errors
+ s      error 404 , {error: user.errors.full_messages[0]}.to_json
     end
   end
   
