@@ -5,11 +5,14 @@ require 'mongoid'
 require 'json'
 require_relative 'model/user.rb'
 
-enable :sessions
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
+
+  get '/' do
+    "Hello Sinatra!"
+  end
 
   # Endpoints
   # sign up
