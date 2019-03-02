@@ -14,7 +14,7 @@ class App < Sinatra::Base
   set :bind, '127.0.0.1'
 
   get '/' do
-    "Hello Sinatra!"
+    redirect 'index.html'
   end
 
   # Endpoints
