@@ -5,7 +5,7 @@ class User
   include Mongoid::Timestamps
   include BCrypt
 
-  attr_accessor         :password
+  attr_accessor :password
 
   field :name, type: String
   field :password_hash, type: String
@@ -25,7 +25,7 @@ class User
   before_save :encrypt_password
 
   def self.find_by_email(email)
-     find_by(email: email)
+    find_by(email: email)
   end
 
   def self.authenticate(user_email, password)
