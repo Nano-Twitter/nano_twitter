@@ -9,7 +9,8 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  # set :port, 8000
+  set :port, 8000
+  set :bind, '127.0.0.1'
 
   get '/' do
     "Hello Sinatra!"
