@@ -1,4 +1,3 @@
-
 require 'sinatra'
 require 'byebug'
 require 'mongoid'
@@ -23,12 +22,12 @@ class App < Sinatra::Base
     if user.save
       {message: "Signup success!"}.to_json
     else
-      # status 403
-      # body user.errors
-      error 404 , {error: user.errors.full_messages[0]}.to_json
+      status 403
+      body user.errors.to_json
+      # error 404, {error: user.errors.full_messages[0]}.to_json
     end
   end
-  
+
   # sign in
   post '/api/user/signin' do
     if User.authenticate(params[:email], params[:password])
