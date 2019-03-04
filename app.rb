@@ -12,8 +12,8 @@ class App < Sinatra::Base
   set :port, 8000
   set :bind, '127.0.0.1'
 
-  get '/' do
-    redirect 'index.html'
+  get '/'do
+    redirect '/index'
   end
 
   # Endpoints
