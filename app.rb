@@ -9,11 +9,11 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  set :port, 8000
-  set :bind, '127.0.0.1'
+  # set :port, 8000
+  # set :bind, '127.0.0.1'
 
-  get '/'do
-    redirect '/index'
+  get '/' do
+    redirect 'index.html'
   end
 
   # Endpoints
@@ -37,7 +37,5 @@ class App < Sinatra::Base
       error 404, {error: "Username and password do not match!"}.to_json
     end
   end
-
-  run! if __FILE__ == $0
 
 end
