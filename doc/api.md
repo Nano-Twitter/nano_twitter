@@ -93,7 +93,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
     
 ## Follow
-* GET /followers/ids/:id
+* `GET /followers/ids/:id`
     - Get all followers ids of a specific user
     - Resource URL: `nanotwitter.com/api/v1/followers/ids/:id.json`
     - Parameters: None
@@ -107,7 +107,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* GET /followees/ids/:id
+* `GET /followees/ids/:id`
     - Get all followees ids of a specific user
     - Resource URL: `nanotwitter.com/api/v1/followees/ids/:id.json`
     - Parameters: None
@@ -121,7 +121,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
     
-* GET /followers/list/:id
+* `GET /followers/list/:id`
     - Get all followers of a specific user
     - Resource URL: `nanotwitter.com/api/v1/followers/list/:id.json`
     - Parameters: None
@@ -163,7 +163,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* GET /followees/list/:id
+* `GET /followees/list/:id`
     - Get all followees of a specific user
     - Resource URL: `nanotwitter.com/api/v1/followees/list/:id.json`
     - Parameters: None
@@ -196,7 +196,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* POST /follows/:id
+* `POST /follows/:id`
     - Follow a user
     - Resource URL: `nanotwitter.com/api/v1/follows/:id.json`
     - Parameters: None
@@ -209,7 +209,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* DELETE /follows/:id
+* `DELETE /follows/:id`
     - Unfollow a user
     - Resource URL: `nanotwitter.com/api/v1/follows/:id.json`
     - Parameters: None
@@ -224,7 +224,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 ## Tweets
     
-* POST /tweets
+* `POST /tweets`
     - Create a new tweet
     - Resource URL: `nanotwitter.com/api/v1/tweets.json`
     - Parameters: 
@@ -250,7 +250,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* DELETE /tweets/:id
+* `DELETE /tweets/:id`
     - Delete a tweet
     - Resource URL: `nanotwitter.com/api/v1/tweets/:id.json`
     - Parameters: None
@@ -263,7 +263,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* GET /tweets/:id
+* `GET /tweets/:id`
     - Get the content of a tweet
     - Resource URL: `nanotwitter.com/api/v1/tweets/:id.json`
     - Parameters: None
@@ -308,7 +308,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-* GET /tweets/recent
+* `GET /tweets/recent`
     - Return recent tweets of followees. Params: {count: number of tweets to return}
     - Resource URL: `nanotwitter.com/api/v1/tweets/recent.json`
     - Parameters: {
@@ -355,7 +355,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
     
-* GET /tweets/user/:id
+* `GET /tweets/user/:id`
     - Return tweets of a user.
     - Resource URL: `nanotwitter.com/api/v1/tweets/user/:id.json`
     - Parameters: {
@@ -394,12 +394,12 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 ## Search
-* GET /tweets/search
+* `GET /tweets/search`
 
-* GET /users/search
+* `GET /users/search`
 
-* GET /hashtags/search
+* `GET /hashtags/search`
 
-* GET /all/search
+* `GET /all/search`
 
     
