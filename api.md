@@ -14,6 +14,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     }
     - Example request: POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd
     - Example response: 
+    ```
             {
                 "status": 200
                 "user":{
@@ -23,6 +24,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
                     "email_confirmed": false
                 }
             }
+    ```
 
 
 * `GET /users/:id`
