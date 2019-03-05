@@ -13,15 +13,17 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         confirm_password: required
     }
     - Example request: POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd
-    - Example response: ```{
-        "status": 200
-        "user":{
-            "username": "xxx",
-            "id": 1,
-            "created_at": "Fri Nov 04 21:22:36 +0000 2011",
-            "email_confirmed": false
-        }
-    }```
+    - Example response: 
+            {
+                "status": 200
+                "user":{
+                    "username": "xxx",
+                    "id": 1,
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                    "email_confirmed": false
+                }
+            }
+
 
 * `GET /users/:id`
     - Get user's profile
