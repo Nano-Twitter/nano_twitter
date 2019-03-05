@@ -407,5 +407,3 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 * `GET /hashtags/search`
 
 * `GET /all/search`
-
-    
