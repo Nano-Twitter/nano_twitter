@@ -3,9 +3,9 @@
 All APIs start with nanotwitter.com/api with optional version. Using the latest API if not specified. 
 
 ## User
-* `POST /users/new`
+* `POST /users`
     - Create a new user
-    - Resource URL: `nanotwitter.com/api/v1/users/new`
+    - Resource URL: `nanotwitter.com/api/v1/users`
     - Parameters: 
     ```
         {
@@ -15,7 +15,13 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             confirm_password: required
         }
     ```
-    - Example request: `POST nanotwitter.com/api/v1/users/new?email=g@gmail.com&name=xxx&password=ddd&confirm_password=ddd`
+    - Example request: `POST nanotwitter.com/api/v1/users`  
+        Request body: {
+            "email": "g@gmail.com", 
+            "name": "xxx", 
+            "password": "ddd", 
+            "confirm_password": "ddd"
+        }
     - Example response: 
     ```
         {
@@ -39,12 +45,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-
 * `GET /users/:id`
     - Get user's profile
     - Resource URL: `nanotwitter.com/api/v1/users/:id`
     - Parameters: None
-    - Example request: `POST nanotwitter.com/api/v1/users/1`
+    - Example request: `GET nanotwitter.com/api/v1/users/1`
     - Example response: 
     ```
         {
@@ -91,6 +96,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             }
         }
     ```
+    
     
 ## Follow
 * `GET /followers/ids/:id`
@@ -200,7 +206,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     - Follow a user
     - Resource URL: `nanotwitter.com/api/v1/follows/:id`
     - Parameters: None
-    - Example request: `GET nanotwitter.com/api/v1/follows/7`
+    - Example request: `POST nanotwitter.com/api/v1/follows/7`
     - Example response: 
     ```
         {
@@ -222,20 +228,24 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
+
 ## Tweets
     
-* `POST /tweets/new`
+* `POST /tweets`
     - Create a new tweet
-    - Resource URL: `nanotwitter.com/api/v1/tweets/new`
+    - Resource URL: `nanotwitter.com/api/v1/tweets`
     - Parameters: 
     ```
         {
-            "user_id": 1,
-            "content": "I am a retweet!",
-            "parent_id": 11
+            content: content of tweet, required
         }
     ```
-    - Example request: `POST nanotwitter.com/api/v1/tweets/new`
+    - Example request: `POST nanotwitter.com/api/v1/tweets`  
+        Request body: {
+            "user_id": 1,
+            "content": "I am a retweet!",
+            "parent_id": 11,
+        }
     - Example response: 
     ```
         {
@@ -307,13 +317,12 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             }
         }
     ```
-    
 
 * `GET /tweets/:id/comments`
     - Get comments of a tweet
     - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments`
     - Parameters: None
-    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments`
+    - Example request: `GET nanotwitter.com/api/v1/tweets/34/comments`
     - Example response: 
     ```
         {
@@ -329,15 +338,15 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ``` 
 
-* `POST /tweets/:id/comments/new`
+* `POST /tweets/:id/comments`
     - Comment for a tweet
-    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments/new`
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments`
     - Parameters: {
         content: comment words
     }
-    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments/new`
+    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments`
         Request body: {
-                "content": "like it"
+            "content": "like it"
         }
     - Example response: 
     ```
@@ -346,6 +355,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             "comments": [
                 {
                     "user_id": 1,
+                    "tweet_id": 34
                     "comment_id": 28
                     "content": "like it",
                     "created_at": "Fri Nov 04 21:22:36 +0000 2011",
@@ -379,7 +389,6 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             "message": "Tweet unliked"
         }
     ``` 
-
 
 * `GET /tweets/recent`
 
@@ -476,9 +485,6 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
     
 
-    
-    
-    
 ## Search
 * `POST /search`
     - Fuzzy search for tweets, user, and hashtag 
@@ -487,7 +493,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         query: query string
         count: number of results to return,
     }
-    - Example request: `POST nanotwitter.com/api/v1/search?query=hello&count=10`
+    - Example request: `POST nanotwitter.com/api/v1/search`  
+        Request body: {
+            "query": "hello"
+            "count": 10
+        }
     - Example response: 
     ```
         {
