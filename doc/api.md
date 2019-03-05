@@ -309,7 +309,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
 
 * `GET /tweets/recent`
-    - Return recent tweets of followees. Params: {count: number of tweets to return}
+    - Return recent tweets of followees.
     - Resource URL: `nanotwitter.com/api/v1/tweets/recent.json`
     - Parameters: 
     ```
