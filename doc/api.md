@@ -307,6 +307,79 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             }
         }
     ```
+    
+
+* `GET /tweets/:id/comments`
+    - Get comments of a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments`
+    - Parameters: None
+    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "comments": [
+                {
+                    "user_id": 1,
+                    "content": "Good!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                },
+                ...
+            ]
+        }
+    ``` 
+
+* `POST /tweets/:id/comments/new`
+    - Comment for a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments/new`
+    - Parameters: {
+        content: comment words
+    }
+    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments/new`
+        Request body: {
+                "content": "like it"
+        }
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "comments": [
+                {
+                    "user_id": 1,
+                    "comment_id": 28
+                    "content": "like it",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                },
+            ]
+        }
+    ```     
+    
+* `POST /tweets/:id/like`
+    - Like a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/like`
+    - Parameters: None
+    - Example request: `POST nanotwitter.com/api/v1/tweets/1/like`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "message": "Tweet liked"
+        }
+    ``` 
+    
+* `DELETE /tweets/:id/like`
+    - Unlike a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/like`
+    - Parameters: None
+    - Example request: `Delete nanotwitter.com/api/v1/tweets/1/like`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "message": "Tweet unliked"
+        }
+    ``` 
+
 
 * `GET /tweets/recent`
     - Return recent tweets of followees. Params: {count: number of tweets to return}
@@ -363,7 +436,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         start: optional (default: 0),
         recent: true
     }
-    - Example request: `GET nanotwitter.com/api/v1/tweets/user/1?count=10&recent=true`
+    - Example request: `POST nanotwitter.com/api/v1/tweets/user/1?count=10&recent=true`
     - Example response: 
     ```
         {
@@ -393,6 +466,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             ]
         }
     ```
+    
+
+    
+    
+    
 ## Search
 * `POST /search`
     - Fuzzy search for tweets, user, and hashtag 
@@ -401,7 +479,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         query: query string
         count: number of results to return,
     }
-    - Example request: `GET nanotwitter.com/api/v1/search?query=hello&count=10`
+    - Example request: `POST nanotwitter.com/api/v1/search?query=hello&count=10`
     - Example response: 
     ```
         {
