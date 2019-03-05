@@ -5,30 +5,55 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 ## User
 * `POST /users`
     - Create a new user
-    - Resource URL: POST nanotwitter.com/api/v1/users
-    - Parameters: {
-        email: required,
-        username: required,
-        password: required,
-        confirm_password: required
-    }
-    - Example request: POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd
+    - Resource URL: `POST nanotwitter.com/api/v1/users`
+    - Parameters: 
+    ```
+        {
+            email: required,
+            username: required,
+            password: required,
+            confirm_password: required
+        }
+    ```
+    - Example request: `POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd`
     - Example response: 
     ```
-            {
-                "status": 200
-                "user":{
-                    "username": "xxx",
-                    "id": 1,
-                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
-                    "email_confirmed": false
-                }
+        {
+            "status": 200
+            "user":{
+                "name": "xxx",
+                "email": "g@gmail.com",
+                "id": 1,
+                "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                "updated_at": "Fri Nov 05 21:21:26 +0000 2011",
+                "email_confirmed": false
             }
+        }
     ```
 
 
 * `GET /users/:id`
     - Get user's profile
+    - Resource URL: `POST nanotwitter.com/api/v1/users/1`
+    - Parameters: None
+    - Example request: `POST nanotwitter.com/api/v1/users/1`
+    - Example response: 
+    ```
+        {
+            "status": 200
+            "user":{
+                "name": "xxx",
+                "email": "g@gmail.com",
+                "id": 1,
+                "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                "updated_at": "Fri Nov 05 21:21:26 +0000 2011",
+                "email_confirmed": false
+                "bio": "XXXXXXX",
+                "gender": 0
+            }
+        }
+    ```
+
 
 * PUT /user/profile/:id?{user_name, gender, bio}
     - Update user's profile. 
