@@ -382,12 +382,16 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 
 * `GET /tweets/recent`
-    - Return recent tweets of followees. Params: {count: number of tweets to return}
+
+    - Return recent tweets of followees.
     - Resource URL: `nanotwitter.com/api/v1/tweets/recent`
-    - Parameters: {
-        count: 10,
-        start: optional (default: 0)
-    }
+    - Parameters: 
+    ```
+        {
+            count: 10,
+            start: optional (default: 0)
+        }
+    ```
     - Example request: `GET nanotwitter.com/api/v1/tweets/recent`
     - Example response: 
     ```
@@ -430,13 +434,17 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     
 * `GET /tweets/user/:id`
     - Return tweets of a user.
+
     - Resource URL: `nanotwitter.com/api/v1/tweets/user/:id`
-    - Parameters: {
-        count: 10,
-        start: optional (default: 0),
-        recent: true
-    }
-    - Example request: `POST nanotwitter.com/api/v1/tweets/user/1?count=10&recent=true`
+    - Parameters: 
+    ```
+        {
+            count: 10,
+            start: optional (default: 0),
+            recent: true
+        }
+    ```
+    - Example request: `GET nanotwitter.com/api/v1/tweets/user/1?count=10&recent=true`
     - Example response: 
     ```
         {
