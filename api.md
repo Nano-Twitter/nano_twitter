@@ -3,25 +3,41 @@
 All APIs start with nanotwitter.com/api with optional version. Using the latest API if not specified. 
 
 ## User
-* POST /users
+* `POST /users`
     - Create a new user
-    - Input: POST nanotwitter.com/api/users?ver=1.0
-    - Outout: {'user_id': 1, 'username': 'xxx', 'email_confirmed': false}
+    - Resource URL: POST nanotwitter.com/api/v1/users
+    - Parameters: {
+        email: required,
+        username: required,
+        password: required,
+        confirm_password: required
+    }
+    - Example request: POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd
+    - Example response: ```{
+        "status": 200
+        "user":{
+            "username": "xxx",
+            "id": 1,
+            "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+            "email_confirmed": false
+        }
+    }```
 
-* GET /users/profile/:id
+* `GET /users/:id`
     - Get user's profile
+
 * PUT /user/profile/:id?{user_name, gender, bio}
     - Update user's profile. 
     
     Params: {user_name: new user_name, gender: [Male, Female, Other], bio: text}
     
 ## Follow
-* GET /followers/ids/:id
+* GET /follows/ids/:id
     - Get all followers' id of a specific user
     - Input: GET nanotwitter.com/api/followers/ids/2?ver=1.0
     - Output: {'user_id': 2, 'followers_ids': [3, 4, 7, 9]}
     
-* GET /followers/list/:id
+* GET /follows/list/:id
     - Get all followers
     
 * GET /friends/ids/:id
