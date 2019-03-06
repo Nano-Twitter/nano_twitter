@@ -5,7 +5,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 ## User
 * `POST /users`
     - Create a new user
-    - Resource URL: `nanotwitter.com/api/v1/users.json`
+    - Resource URL: `nanotwitter.com/api/v1/users`
     - Parameters: 
     ```
         {
@@ -15,7 +15,13 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             confirm_password: required
         }
     ```
-    - Example request: `POST nanotwitter.com/api/v1/users/email=g@gmail.com&username=xxx&password=ddd&confirm_password=ddd`
+    - Example request: `POST nanotwitter.com/api/v1/users`  
+        Request body: {
+            "email": "g@gmail.com", 
+            "name": "xxx", 
+            "password": "ddd", 
+            "confirm_password": "ddd"
+        }
     - Example response: 
     ```
         {
@@ -39,12 +45,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
-
 * `GET /users/:id`
     - Get user's profile
-    - Resource URL: `nanotwitter.com/api/v1/users/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/users/:id`
     - Parameters: None
-    - Example request: `POST nanotwitter.com/api/v1/users/1`
+    - Example request: `GET nanotwitter.com/api/v1/users/1`
     - Example response: 
     ```
         {
@@ -64,7 +69,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `PUT /users/:id?`
     - Update user's profile. 
-    - Resource URL: `nanotwitter.com/api/v1/users/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/users/:id`
     - Parameters: 
     ```
         {
@@ -92,10 +97,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
     
+    
 ## Follow
 * `GET /followers/ids/:id`
     - Get all followers ids of a specific user
-    - Resource URL: `nanotwitter.com/api/v1/followers/ids/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/followers/ids/:id`
     - Parameters: None
     - Example request: `GET nanotwitter.com/api/v1/followers/ids/1`
     - Example response: 
@@ -109,7 +115,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `GET /followees/ids/:id`
     - Get all followees ids of a specific user
-    - Resource URL: `nanotwitter.com/api/v1/followees/ids/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/followees/ids/:id`
     - Parameters: None
     - Example request: `GET nanotwitter.com/api/v1/followees/ids/1`
     - Example response: 
@@ -123,7 +129,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     
 * `GET /followers/list/:id`
     - Get all followers of a specific user
-    - Resource URL: `nanotwitter.com/api/v1/followers/list/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/followers/list/:id`
     - Parameters: None
     - Example request: `GET nanotwitter.com/api/v1/followers/list/1`
     - Example response: 
@@ -165,7 +171,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `GET /followees/list/:id`
     - Get all followees of a specific user
-    - Resource URL: `nanotwitter.com/api/v1/followees/list/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/followees/list/:id`
     - Parameters: None
     - Example request: `GET nanotwitter.com/api/v1/followees/list/1`
     - Example response: 
@@ -198,9 +204,9 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `POST /follows/:id`
     - Follow a user
-    - Resource URL: `nanotwitter.com/api/v1/follows/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/follows/:id`
     - Parameters: None
-    - Example request: `GET nanotwitter.com/api/v1/follows/7`
+    - Example request: `POST nanotwitter.com/api/v1/follows/7`
     - Example response: 
     ```
         {
@@ -211,7 +217,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `DELETE /follows/:id`
     - Unfollow a user
-    - Resource URL: `nanotwitter.com/api/v1/follows/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/follows/:id`
     - Parameters: None
     - Example request: `DELETE nanotwitter.com/api/v1/follows/7`
     - Example response: 
@@ -222,20 +228,24 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
+
 ## Tweets
     
 * `POST /tweets`
     - Create a new tweet
-    - Resource URL: `nanotwitter.com/api/v1/tweets.json`
+    - Resource URL: `nanotwitter.com/api/v1/tweets`
     - Parameters: 
     ```
         {
-            "user_id": 1,
-            "content": "I am a retweet!",
-            "parent_id": 11
+            content: content of tweet, required
         }
     ```
-    - Example request: `POST nanotwitter.com/api/v1/tweets`
+    - Example request: `POST nanotwitter.com/api/v1/tweets`  
+        Request body: {
+            "user_id": 1,
+            "content": "I am a retweet!",
+            "parent_id": 11,
+        }
     - Example response: 
     ```
         {
@@ -252,7 +262,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `DELETE /tweets/:id`
     - Delete a tweet
-    - Resource URL: `nanotwitter.com/api/v1/tweets/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id`
     - Parameters: None
     - Example request: `DELETE nanotwitter.com/api/v1/tweets/7`
     - Example response: 
@@ -265,7 +275,7 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
 
 * `GET /tweets/:id`
     - Get the content of a tweet
-    - Resource URL: `nanotwitter.com/api/v1/tweets/:id.json`
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id`
     - Parameters: None
     - Example request: `GET nanotwitter.com/api/v1/tweets/7`
     - Example response: 
@@ -308,9 +318,82 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
         }
     ```
 
+* `GET /tweets/:id/comments`
+    - Get comments of a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments`
+    - Parameters: None
+    - Example request: `GET nanotwitter.com/api/v1/tweets/34/comments`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "comments": [
+                {
+                    "user_id": 1,
+                    "content": "Good!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                },
+                ...
+            ]
+        }
+    ``` 
+
+* `POST /tweets/:id/comments`
+    - Comment for a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/comments`
+    - Parameters: {
+        content: comment words
+    }
+    - Example request: `POST nanotwitter.com/api/v1/tweets/34/comments`
+        Request body: {
+            "content": "like it"
+        }
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "comments": [
+                {
+                    "user_id": 1,
+                    "tweet_id": 34
+                    "comment_id": 28
+                    "content": "like it",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011",
+                },
+            ]
+        }
+    ```     
+    
+* `POST /tweets/:id/like`
+    - Like a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/like`
+    - Parameters: None
+    - Example request: `POST nanotwitter.com/api/v1/tweets/1/like`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "message": "Tweet liked"
+        }
+    ``` 
+    
+* `DELETE /tweets/:id/like`
+    - Unlike a tweet
+    - Resource URL: `nanotwitter.com/api/v1/tweets/:id/like`
+    - Parameters: None
+    - Example request: `Delete nanotwitter.com/api/v1/tweets/1/like`
+    - Example response: 
+    ```
+        {
+            "status": 200,
+            "message": "Tweet unliked"
+        }
+    ``` 
+
 * `GET /tweets/recent`
+
     - Return recent tweets of followees.
-    - Resource URL: `nanotwitter.com/api/v1/tweets/recent.json`
+    - Resource URL: `nanotwitter.com/api/v1/tweets/recent`
     - Parameters: 
     ```
         {
@@ -362,7 +445,8 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     
 * `GET /tweets/user/:id`
     - Return tweets of a user.
-    - Resource URL: `nanotwitter.com/api/v1/tweets/user/:id.json`
+
+    - Resource URL: `nanotwitter.com/api/v1/tweets/user/:id`
     - Parameters: 
     ```
         {
@@ -403,11 +487,130 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
             ]
         }
     ```
+    
+
 ## Search
-* `GET /tweets/search`
+* `POST /search`
+    - Fuzzy search for tweets, user, and hashtag 
+    - Resource URL: `nanotwitter.com/api/v1/search`
+    - Parameters: {
+        query: query string
+        count: number of results to return,
+    }
+    - Example request: `POST nanotwitter.com/api/v1/search`  
+        Request body: {
+            "query": "hello"
+            "count": 10
+        }
+    - Example response: 
+    ```
+        {
+            "status": 203,
+            "tweets": [
+                {
+                    "id": 1,
+                    "user_id": 1,
+                    "content": "hello, I am a retweet!",
+                    "parent_id: 11,
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+                },
+                {
+                    "id": 2,
+                    "user_id": 1,
+                    "content": "Hello, I am a tweet!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+                },
+                ...
+                {
+                    "id": 10,
+                    "user_id": 1,
+                    "content": "Helloooo! I am a tweet!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+                }
 
-* `GET /users/search`
+            ]
+        }
+    ```
+    
+* `GET /search/tweets`
+    - Fuzzy search for content in tweets
+    - Resource URL: `nanotwitter.com/api/v1/search/tweets`
+    - Parameters: {
+        query: query string
+        count: number of results to return,
+    }
+    - Example request: `GET nanotwitter.com/api/v1/search/tweets?query=I+am+a+tweet&count=10`
+    - Example response: 
+    ```
+        {
+            "status": 203,
+            "tweets": [
+                {
+                    "id": 2,
+                    "user_id": 1,
+                    "content": "Hello, I am a tweet!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+                },
+                ...
+                {
+                    "id": 10,
+                    "user_id": 1,
+                    "content": "Helloooo! I am a tweet!",
+                    "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+                }
+            ]
+        }
+    ```
 
-* `GET /hashtags/search`
+* `GET /search/users`
+    - Fuzzy search for users
+    - Resource URL: `nanotwitter.com/api/v1/search/users`
+    - Parameters: {
+        query: query string
+    }
+    - Example request: `GET nanotwitter.com/api/v1/search/users?query=groot`
+    - Example response: 
+    ```
+        {
+            "status": 203,
+            "users": [
+                {
+                    "user_id": 3,
+                    "name": "groot"
+                }
+                {
+                    "user_id": 28,
+                    "name": "grootisgood"
+                }
+            ]
+        }
+    ```
 
-* `GET /all/search`
+* `GET /search/hashtags`
+    - Search for tweets with specific hashtag
+    - Resource URL: `nanotwitter.com/api/v1/search/hashtags`
+    - Parameters: {
+        query: query string
+    }
+    - Example request: `GET nanotwitter.com/api/v1/search/hashtags?query=March`
+    - Example response: 
+    ```
+        {
+            "status": 203,
+           "tweets": [
+               {
+                   "id": 5,
+                   "user_id": 3,
+                   "content": "#March Hello, I am a tweet!",
+                   "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+               },
+               ...
+               {
+                   "id": 10,
+                   "user_id": 1,
+                   "content": " Helloooo #March! I am a tweet!",
+                   "created_at": "Fri Nov 04 21:22:36 +0000 2011"
+               }
+           ]
+        }
+    ```
