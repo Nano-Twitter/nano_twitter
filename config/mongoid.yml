@@ -6,3 +6,21 @@ development:
         - localhost:27017
   options:
     raise_not_found_error: false
+
+production:
+  clients:
+    default:
+      database: mongoid
+      hosts:
+        - cluster0-shard-00-00-jj21z.mongodb.net:27017
+        - cluster0-shard-00-01-jj21z.mongodb.net:27017
+        - cluster0-shard-00-02-jj21z.mongodb.net:27017
+      options:
+        user: 'admin'
+        password: 'qwer123456ty'
+
+  options:
+    raise_not_found_error: false
+
+    
+    

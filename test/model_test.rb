@@ -6,8 +6,6 @@ require 'rack/test'
 
 include Rack::Test::Methods
 
-# Mongoid.load!("config/mongoid.yml", :development)
-
 def app
   App
 end
