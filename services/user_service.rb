@@ -1,6 +1,6 @@
 require_relative '../model/user'
 
-class Service
+class UserService
 
   def signup(params)
     user = User.new(params)
