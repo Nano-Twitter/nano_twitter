@@ -323,6 +323,8 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
         {
             "status": 203,
+            "start": 0,
+            "count": 10,
             "tweets": [
                 {
                     "id": 1,
@@ -374,6 +376,8 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
         {
             "status": 203,
+            "start": 0,
+            "count": 10,
             "tweets": [
                 {
                     "id": 1,
