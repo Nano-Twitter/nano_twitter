@@ -44,7 +44,7 @@ class App < Sinatra::Base
       {message: "Signup success!"}.to_json
     else
       status 403
-      body user.errors.to_json
+      {error: user.errors.to_json}.to_json
       # error 404, {error: user.errors.full_messages[0]}.to_json
     end
   end
