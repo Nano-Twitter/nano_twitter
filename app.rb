@@ -50,6 +50,7 @@ class App < Sinatra::Base
 
   # sign in
   post '/api/user/signin' do
+
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
     else
