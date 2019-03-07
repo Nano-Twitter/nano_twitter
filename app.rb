@@ -37,6 +37,7 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/api/user/signup' do
+    pp params
     user = User.new(params)
     if user.save
       status 201
@@ -50,10 +51,13 @@ class App < Sinatra::Base
 
   # sign in
   post '/api/user/signin' do
+    pp params
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
+      {message: "Signin success!"}.to_json
     else
-      error 403, {error: "Username and password do not match!"}.to_json
+      status 403
+      {error: "Username and password do not match!"}.to_json
     end
   end
 
