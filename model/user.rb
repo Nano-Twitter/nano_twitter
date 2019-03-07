@@ -43,4 +43,9 @@ class User
   def encrypt_password
     self.password_hash = Password.create(@password)
   end
+
+  def as_json(options={})
+    attrs = super(options)
+    attrs.delete("password_hash")
+  end
 end
