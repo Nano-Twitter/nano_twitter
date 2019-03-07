@@ -25,7 +25,7 @@ class User
   before_save :encrypt_password
 
   def self.find_by_email(email)
-    find_by(email: email).as_json
+    find_by(email: email)
   end
 
   def self.authenticate(user_email, password)
@@ -42,5 +42,10 @@ class User
 
   def encrypt_password
     self.password_hash = Password.create(@password)
+  end
+
+  def as_json(options={})
+    attrs = super(options)
+    attrs.delete("password_hash")
   end
 end

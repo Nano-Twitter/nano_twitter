@@ -43,8 +43,7 @@ class App < Sinatra::Base
       {message: "Signup success!"}.to_json
     else
       status 403
-      body user.errors.to_json
-      # error 404, {error: user.errors.full_messages[0]}.to_json
+      {error: user.errors.to_json}.to_json
     end
   end
 
@@ -53,8 +52,11 @@ class App < Sinatra::Base
 
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
+      session[:user] = user;
+      {message: "Signin success!"}.to_json
     else
-      error 403, {error: "Username and password do not match!"}.to_json
+      status 403
+      {error: "Username and password do not match!"}.to_json
     end
   end
 
