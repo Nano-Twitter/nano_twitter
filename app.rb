@@ -37,7 +37,6 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/api/user/signup' do
-    pp params
     user = User.new(params)
     if user.save
       status 201
@@ -45,15 +44,14 @@ class App < Sinatra::Base
     else
       status 403
       {error: user.errors.to_json}.to_json
-      # error 404, {error: user.errors.full_messages[0]}.to_json
     end
   end
 
   # sign in
   post '/api/user/signin' do
-    pp params
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
+      session[:user] = user;
       {message: "Signin success!"}.to_json
     else
       status 403
