@@ -10,25 +10,25 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  configure do
-    enable :sessions    
-    # enable :cross_origin
-    # use Rack::Session::Cookie, :key => 'rack.session',
-    #                        :path => '/',
-    #                        :secret => 'your_secret'
+  set :sessions => true
+
+  register do
+    def auth (type)
+      condition do
+        {status:"401", error: "Not logged in."}.to_json unless send("is_#{type}?")
+      end
+    end
   end
 
-  # before do
-  #   response.headers['Access-Control-Allow-Origin'] = '*'
-  # end
-  
-  # # routes...
-  # options "*" do
-  #   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
-  #   response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
-  #   response.headers["Access-Control-Allow-Origin"] = "*"
-  #   200
-  # end
+  helpers do
+    def is_user?
+      @user != nil
+    end
+  end
+
+  before do
+    @user = User.find_by(id: session[:user_id])
+  end
 
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')
@@ -60,13 +60,29 @@ class App < Sinatra::Base
 
   end
 
-  post '/api/users/auth' do
-    res = session[:user] != nil && session[:user] == params[:_id][:$oid]
-    {message: res.to_s}.to_json
+  # for protected routes 
+  get '/example_protected_route', :auth => :user do
+    "I am protected"
   end
 
   delete '/api/users/signout' do 
     session[:user] = nil;
+  end
+
+  get '/' do
+    #send_file File.join(settings.public_folder, 'index.html')
+    redirect '/index.html'
+  end
+
+
+  delete '/api/users/signout' do
+    session[:user] = nil;
+  end
+
+  after do
+    result = session[:result]
+    status (result['status'] || 500)
+    result['payload']
   end
 
 end
