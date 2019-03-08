@@ -13,11 +13,11 @@ class User
   field :bio, type: String
   field :gender, type: Integer
 
-  validates_presence_of :name, message: "Username is required."
-  validates_uniqueness_of :name, message: "Username already in use. Try another one!"
-  validates_presence_of :email, message: "Email address is required."
-  validates_uniqueness_of :email, message: "Email address already in use. Forget password?"
-  validates_length_of :password, minimum: 12, message: "Password must be at least 12-character long."
+  validates_presence_of :name
+  validates_uniqueness_of :name
+  validates_presence_of :email
+  validates_uniqueness_of :email
+  validates_length_of :password, minimum: 12
   # validates_confirmation_of :password, message: "Password confirmation must be the same as the password."
 
   before_save :encrypt_password
@@ -47,13 +47,9 @@ class User
   def encrypt_password
     self.password_hash = Password.create(@password)
   end
-<<<<<<< HEAD
 
   # def as_json(options={})
   #   attrs = super(options)
   #   attrs.delete("password_hash")
   # end
-=======
-  
->>>>>>> 688fb09596179e25fb4e6608dec26a1696da9657
 end
