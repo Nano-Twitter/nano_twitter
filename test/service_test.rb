@@ -14,6 +14,7 @@ describe 'user_service' do
   before do
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
+    @user_id = @user.id
     @service = Services.new.user_service
   end
 
@@ -68,6 +69,52 @@ describe 'user_service' do
     JSON.parse(response)['status'].must_equal 403
     JSON.parse(response)['errors'].first.must_equal 'Email is already taken'
   end
+
+  it 'can get user\'s profile' do
+    params = {
+        id: @user_id,
+    }
+    response = @service.get_profile(params)
+    JSON.parse(response)['status'].must_equal 200
+    JSON.parse(response)['payload']['name'].must_equal 'Adam Stark'
+
+  end
+
+  it 'can update user\'s profile' do
+    params = {
+        id: @user_id,
+        name: "Adam Starksss",
+        email: "good@gmail.com",
+        password: "qwdsadsadsadaeds",
+        gender: 0,
+    }
+    response = @service.update_profile(params)
+    JSON.parse(response)['status'].must_equal 200
+  end
+
+  it 'can do validation update user\'s profile' do
+    params = {
+        id: @user_id,
+        name: "Adam Stark",
+        email: "good@gmail.com",
+        password: "qwsds",
+        gender: 0,
+    }
+    response = @service.update_profile(params)
+    JSON.parse(response)['status'].must_equal 403
+
+    params = {
+        id: @user_id,
+        name: "Adam Stark",
+        email: "good@gmail.com",
+        password: "qwsdsadasds",
+        gender: 0,
+        unknown_param: 'xxxx'
+    }
+    response = @service.update_profile(params)
+    JSON.parse(response)['status'].must_equal 403
+  end
+
 
   after do
     User.destroy_all
