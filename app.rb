@@ -10,7 +10,7 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  set :sessions => true
+  set sessions: true
 
   register do
     def auth (type)
@@ -80,9 +80,8 @@ class App < Sinatra::Base
   end
 
   after do
-    result = session[:result]
-    status (result['status'] || 500)
-    result['payload']
+    status (@result['status'] || 500)
+    @result['payload']
   end
 
 end
