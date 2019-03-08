@@ -12,8 +12,6 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
-  # field :follower, type: BSON::Binary
-  # field :followee, type: BSON::Binary
 
   validates_presence_of :name, message: "Username is required."
   validates_uniqueness_of :name, message: "Username already in use. Try another one!"
@@ -38,14 +36,16 @@ class User
     end
   end
 
+  def as_json(options={})
+    attrs = super(options)
+    attrs.delete("password_hash")
+    attrs
+  end
+
   private
 
   def encrypt_password
     self.password_hash = Password.create(@password)
   end
-
-  def as_json(options={})
-    attrs = super(options)
-    attrs.delete("password_hash")
-  end
+  
 end
