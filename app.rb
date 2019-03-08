@@ -10,8 +10,10 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
+  enable :sessions
+
   configure do
-    enable :sessions    
+    #enable :sessions
     # enable :cross_origin
     # use Rack::Session::Cookie, :key => 'rack.session',
     #                        :path => '/',
@@ -21,7 +23,7 @@ class App < Sinatra::Base
   # before do
   #   response.headers['Access-Control-Allow-Origin'] = '*'
   # end
-  
+
   # # routes...
   # options "*" do
   #   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
@@ -29,10 +31,6 @@ class App < Sinatra::Base
   #   response.headers["Access-Control-Allow-Origin"] = "*"
   #   200
   # end
-
-  get '/*' do
-    send_file File.join(settings.public_folder, 'index.html')
-  end
 
   # Endpoints
   # sign up
@@ -65,8 +63,20 @@ class App < Sinatra::Base
     {message: res.to_s}.to_json
   end
 
-  delete '/api/users/signout' do 
+  get '/' do
+    #send_file File.join(settings.public_folder, 'index.html')
+    redirect '/index.html'
+  end
+
+
+  delete '/api/users/signout' do
     session[:user] = nil;
+  end
+
+  after do
+    result = session[:result]
+    status (result['status'] || 500)
+    result['payload']
   end
 
 end
