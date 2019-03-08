@@ -1,7 +1,7 @@
 ENV['APP_ENV'] = 'development'
 
-require_relative '../app.rb'
-# require_relative '../services/user_service.rb'
+# require_relative '../app.rb'
+require_relative '../services/services.rb'
 require 'minitest/autorun'
 require 'rack/test'
 
@@ -15,7 +15,7 @@ describe 'user_service' do
   before do
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
-    @service = UserService.new
+    @service = Services.new.user_service
   end
 
   it "can create a user" do

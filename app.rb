@@ -11,24 +11,24 @@ Mongoid.load! "config/mongoid.yml"
 class App < Sinatra::Base
 
   configure do
-    # enable :sessions    
-    enable :cross_origin
-    use Rack::Session::Cookie, :key => 'rack.session',
-                           :path => '/',
-                           :secret => 'your_secret'
+    enable :sessions    
+    # enable :cross_origin
+    # use Rack::Session::Cookie, :key => 'rack.session',
+    #                        :path => '/',
+    #                        :secret => 'your_secret'
   end
 
-  before do
-    response.headers['Access-Control-Allow-Origin'] = '*'
-  end
+  # before do
+  #   response.headers['Access-Control-Allow-Origin'] = '*'
+  # end
   
-  # routes...
-  options "*" do
-    response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    200
-  end
+  # # routes...
+  # options "*" do
+  #   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
+  #   response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
+  #   response.headers["Access-Control-Allow-Origin"] = "*"
+  #   200
+  # end
 
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')
