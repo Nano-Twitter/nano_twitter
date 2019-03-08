@@ -4,5 +4,6 @@ module Mongoid
       attrs = super(options)
       attrs["id"] = attrs["_id"].to_s
     end
+
   end
 end

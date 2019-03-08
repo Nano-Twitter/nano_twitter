@@ -1,7 +1,6 @@
-ENV['APP_ENV'] = 'development'
+ENV['APP_ENV'] = 'test'
 
 require_relative '../app.rb'
-# require_relative '../services/user_service.rb'
 require 'minitest/autorun'
 require 'rack/test'
 
@@ -38,11 +37,12 @@ describe 'user_service' do
                               })
     JSON.parse(response)['status'].must_equal 403
 
-    # response = @service.login({
-    #                               email: "good@gmail.com",
-    #                               password: "qwer123456ty"
-    #                           })
-    # JSON.parse(response)['status'].must_equal 200
+    response = @service.login({
+                                  email: "good@gmail.com",
+                                  password: "qwer123456ty"
+                              })
+    a = JSON.parse(response)['payload']
+    JSON.parse(response)['status'].must_equal 200
 
   end
   #

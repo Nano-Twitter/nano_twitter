@@ -44,8 +44,8 @@ class User
     self.password_hash = Password.create(@password)
   end
 
-  def as_json(options={})
-    attrs = super(options)
-    attrs.delete("password_hash")
-  end
+  # def as_json(options={})
+  #   attrs = super(options)
+  #   attrs.delete("password_hash")
+  # end
 end
