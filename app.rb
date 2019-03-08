@@ -2,7 +2,6 @@ require 'sinatra'
 require 'byebug'
 require 'mongoid'
 require 'json'
-require_relative 'helper/auth_helper.rb'
 require_relative 'model/user.rb'
 require_relative 'services/services'
 
@@ -62,12 +61,28 @@ class App < Sinatra::Base
   end
 
   # for protected routes 
-  get '/protected_route', :auth => :user do
+  get '/example_protected_route', :auth => :user do
     "I am protected"
   end
 
   delete '/api/users/signout' do 
     session[:user] = nil;
+  end
+
+  get '/' do
+    #send_file File.join(settings.public_folder, 'index.html')
+    redirect '/index.html'
+  end
+
+
+  delete '/api/users/signout' do
+    session[:user] = nil;
+  end
+
+  after do
+    result = session[:result]
+    status (result['status'] || 500)
+    result['payload']
   end
 
 end
