@@ -3,6 +3,7 @@ require 'byebug'
 require 'mongoid'
 require 'json'
 require_relative 'model/user.rb'
+require_relative 'services/services'
 
 # DB Setup
 Mongoid.load! "config/mongoid.yml"

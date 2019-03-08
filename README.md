@@ -1,8 +1,8 @@
 # Nano Twitter V 0.3
 
 ## Tech Stacks
-* Frontend: [React](https://reactjs.org/)
-* Backend: [Sinatra](http://sinatrarb.com/)
+* Front-end: [React](https://reactjs.org/)
+* Back-end: [Sinatra](http://sinatrarb.com/)
 
 ## Documentations
 * [API](https://github.com/Nano-Twitter/nano_twitter/blob/master/doc/api.md)
