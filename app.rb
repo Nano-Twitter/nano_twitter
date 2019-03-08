@@ -10,7 +10,7 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  enable :sessio
+  enable :sessions
 
   register do
     def auth (type)
@@ -83,5 +83,7 @@ class App < Sinatra::Base
     #send_file File.join(settings.public_folder, 'index.html')
     redirect '/index.html'
   end
+
+  run! if app_file == $0
 
 end
