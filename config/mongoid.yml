@@ -21,6 +21,3 @@ production:
 
   options:
     raise_not_found_error: false
-
-    
-    
