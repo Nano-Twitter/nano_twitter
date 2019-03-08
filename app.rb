@@ -10,12 +10,12 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  set sessions: true
+  enable :sessio
 
   register do
     def auth (type)
       condition do
-        {status:"401", error: "Not logged in."}.to_json unless send("is_#{type}?")
+        {status: "401", error: "Not logged in."}.to_json unless send("is_#{type}?")
       end
     end
   end
@@ -28,10 +28,6 @@ class App < Sinatra::Base
 
   before do
     @user = User.find_by(id: session[:user_id])
-  end
-
-  get '/*' do
-    send_file File.join(settings.public_folder, 'index.html')
   end
 
   # Endpoints
@@ -65,23 +61,27 @@ class App < Sinatra::Base
     "I am protected"
   end
 
-  delete '/api/users/signout' do 
-    session[:user] = nil;
-  end
-
-  get '/' do
-    #send_file File.join(settings.public_folder, 'index.html')
-    redirect '/index.html'
-  end
-
-
   delete '/api/users/signout' do
     session[:user] = nil;
   end
 
+
+  get '/shit' do
+    @result = {shit: 1234}
+    puts @result
+    @result
+  end
+
+
   after do
+    puts @result[:shit]
     status (@result['status'] || 500)
     @result['payload']
+  end
+
+  get '/*' do
+    #send_file File.join(settings.public_folder, 'index.html')
+    redirect '/index.html'
   end
 
 end
