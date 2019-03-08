@@ -13,11 +13,11 @@ class User
   field :bio, type: String
   field :gender, type: Integer
 
-  validates_presence_of :name, message: "Username is required."
-  validates_uniqueness_of :name, message: "Username already in use. Try another one!"
-  validates_presence_of :email, message: "Email address is required."
-  validates_uniqueness_of :email, message: "Email address already in use. Forget password?"
-  validates_length_of :password, minimum: 12, message: "Password must be at least 12-character long."
+  validates_presence_of :name
+  validates_uniqueness_of :name
+  validates_presence_of :email
+  validates_uniqueness_of :email
+  validates_length_of :password, minimum: 12
   # validates_confirmation_of :password, message: "Password confirmation must be the same as the password."
 
   before_save :encrypt_password
