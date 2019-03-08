@@ -11,14 +11,24 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  configure do
-    enable :sessions 
+  set :sessions => true
+
+  register do
+    def auth (type)
+      condition do
+        {status:"401", error: "Not logged in."}.to_json unless send("is_#{type}?")
+      end
+    end
+  end
+
+  helpers do
+    def is_user?
+      @user != nil
+    end
   end
 
   before do
-    if not session[:user]
-      halt 401, 'not logged in'
-    end
+    @user = User.find_by(id: session[:user_id])
   end
 
   get '/*' do
@@ -49,6 +59,11 @@ class App < Sinatra::Base
       {error: "Username and password do not match!"}.to_json
     end
 
+  end
+
+  # for protected routes 
+  get '/protected_route', :auth => :user do
+    "I am protected"
   end
 
   delete '/api/users/signout' do 
