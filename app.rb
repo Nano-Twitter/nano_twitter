@@ -2,6 +2,7 @@ require 'sinatra'
 require 'byebug'
 require 'mongoid'
 require 'json'
+require_relative 'helper/auth_helper.rb'
 require_relative 'model/user.rb'
 require_relative 'services/services'
 
@@ -12,25 +13,11 @@ class App < Sinatra::Base
 
   enable :sessions
 
-  configure do
-    #enable :sessions
-    # enable :cross_origin
-    # use Rack::Session::Cookie, :key => 'rack.session',
-    #                        :path => '/',
-    #                        :secret => 'your_secret'
+  before do
+    if not session[:user]
+      halt 401, 'not logged in'
+    end
   end
-
-  # before do
-  #   response.headers['Access-Control-Allow-Origin'] = '*'
-  # end
-
-  # # routes...
-  # options "*" do
-  #   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
-  #   response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
-  #   response.headers["Access-Control-Allow-Origin"] = "*"
-  #   200
-  # end
 
   # Endpoints
   # sign up
@@ -58,9 +45,8 @@ class App < Sinatra::Base
 
   end
 
-  post '/api/users/auth' do
-    res = session[:user] != nil && session[:user] == params[:_id][:$oid]
-    {message: res.to_s}.to_json
+  delete '/api/users/signout' do
+    session[:user] = nil;
   end
 
   get '/' do
