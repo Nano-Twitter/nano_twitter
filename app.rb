@@ -65,18 +65,19 @@ class App < Sinatra::Base
     session[:user] = nil;
   end
 
-
-  get '/shit' do
+  get '/api/shit' do
     @result = {shit: 1234}
     puts @result
-    @result
+    pass
   end
 
-
-  after do
+  get '/*' do
+    if not request.path_info.start_with? '/api'
+      pass
+    end
     puts @result[:shit]
     status (@result['status'] || 500)
-    @result['payload']
+    @result.to_json
   end
 
   get '/*' do

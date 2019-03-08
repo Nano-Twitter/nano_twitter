@@ -1,12 +1,21 @@
 require_relative '../model/tweet'
 
 class TweetService
-  def new_tweet(params)
+  def new_tweet(params, result)
     tweet = Tweet.new(params)
     if tweet.save
-      {status: 201, message: "Tweet sent success"}.to_json
+      result[:status] = 201
+      result[:message] = "Tweet sent success."
     else
-      {status: 403, message: "Fail to send the tweet"}.to_json
+      result[:status] = 403
+      result[:message] = "Fail to send the tweet."
     end
   end
+
+  def delete_tweet(params)
+    tweet = Tweet.find(params[:id])
+    if tweet.delete
+      {}
+
+  end 
 end
