@@ -15,7 +15,7 @@ class App < Sinatra::Base
   register do
     def auth (type)
       condition do
-        {status: "401", error: "Not logged in."}.to_json unless send("is_#{type}?")
+        redirect '/login' unless send("is_#{type}?")
       end
     end
   end
@@ -27,7 +27,7 @@ class App < Sinatra::Base
   end
 
   before do
-    @user = User.find_by(id: session[:user_id])
+    session[:user] != nil ? @user = User.find(session[:user]) : nil
   end
 
   # Endpoints
@@ -57,7 +57,7 @@ class App < Sinatra::Base
   end
 
   # for protected routes 
-  get '/example_protected_route', :auth => :user do
+  get '/api/example_protected_route', :auth => :user do
     "I am protected"
   end
 
