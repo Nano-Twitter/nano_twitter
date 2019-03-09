@@ -26,9 +26,8 @@ class App < Sinatra::Base
     end
 
     def process_result
-      puts @result[:shit]
-      status (@result['status'] || 500)
-      @result.to_json
+      status (@result[:status] || 500)
+      (@result[:payload] || {}).to_json
     end
   end
 
@@ -38,7 +37,7 @@ class App < Sinatra::Base
 
   # Endpoints
   # sign up
-  post 'users/signup' do
+  post '/users/signup' do
     user = User.new(params)
     if user.save
       status 201
@@ -50,7 +49,7 @@ class App < Sinatra::Base
   end
 
   # sign in
-  post 'users/signin' do
+  post '/users/signin' do
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
       session[:user] = user[:id].to_s
@@ -67,7 +66,7 @@ class App < Sinatra::Base
     "I am protected"
   end
 
-  delete '/api/users/signout' do
+  delete 'users/signout' do
     session[:user] = nil;
   end
 
