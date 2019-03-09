@@ -84,11 +84,17 @@ class App < Sinatra::Base
     process_result
   end
 
-  post "/*", &method(:process_result)
+  post "/*" do
+    process_result
+  end
 
-  put "/*", &method(:process_result)
+  put "/*" do
+    process_result
+  end
 
-  delete "/*", &method(:process_result)
+  delete "/*" do
+    process_result
+  end
 
 
   get '/*' do
