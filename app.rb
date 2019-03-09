@@ -62,15 +62,15 @@ class App < Sinatra::Base
   end
 
   # for protected routes 
-  get '/api/example_protected_route', :auth => :user do
+  get '/example_protected_route', :auth => :user do
     "I am protected"
   end
 
-  delete 'users/signout' do
+  delete '/users/signout' do
     session[:user] = nil;
   end
 
-  get 'shit' do
+  get '/shit' do
     @result = {shit: 1234}
     puts @result
     pass
