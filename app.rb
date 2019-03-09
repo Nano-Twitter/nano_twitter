@@ -38,7 +38,7 @@ class App < Sinatra::Base
 
   # Endpoints
   # sign up
-  post '/api/users/signup' do
+  post 'users/signup' do
     user = User.new(params)
     if user.save
       status 201
@@ -50,7 +50,7 @@ class App < Sinatra::Base
   end
 
   # sign in
-  post '/api/users/signin' do
+  post 'users/signin' do
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
       session[:user] = user[:id].to_s
@@ -71,7 +71,7 @@ class App < Sinatra::Base
     session[:user] = nil;
   end
 
-  get '/api/shit' do
+  get 'shit' do
     @result = {shit: 1234}
     puts @result
     pass
