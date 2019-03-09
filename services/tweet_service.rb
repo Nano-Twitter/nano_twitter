@@ -1,27 +1,45 @@
 require_relative '../model/tweet'
+require_relative '../helper/service_helper.rb'
 
 class TweetService
 
-  def new_tweet(params, result)
+  # json_result(status, code, message, data)
+
+  def create_tweet(params)
+    """
+    Create a new tweet
+    param params: a hashmap containing info of a new tweet
+    return: an json response
+    """
     tweet = Tweet.new(params)
     if tweet.save
-      result[:status] = 201
-      result[:message] = "Tweet sent successfully."
+      json_result(201, 0, "Tweet sent successfully.", tweet)
     else
-      result[:status] = 403
-      result[:error] = "Fail to send the tweet."
+      json_result(403, 1, "Unable to send the tweet.", {})
     end
   end
 
-  def delete_tweet(params, result)
+  def delete_tweet(params)
+    """
+    Delete a tweet
+    param params: a hashmap containing info of a tweet to delete
+    return: an json response
+    """
     tweet = Tweet.find(params[:id])
     if tweet.delete
-      result[:status] = 204
-      result[:message] = "Tweet deleted successfully."
+      json_result(204, 0, "Tweet deleted successfully.", {})
     else
-      result[:status] = 400
-      result[:error] = "Unable to delete the tweet."
+      json_result(400, 1, "Unable to delete the tweet.", {})
     end
   end 
 
+  def get_tweet(params)
+    """
+    Get a tweet
+    param params: a hashmap
+    """
+  end
+
+  def get_tweets_by_user(params, start, count)
+  end
 end
