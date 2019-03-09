@@ -24,6 +24,12 @@ class App < Sinatra::Base
     def is_user?
       @user != nil
     end
+
+    def process_result
+      puts @result[:shit]
+      status (@result['status'] || 500)
+      @result.to_json
+    end
   end
 
   before do
@@ -72,13 +78,18 @@ class App < Sinatra::Base
   end
 
   get '/*' do
-    if not request.path_info.start_with? '/api'
+    unless request.xhr?
       pass
     end
-    puts @result[:shit]
-    status (@result['status'] || 500)
-    @result.to_json
+    process_result
   end
+
+  post "/*", &method(:process_result)
+
+  put "/*", &method(:process_result)
+
+  delete "/*", &method(:process_result)
+
 
   get '/*' do
     #send_file File.join(settings.public_folder, 'index.html')
