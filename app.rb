@@ -24,6 +24,12 @@ class App < Sinatra::Base
     def is_user?
       @user != nil
     end
+
+    def process_result
+      puts @result[:shit]
+      status (@result['status'] || 500)
+      @result.to_json
+    end
   end
 
   before do
@@ -32,7 +38,7 @@ class App < Sinatra::Base
 
   # Endpoints
   # sign up
-  post '/api/users/signup' do
+  post 'users/signup' do
     user = User.new(params)
     if user.save
       status 201
@@ -44,7 +50,7 @@ class App < Sinatra::Base
   end
 
   # sign in
-  post '/api/users/signin' do
+  post 'users/signin' do
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email])
       session[:user] = user[:id].to_s
@@ -65,24 +71,34 @@ class App < Sinatra::Base
     session[:user] = nil;
   end
 
-  get '/api/shit' do
+  get 'shit' do
     @result = {shit: 1234}
     puts @result
     pass
   end
 
   get '/*' do
-    if not request.path_info.start_with? '/api'
+    unless request.xhr?
       pass
     end
-    puts @result[:shit]
-    status (@result['status'] || 500)
-    @result.to_json
+    process_result
   end
 
+  post "/*" do
+    process_result
+  end
+
+  put "/*" do
+    process_result
+  end
+
+  delete "/*" do
+    process_result
+  end
+
+
   get '/*' do
-    #send_file File.join(settings.public_folder, 'index.html')
-    redirect '/index.html'
+    send_file File.join(settings.public_folder, 'index.html')
   end
 
   run! if app_file == $0
