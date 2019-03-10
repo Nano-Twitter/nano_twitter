@@ -36,18 +36,18 @@
 
 ### Version 0.4 TO DO
 * Connect our AWS project to mongoDB.
-* Finished writing core backend services and apis: 
+* Finish writing core backend services and apis: 
   - User
   - Follow
   - Tweet(without comment/like)
-* Manual testing
-* Try Loader.io to add artificial load
+  * Process seed data
+* Finish writing a simplified version of front-end homepage
 * Implement the complete test interface:
   - POST test/reset/all
   - POST /test/reset?users=u
   - POST /test/user/{u}/tweets?count=n
   - GET /test/status
-* Process seed data
+* Try Loader.io to add artificial load
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 
