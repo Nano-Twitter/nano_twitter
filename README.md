@@ -1,5 +1,8 @@
 # Nano Twitter V 0.3
 
+## Deployment in AWS:
+[Nanotwitter](http://nanotwitter2019.us-east-2.elasticbeanstalk.com/)
+
 ## Tech Stacks
 * Front-end: [React](https://reactjs.org/)
 * Back-end: [Sinatra](http://sinatrarb.com/)
@@ -40,7 +43,7 @@
   - User
   - Follow
   - Tweet(without comment/like)
-  * Process seed data
+* Process seed data
 * Finish writing a simplified version of front-end homepage
 * Implement the complete test interface:
   - POST test/reset/all
