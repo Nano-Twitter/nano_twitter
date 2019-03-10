@@ -32,9 +32,22 @@
 * Added MobX for state management
 * Added routing and authentication logic involving interactions between front-end and backend
 * Finished NanoTwitter API Version 1 design
-* TODOs this week:
-  - Set up Codeship auto testing and deployment on AWS
-  - Finish writing all backend APIs
+* Set up Code Pipeline auto testing and deployment on AWS
+
+### Version 0.4 TO DO
+* Connect our AWS project to mongoDB.
+* Finish writing core backend services and apis: 
+  - User
+  - Follow
+  - Tweet(without comment/like)
+  * Process seed data
+* Finish writing a simplified version of front-end homepage
+* Implement the complete test interface:
+  - POST test/reset/all
+  - POST /test/reset?users=u
+  - POST /test/user/{u}/tweets?count=n
+  - GET /test/status
+* Try Loader.io to add artificial load
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 

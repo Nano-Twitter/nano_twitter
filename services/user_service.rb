@@ -1,10 +1,14 @@
 require_relative '../model/user'
 
 class UserService
+
+  # json_result(status, code, message, data)
+
   def signup(params)
     user = User.new(params)
     if user.save
       {status: 201, message: "Sign up success!"}.to_json
+      json_result(201, 0, "Sign up success!")
     else
       {status: 403, errors: user.errors.full_messages}.to_json
     end
