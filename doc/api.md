@@ -616,10 +616,11 @@ All APIs start with nanotwitter.com/api with optional version. Using the latest 
     ```
 
 ## Error code mapping 
-* 0: SUCCESS: The request has succeeded.
-* 1: BAD_REQUEST: The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
-* 2: UNAUTHORIZED: The request requires user authentication.
-* 3: FORBIDDEN: The server understood the request, but is refusing to fulfill it. 
-* 4: NOT_FOUND: The server has not found anything matching the Request-URI. 
-* 5: CONFLICT: The request could not be completed due to a conflict with the current state of the resource.
-* 9: INTERNAL_SERVER_ERROR: The server encountered an unexpected condition which prevented it from fulfilling the request.
+* 0: The request has succeeded.
+* 1: The request has failed.
+* 2: An exeption occurred.
+* 3: The request requires user authentication.
+* 4: You cannot have duplicate username
+* 5: You cannot have duplicate email address
+* 6: Your password should be at least 12 character long
+* 7: Tweet cannot be empty.
