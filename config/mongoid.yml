@@ -17,11 +17,11 @@ test:
     raise_not_found_error: false
 
 production:
-  clients:
-    default:
-      database: mongoid_production
-      hosts:
-        <%= ENV['MONGODB_URI'] || ENV['MONGOHQ_URL'] || ENV['MONGO_URL'] || ENV['MONGOLAB_URI'] %>
-
+  
+  uri: <%= ENV['MONGODB_URI'] || ENV['MONGOHQ_URL'] || ENV['MONGO_URL'] || ENV['MONGOLAB_URI'] %>
+  max_retries_on_connection_failure: 20
+  persist_in_safe_mode: true
+  skip_version_check: true
+  
   options:
     raise_not_found_error: false
