@@ -1,0 +1,17 @@
+branch-defaults:
+  master:
+    environment: null
+global:
+  application_name: nano_twitter
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Ruby 2.6 (Puma)
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: git
+  workspace_type: Application
