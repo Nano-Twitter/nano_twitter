@@ -38,6 +38,12 @@ class TweetService
     Get a tweet
     param params: a hashmap
     """
+    tweet = Tweet.find(params[:id])
+    if tweet:
+      json_result(201, 0, "Tweet found.", tweet)
+    else
+      json_result(400, 1, "Tweet not found", {})
+    end
   end
 
   def get_tweets_by_user(params, start, count)
