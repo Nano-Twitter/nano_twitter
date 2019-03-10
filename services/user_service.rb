@@ -19,7 +19,7 @@ class UserService
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email]).unset(:password_hash)
       # {status: 200, message: "Login success!", payload: user.as_json}.to_json
-      json_result(200, 0, "Login success!", user.as_json)
+      json_result(200, 0, "Login success!", user)
     else
       # {status: 403, errors: "Username and password do not match!"}.to_json
       json_result(403, 1, "Username and password do not match!")
@@ -37,7 +37,7 @@ class UserService
     if user
       user.unset(:password_hash)
       # {status: 200, payload: user.as_json}.to_json
-      json_result(200, 0, 'Profile get success', user.as_json)
+      json_result(200, 0, 'Profile get success', user)
     else
       # {status: 403, errors: 'User not found'}.to_json
       json_result(403, 1, 'User not found')
@@ -56,7 +56,7 @@ class UserService
       begin
         user.update!(params)
         # {status: 200, message: 'Profile update succeed', payload: user.as_json}.to_json
-        json_result(200, 0, 'Profile update succeed', user.as_json)
+        json_result(200, 0, 'Profile update succeed', user)
       rescue => e
         # {status: 403, message: 'Profile update failed', errors: e.message}.to_json
         json_result(403, 1, 'Profile update failed')
