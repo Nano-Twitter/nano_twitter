@@ -9,6 +9,7 @@ include Rack::Test::Methods
 def app
   App
 end
+Mongoid.load! "config/mongoid.yml"
 
 describe 'user_service' do
   before do
