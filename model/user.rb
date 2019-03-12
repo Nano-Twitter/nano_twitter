@@ -20,7 +20,24 @@ class User
   #validates_length_of :password, minimum: 12
   # validates_confirmation_of :password, message: "Password confirmation must be the same as the password."
 
+
+  # tentative association
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
+
   before_save :encrypt_password
+
+
+  def follow!(user)
+    if self.id != user.id && !self.following.include?(user)
+      self.following << user
+    end
+  end
+
+  def unfollow!(user)
+    self.following.delete(user)
+  end
+
 
   def self.find_by_email(email)
     find_by(email: email)
