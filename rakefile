@@ -10,3 +10,8 @@ Rake::TestTask.new do |t|
   t.verbose = true
 
 end
+
+# calling rake seed to seed the data
+task :seed do
+  ruby 'seed/seed.rb'
+end
