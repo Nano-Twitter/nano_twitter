@@ -6,6 +6,4 @@ require_relative '../helper/service_helper.rb'
 class Services
     attr_accessor :user_service
 
-    self.user_service = UserService.new
-    self.follow-service=FollowService.new
 end
