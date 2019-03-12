@@ -12,7 +12,7 @@ test:
     default:
       database: mongoid_test
       hosts:
-        - 18.191.227.19:27017
+        - localhost:27017
   options:
     raise_not_found_error: false
 
