@@ -26,7 +26,7 @@ class App < Sinatra::Base
 
     def process_result
       status (@result[:status] || 500)
-      (@result[:payload] || {}).to_json
+      @result[:payload] || {}
     end
   end
 
@@ -37,6 +37,7 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/users/signup' do
+    puts 'aaa'
     UserService.signup(params)
   end
 

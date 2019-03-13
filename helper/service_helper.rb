@@ -6,7 +6,7 @@ def json_result(status, code, message, data = {})
       payload: {
           code: code,
           message: message,
-          data: data.to_json
+          data: data.as_json
       }
-  }.to_json
+  }
 end
