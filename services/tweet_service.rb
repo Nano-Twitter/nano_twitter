@@ -1,5 +1,4 @@
 require_relative '../model/tweet'
-require_relative '../helper/service_helper.rb'
 
 class TweetService
 

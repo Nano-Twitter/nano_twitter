@@ -9,8 +9,10 @@ require_relative 'services/services'
 Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
-
   enable :sessions
+
+  # def initialize
+  # end
 
   register do
     def auth (type)
@@ -33,19 +35,22 @@ class App < Sinatra::Base
 
   before do
     session[:user] != nil ? @user = User.find(session[:user]) : nil
+    @services = Services.new
+
   end
 
   # Endpoints
   # sign up
   post '/users/signup' do
-    user = User.new(params)
-    if user.save
-      status 201
-      {message: "Signup success!"}.to_json
-    else
-      status 403
-      {error: user.errors.to_json}.to_json
-    end
+    @services.user_service.signup(params)
+    # user = User.new(params)
+    # if user.save
+    #   status 201
+    #   {message: "Signup success!"}.to_json
+    # else
+    #   status 403
+    #   {error: user.errors.to_json}.to_json
+    # end
   end
 
   # sign in

@@ -1,4 +1,5 @@
 require_relative 'user_service.rb'
+require_relative 'tweet_service.rb'
 require_relative '../helper/service_helper.rb'
 
 Mongoid.load! "config/mongoid.yml"
