@@ -2,8 +2,6 @@ require 'mongoid'
 require 'json'
 require_relative '../model/user.rb'
 require_relative '../model/tweet.rb'
-require_relative '../model/followee.rb'
-require_relative '../model/follower.rb'
 # DB Setup
 Mongoid.load! "config/mongoid.yml", :test
 
@@ -12,26 +10,25 @@ tweets = File.read('seed/tweets.csv')
 users = File.read('seed/users.csv')
 
 User.delete_all
-Follower.delete_all
-Followee.delete_all
 Tweet.delete_all
 
 
 user_hash = {}
-users.split(/\n/).map {|x| x.split(',')}.each do |array|
-  user_hash[array[0]] = User.create(name: array[1]).id
-  puts array[1]
+users.split(/\n/).map {|x| x.split(',')}[1..10].each do |array|
+  user_hash[array[0]] = User.create(name: array[1])
+  puts array[0]
+end
+tweets.split(/\n/).shuffle[1..100].map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
+  puts Tweet.create x
 end
 
+follows = follows.split(/\n/).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
 
-Tweet.create(tweets.split(/\n/).map {|x| x.split(',')}.map {|array| {content: array[1],user_id:user_hash[array[0]]}})
+follows.group_by {|x| user_hash[x[:followee]]}
+       .each do |user, follower_id|
+  if user
+    user.followers.push user_hash[follower_id]
+  end
+  puts user
+end
 
-follows.split(/\n/).map {|x| x.split(',')}.map {|array| {follower:array[0],followee:array[1]}}
-
-followers=follows.group_by{|x|user_hash[x[:followee]]}.map{|key,value|{user_id:key,followers:value}}
-
-followees=follows.group_by{|x|user_hash[x[:follower]]}.map{|key,value|{user_id:key,followees:value}}
-
-Followee.create(followees)
-
-Follower.create(followers)

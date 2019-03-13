@@ -10,12 +10,14 @@ def app
   App
 end
 
+Mongoid.load! "config/mongoid.yml"
+
 describe 'user_service' do
   before do
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id
-    @service = Services.new.user_service
+    @service = UserService
   end
 
   it "can create a user" do
@@ -114,7 +116,6 @@ describe 'user_service' do
     response = @service.update_profile(params)
     JSON.parse(response)['status'].must_equal 403
   end
-
 
   after do
     User.destroy_all

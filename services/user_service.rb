@@ -4,7 +4,7 @@ class UserService
 
   # json_result(status, code, message, data)
 
-  def signup(params)
+  def self.signup(params)
     user = User.new(params)
     if user.save
       # {status: 201, message: "Sign up success!"}.to_json
@@ -15,7 +15,7 @@ class UserService
     end
   end
 
-  def login(params)
+  def self.login(params)
     if User.authenticate(params[:email], params[:password])
       user = User.find_by_email(params[:email]).unset(:password_hash)
       # {status: 200, message: "Login success!", payload: user.as_json}.to_json
@@ -26,7 +26,7 @@ class UserService
     end
   end
 
-  def get_profile(params)
+  def self.get_profile(params)
     if params.has_key?(:id)
       user = User.find(params[:id])
     else
@@ -44,7 +44,7 @@ class UserService
     end
   end
 
-  def update_profile(params)
+  def self.update_profile(params)
     if params.has_key?(:id)
       user = User.find(params[:id])
     else

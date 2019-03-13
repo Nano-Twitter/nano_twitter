@@ -1,11 +1,10 @@
 require_relative '../model/tweet'
-require_relative '../helper/service_helper.rb'
 
 class TweetService
 
   # json_result(status, code, message, data)
 
-  def create_tweet(params)
+  def self.create_tweet(params)
     "" "
     Create a new tweet
     param params: a hashmap containing info of a new tweet
@@ -26,7 +25,7 @@ class TweetService
     end
   end
 
-  def delete_tweet(params)
+  def self.delete_tweet(params)
     "" "
     Delete a tweet
     param params: a hashmap containing info of a tweet to delete
@@ -40,7 +39,7 @@ class TweetService
     end
   end
 
-  def get_tweet(params)
+  def self.get_tweet(params)
     "" "
     Get a tweet
     param params: a hash containing the id of a tweet
@@ -53,7 +52,7 @@ class TweetService
     end
   end
 
-  def get_tweets_by_user(params, start, count)
+  def self.get_tweets_by_user(params, start, count)
     "" "
     Get a list of tweets
     param params: a hash containing the user_id of the requested tweet
@@ -66,11 +65,11 @@ class TweetService
     end
   end
 
-  def get_total_by_user(params)
+  def self.get_total_by_user(params)
     tweets = Tweet.where(user_id: params[:user_id]).count
   end
 
-  def get_followee_tweets(params)
+  def self.get_followee_tweets(params)
     tweets = User.where(user_id: params[:user_id]).includes(:tweets, from: :followee)
-  end
+
 end

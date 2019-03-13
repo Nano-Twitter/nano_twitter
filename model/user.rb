@@ -5,7 +5,7 @@ class User
   include Mongoid::Timestamps
   include BCrypt
 
-  attr_accessor         :password
+  attr_accessor :password
 
   field :name, type: String
   field :password_hash, type: String
@@ -22,6 +22,7 @@ class User
 
 
   # tentative association
+  include Mongoid::Attributes::Dynamic
   has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
   has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
 
@@ -55,7 +56,7 @@ class User
     end
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     attrs = super(options)
     attrs.delete("password_hash")
     attrs

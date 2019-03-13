@@ -2,14 +2,13 @@ require 'sinatra'
 require 'byebug'
 require 'mongoid'
 require 'json'
-require_relative 'model/user.rb'
+# require_relative 'model/user.rb'
 require_relative 'services/services'
 
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
-
   enable :sessions
 
   register do
@@ -38,14 +37,15 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/users/signup' do
-    user = User.new(params)
-    if user.save
-      status 201
-      {message: "Signup success!"}.to_json
-    else
-      status 403
-      {error: user.errors.to_json}.to_json
-    end
+    UserService.signup(params)
+    # user = User.new(params)
+    # if user.save
+    #   status 201
+    #   {message: "Signup success!"}.to_json
+    # else
+    #   status 403
+    #   {error: user.errors.to_json}.to_json
+    # end
   end
 
   # sign in
