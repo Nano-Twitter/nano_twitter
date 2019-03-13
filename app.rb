@@ -2,7 +2,7 @@ require 'sinatra'
 require 'byebug'
 require 'mongoid'
 require 'json'
-require_relative 'model/user.rb'
+# require_relative 'model/user.rb'
 require_relative 'services/services'
 
 # DB Setup
@@ -10,9 +10,6 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
   enable :sessions
-
-  # def initialize
-  # end
 
   register do
     def auth (type)
@@ -35,14 +32,12 @@ class App < Sinatra::Base
 
   before do
     session[:user] != nil ? @user = User.find(session[:user]) : nil
-    @services = Services.new
-
   end
 
   # Endpoints
   # sign up
   post '/users/signup' do
-    @services.user_service.signup(params)
+    UserService.signup(params)
     # user = User.new(params)
     # if user.save
     #   status 201

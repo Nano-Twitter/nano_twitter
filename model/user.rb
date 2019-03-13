@@ -5,7 +5,7 @@ class User
   include Mongoid::Timestamps
   include BCrypt
 
-  attr_accessor         :password
+  attr_accessor :password
 
   field :name, type: String
   field :password_hash, type: String
@@ -54,7 +54,7 @@ class User
     end
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     attrs = super(options)
     attrs.delete("password_hash")
     attrs
