@@ -38,14 +38,6 @@ class App < Sinatra::Base
   # sign up
   post '/users/signup' do
     UserService.signup(params)
-    # user = User.new(params)
-    # if user.save
-    #   status 201
-    #   {message: "Signup success!"}.to_json
-    # else
-    #   status 403
-    #   {error: user.errors.to_json}.to_json
-    # end
   end
 
   # sign in

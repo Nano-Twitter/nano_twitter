@@ -79,7 +79,6 @@ describe 'user_service' do
     response = @service.get_profile(params)
     JSON.parse(response)['status'].must_equal 200
     JSON.parse(JSON.parse(response)['payload']['data'])['name'].must_equal 'Adam Stark'
-
   end
 
   it 'can update user\'s profile' do
