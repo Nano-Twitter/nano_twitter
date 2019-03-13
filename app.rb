@@ -37,6 +37,7 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/users/signup' do
+    puts 'aaa'
     UserService.signup(params)
     # user = User.new(params)
     # if user.save
