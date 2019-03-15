@@ -29,7 +29,7 @@ class TweetService
     param params: a hashmap containing info of a tweet to delete
     return: an json response
     """
-    tweet = Tweet.find(params[:id])
+    tweet = Tweet.find(params[:tweet_id])
     if tweet.delete
       json_result(200, 0, "Tweet deleted successfully.")
     else
@@ -42,7 +42,7 @@ class TweetService
     Get a tweet
     param params: a hash containing the id of a tweet
     """
-    tweet = Tweet.find(params[:id])
+    tweet = Tweet.find(params[:tweet_id])
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -81,14 +81,17 @@ class TweetService
     Get a list of tweets of followees
     param params: a hash containing the user_id of the requested tweet
     """
-    followees = User.where(user_id: params[:user_id])
-    pp followees
-    # tweets = .includes(:tweets, from: :followee)
-    # if tweets
-    #   json_result(200, 0, "Tweets found.", tweets)
-    # else
-    #   json_result(403, 1, "Tweets not found.")
-    # end
+    tweets = (User.find(params[:user_id]).following).map{|f| f.tweets}
+    tweets = tweets.flatten(1)
+    # following_ids = User.find(params[:user_id]).following_ids
+    # tweets = Tweet.where(user_id: following_ids[0])
+    # pp following_ids
+    # pp tweets
+    if tweets
+      json_result(200, 0, "All tweets found.", tweets)
+    else
+      json_result(403, 1, "Tweets not found.")
+    end
   end
 
 end

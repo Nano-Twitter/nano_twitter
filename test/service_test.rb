@@ -57,7 +57,7 @@ describe 'user_service' do
     }
     response = @service.signup(params)
     response[:status].must_equal 403
-    response[:payload][:message].must_equal 'Sign up failed'
+    response[:payload][:message].must_equal 'Signup failed'
   end
 
   it "cannot create user with duplicate email" do
@@ -69,7 +69,7 @@ describe 'user_service' do
     }
     response = @service.signup(params)
     response[:status].must_equal 403
-    response[:payload][:message].must_equal 'Sign up failed'
+    response[:payload][:message].must_equal 'Signup failed'
   end
 
   it 'can get user\'s profile' do
@@ -131,11 +131,12 @@ describe 'tweet_service' do
     @user_id = @user.id
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id
-    @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet.")
+    @follower.follow! @user
+    @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet1.")
     @tweet_id = @tweet.id
-    @tweet1 = Tweet.create!(user_id: @user_id, content: "This is the base tweet.")
+    @tweet1 = Tweet.create!(user_id: @user_id, content: "This is the base tweet2.")
     @tweet_id1 = @tweet1.id
-    @tweet2 = Tweet.create!(user_id: @user_id, content: "This is the base tweet.")
+    @tweet2 = Tweet.create!(user_id: @user_id, content: "This is the base tweet3.")
     @tweet_id2 = @tweet2.id
     @service = TweetService
   end
@@ -176,7 +177,7 @@ describe 'tweet_service' do
 
   it 'can delete an existing tweet' do
     params = {
-      id: @tweet_id
+      tweet_id: @tweet_id
     }
     response = @service.delete_tweet(params)
     response[:status].must_equal 200
@@ -185,13 +186,32 @@ describe 'tweet_service' do
 
   it 'can get an existing tweet' do
     params = {
-      id: @tweet_id
+      tweet_id: @tweet_id
     }
     response = @service.get_tweet(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal 'Tweet found.'
   end
 
-  
+  it 'can get tweets by user' do
+    params = {
+      user_id: @user_id
+    }
+    response = @service.get_tweets_by_user(params, 0, 10)
+    response[:status].must_equal 200
+    response[:payload][:message].must_equal 'Tweets found.'
+    response[:payload][:data].count.must_equal 3
+  end
+
+  it 'can get tweets of all followees' do
+    params = {
+      user_id: @follower_id
+    }
+    response = @service.get_followee_tweets(params)
+    # response[:status].must_equal 200
+    # response[:payload][:message].must_equal 'All tweets found.'
+    # response[:payload][:data].count.must_equal 3
+  end
+
 
 end
