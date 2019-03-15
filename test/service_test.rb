@@ -16,7 +16,7 @@ describe 'user_service' do
   before do
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
-    @user_id = @user.id
+    @user_id = @user.id.to_s
     @service = UserService
   end
 
@@ -128,9 +128,9 @@ describe 'follow_service' do
 
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
-    @user_id = @user.id
+    @user_id = @user.id.to_s
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
-    @follower_id = @follower.id
+    @follower_id = @follower.id.to_s
     @service = FollowService
 
   end
@@ -188,16 +188,14 @@ describe 'tweet_service' do
     User.destroy_all
     Tweet.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
-    @user_id = @user.id
+    @user_id = @user.id.to_s
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
-    @follower_id = @follower.id
+    @follower_id = @follower.id.to_s
     @follower.follow! @user
     @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet1.")
-    @tweet_id = @tweet.id
+    @tweet_id = @tweet.id.to_s
     @tweet1 = Tweet.create!(user_id: @user_id, content: "This is the base tweet2.")
-    @tweet_id1 = @tweet1.id
     @tweet2 = Tweet.create!(user_id: @user_id, content: "This is the base tweet3.")
-    @tweet_id2 = @tweet2.id
     @service = TweetService
 
   end
@@ -224,7 +222,7 @@ describe 'tweet_service' do
     response = @service.create_tweet(params)
     response[:status].must_equal 201
     response[:payload][:data]['content'].must_equal 'Repost'
-    response[:payload][:data]['parent_id'].must_equal @tweet_id
+    response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
 
   end
 
@@ -238,7 +236,7 @@ describe 'tweet_service' do
     response = @service.create_tweet(params)
     response[:status].must_equal 201
     response[:payload][:data]['content'].must_equal 'I am a repost'
-    response[:payload][:data]['parent_id'].must_equal @tweet_id
+    response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
 
   end
 

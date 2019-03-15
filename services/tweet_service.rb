@@ -14,6 +14,8 @@ class TweetService
     if params[:content] == '' # the tweet has no content
       json_result(403, 7, "Your tweet should not be empty.")
     else # the tweet has content
+      params[:parent_id] = BSON::ObjectId(params[:parent_id]) if params[:parent_id]
+      params[:user_id] = BSON::ObjectId(params[:user_id])
       tweet = Tweet.new(params)
       if tweet.save
         json_result(201, 0, "Tweet sent successfully.", tweet)
@@ -29,7 +31,7 @@ class TweetService
     param params: a hashmap containing info of a tweet to delete
     return: an json response
     """
-    tweet = Tweet.find(params[:tweet_id])
+    tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     if tweet.delete
       json_result(200, 0, "Tweet deleted successfully.")
     else
@@ -42,7 +44,7 @@ class TweetService
     Get a tweet
     param params: a hash containing the id of a tweet
     """
-    tweet = Tweet.find(params[:tweet_id])
+    tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -55,7 +57,7 @@ class TweetService
     Get a list of tweets
     param params: a hash containing the user_id of the requested tweet
     """
-    tweets = Tweet.where(user_id: params[:user_id]).order(created_at: :desc).skip(start).limit(count)
+    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(start).limit(count)
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
@@ -68,7 +70,7 @@ class TweetService
     Get a the number of tweets of a user
     param params: a hash containing the user_id of the requested tweet
     """
-    tweets = Tweet.where(user_id: params[:user_id]).count
+    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).count
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
@@ -81,7 +83,7 @@ class TweetService
     Get a list of tweets of followees
     param params: a hash containing the user_id of the requested tweet
     """
-    tweets = (User.find(params[:user_id]).following).map{|f| f.tweets}
+    tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map{|f| f.tweets}
     tweets = tweets.flatten(1)
     # following_ids = User.find(params[:user_id]).following_ids
     # tweets = Tweet.where(user_id: following_ids[0])

@@ -22,7 +22,7 @@ class UserService
 
   def self.get_profile(params)
     if params.has_key?(:id)
-      user = User.find(params[:id])
+      user = User.find(BSON::ObjectId(params[:id]))
     else
       return json_result(403, 1, 'Profile get failed')
     end
@@ -37,7 +37,7 @@ class UserService
 
   def self.update_profile(params)
     if params.has_key?(:id)
-      user = User.find(params[:id])
+      user = User.find(BSON::ObjectId(params[:id]))
     else
       return json_result(403, 1, 'Profile update failed')
     end

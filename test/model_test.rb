@@ -25,8 +25,8 @@ describe "user_model" do
   end
 
   it "can update info" do
-    @user.update_attribute(:name, "Jean Stock")
-    User.find(@user.id).name.must_equal "Jean Stock"
+    @user.update_attribute(:name, "Jean")
+    User.find(@user.id).name.must_equal "Jean"
   end
 
   it "can authenticate" do
@@ -44,7 +44,6 @@ describe "user_model" do
     @user.follow!(@user3)
     @user.following.size.must_equal 2
     @user.following.second.name.must_equal 'Cdam Stark'
-
   end
 
   it 'can unfollow user' do
@@ -61,8 +60,11 @@ describe "user_model" do
     @user.following.size.must_equal 0
     @user.follow!(@user2)
     @user.following.size.must_equal 1
-    @user.follow!(@user2)
-    @user.follow!(@user2)
+    begin
+      @user.follow!(@user2)
+    rescue => e
+      e.message.must_equal 'Duplicate following relationship.'
+    end  
     @user.following.size.must_equal 1
   end
 

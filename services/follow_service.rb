@@ -5,8 +5,8 @@ class FollowService
     """
       One who follows, comes after another.
     """
-    follower = User.find(params[:follower_id])
-    followee = User.find(params[:followee_id])
+    follower = User.find(BSON::ObjectId(params[:follower_id]))
+    followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.follow!(followee)
       json_result(200, 0, 'Follow successfully')
@@ -20,8 +20,8 @@ class FollowService
     """
       One who is followed (has his/her posts monitored by another user).
     """
-    follower = User.find(params[:follower_id])
-    followee = User.find(params[:followee_id])
+    follower = User.find(BSON::ObjectId(params[:follower_id]))
+    followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.unfollow!(followee)
       json_result(200, 0, 'Unfollow successfully')
