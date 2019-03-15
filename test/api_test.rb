@@ -24,21 +24,22 @@ describe "api" do
         gender: 1
     }
     last_response.ok?
-    last_response.status.must_equal 200
-    JSON.parse(last_response.body)["message"].must_equal "Signup success!"
+    last_response.status.must_equal 201
+    JSON.parse(last_response.body)['message'].must_equal "Signup success!"
     User.find_by(email: "bad@gmail.com").name.must_equal "Adam Stone"
   end
 
   it "can authenticate a user" do
-    post '/users/signin', {
+    post '/users/login', {
         email: "goo@gmail.com",
         password: "qwer123456ty"
     }
     last_response.ok?
-    last_response.status.must_equal 404
-    JSON.parse(last_response.body)["error"].must_equal "Username and password do not match!"
+    last_response.status.must_equal 403
+    # JSON.parse()
+    # JSON.parse(last_response.body)["error"].must_equal "Username and password do not match!"
 
-    post '/users/signin', {
+    post '/users/login', {
         email: "good@gmail.com",
         password: "qwer123456ty"
     }
@@ -55,8 +56,8 @@ describe "api" do
         gender: 0
     }
     last_response.ok?
-    last_response.status.must_equal 404
-    JSON.parse(last_response.body)["error"].must_equal "Name Username already in use. Try another one!"
+    last_response.status.must_equal 403
+    # JSON.parse(last_response.body)["error"].must_equal "Name Username already in use. Try another one!"
   end
 
   it "cannot create user with duplicate email" do
@@ -67,8 +68,8 @@ describe "api" do
         gender: 0
     }
     last_response.ok?
-    last_response.status.must_equal 404
-    JSON.parse(last_response.body)["error"].must_equal "Email Email address already in use. Forget password?"
+    last_response.status.must_equal 403
+    # JSON.parse(last_response.body)["error"].must_equal "Email Email address already in use. Forget password?"
   end
 
   after do

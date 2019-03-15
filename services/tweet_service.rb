@@ -72,5 +72,5 @@ class TweetService
   def self.get_followee_tweets(params)
     tweets = User.where(user_id: params[:user_id]).includes(:tweets, from: :followee)
   end
-  
+
 end
