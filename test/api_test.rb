@@ -13,6 +13,7 @@ end
 describe "users api" do
 
   before do
+    User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
   end
 

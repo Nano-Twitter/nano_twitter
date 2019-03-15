@@ -13,9 +13,12 @@ end
 describe "user_model" do
 
   before do
+
+    User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user2 = User.create!(name: "Bdam Stark", email: "bad@gmail.com", password: "qwer123456ty", gender: 0)
     @user3 = User.create!(name: "Cdam Stark", email: "no@gmail.com", password: "qwer123456ty", gender: 0)
+  
   end
 
   it "can create a user" do

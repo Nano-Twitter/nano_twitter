@@ -13,11 +13,14 @@ end
 Mongoid.load! "config/mongoid.yml"
 
 describe 'user_service' do
+
   before do
+    
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
     @service = UserService
+
   end
 
   it "can create a user" do
@@ -179,6 +182,11 @@ describe 'follow_service' do
     response[:payload][:message].must_equal "Unfollow successfully"
 
   end
+
+  after do
+    User.destroy_all
+  end
+
 end
 
 describe 'tweet_service' do 
@@ -286,5 +294,9 @@ describe 'tweet_service' do
 
   end
 
+  after do
+    User.destroy_all
+    Tweet.destroy_all
+  end
 
 end
