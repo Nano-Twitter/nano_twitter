@@ -51,25 +51,25 @@ class App < Sinatra::Base
     pass
   end
 
+  delete '/users/signout' do
+    session[:user] = nil;
+  end
+
+  get '/users/:id' do
+    @result = UserService.get_profile(params)
+    pass
+  end
+
   # for protected routes 
   get '/example_protected_route', :auth => :user do
     "I am protected"
   end
 
-  delete '/users/signout' do
-    session[:user] = nil;
-  end
-
-  get '/shit' do
-    @result = {shit: 1234}
-    puts @result
-    pass
-  end
 
   get '/*' do
-    unless request.xhr?
-      pass
-    end
+    # unless request.xhr?
+    #   pass
+    # end
     process_result
   end
 

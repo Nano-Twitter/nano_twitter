@@ -10,7 +10,7 @@ def app
   App
 end
 
-describe "api" do
+describe "users api" do
 
   before do
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
@@ -70,6 +70,13 @@ describe "api" do
     last_response.ok?
     last_response.status.must_equal 403
     # JSON.parse(last_response.body)["error"].must_equal "Email Email address already in use. Forget password?"
+  end
+
+  it 'can get user\'s profile' do
+    get "/users/#{@user.id}"
+    last_response.ok?
+    last_response.status.must_equal 200
+    JSON.parse(last_response.body)['data']['_id']['$oid'].must_equal @user.id.to_s
   end
 
   after do
