@@ -3,11 +3,11 @@ require_relative '../model/tweet'
 class TweetService
 
   def self.create_tweet(params)
-    "" "
+    """
     Create a new tweet
     param params: a hashmap containing info of a new tweet
     return: an json response
-    " ""
+    """
     if params[:content] == '' && params[:parent_id] != '' # if it is a repost
       params[:content] = 'Repost' # add 'Repost' to the tweet content
     end
@@ -24,11 +24,11 @@ class TweetService
   end
 
   def self.delete_tweet(params)
-    "" "
+    """
     Delete a tweet
     param params: a hashmap containing info of a tweet to delete
     return: an json response
-    " ""
+    """
     tweet = Tweet.find(params[:id])
     if tweet.delete
       json_result(200, 0, "Tweet deleted successfully.")
@@ -38,10 +38,10 @@ class TweetService
   end
 
   def self.get_tweet(params)
-    "" "
+    """
     Get a tweet
     param params: a hash containing the id of a tweet
-    " ""
+    """
     tweet = Tweet.find(params[:id])
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
