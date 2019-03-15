@@ -8,6 +8,10 @@ require_relative 'services/services'
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
+# GET Success: 200
+# POST Success: 201
+# Fail: 403
+
 class App < Sinatra::Base
   enable :sessions
 
@@ -26,7 +30,7 @@ class App < Sinatra::Base
 
     def process_result
       status (@result[:status] || 500)
-      @result[:payload] || {}
+      (@result[:payload] || {}).to_json
     end
   end
 
@@ -37,21 +41,14 @@ class App < Sinatra::Base
   # Endpoints
   # sign up
   post '/users/signup' do
-    puts 'aaa'
-    UserService.signup(params)
+    @result = UserService.signup(params)
+    pass
   end
 
   # sign in
-  post '/users/signin' do
-    if User.authenticate(params[:email], params[:password])
-      user = User.find_by_email(params[:email])
-      session[:user] = user[:id].to_s
-      {message: user.to_json}.to_json
-    else
-      status 403
-      {error: "Username and password do not match!"}.to_json
-    end
-
+  post '/users/login' do
+    @result = UserService.login(params)
+    pass
   end
 
   # for protected routes 

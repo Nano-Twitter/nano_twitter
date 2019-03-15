@@ -2,8 +2,6 @@ require_relative '../model/user'
 
 class UserService
 
-  # json_result(status, code, message, data)
-
   def self.signup(params)
     user = User.new(params)
     if user.save
