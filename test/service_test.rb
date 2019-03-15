@@ -28,7 +28,7 @@ describe 'user_service' do
         gender: 1
     }
     response = @service.signup(params)
-    JSON.parse(response)['status'].must_equal 201
+    response[:status].must_equal 201
     User.find_by(email: "bad@gmail.com").name.must_equal "Adam Stone"
   end
 
@@ -37,14 +37,14 @@ describe 'user_service' do
                                   email: "goo@gmail.com",
                                   password: "qwer123456ty"
                               })
-    JSON.parse(response)['status'].must_equal 403
+    response[:status].must_equal 403
 
     response = @service.login({
                                   email: "good@gmail.com",
                                   password: "qwer123456ty"
                               })
-    JSON.parse(response)['status'].must_equal 200
-    JSON.parse(JSON.parse(response)['payload']['data'])['name'].must_equal 'Adam Stark'
+    response[:status].must_equal 200
+    JSON.parse(response['payload']['data'])['name'].must_equal 'Adam Stark'
     # JSON.parse(response)['payload']['password_hash'].must_equal null
   end
 
