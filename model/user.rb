@@ -31,7 +31,9 @@ class User
 
 
   def follow!(user)
-    if self.id != user.id && !self.following.include?(user)
+    if self.following.include?(user)
+      raise 'Duplicate following relationship.'
+    elsif self.id != user.id
       self.following << user
     end
   end

@@ -1,21 +1,34 @@
 require_relative '../model/tweet'
 
 class FollowService
-  def create_follower(params)
-    "" "
+  def self.follow(params)
+    """
       One who follows, comes after another.
-    " ""
-    follow = Follower.new(params)
-
-    create_followee(params)
+    """
+    follower = User.find(params[:follower_id])
+    followee = User.find(params[:followee_id])
+    begin
+      follower.follow!(followee)
+      json_result(200, 0, 'Follow successfully')
+    rescue => e
+      json_result(403, 1, 'Fail to follow')
+    end
+    
   end
 
-
-  private
-
-  def create_followee(params)
-    "" "
+  def self.unfollow(params)
+    """
       One who is followed (has his/her posts monitored by another user).
-    " ""
+    """
+    follower = User.find(params[:follower_id])
+    followee = User.find(params[:followee_id])
+    begin
+      follower.unfollow!(followee)
+      json_result(200, 0, 'Unfollow successfully')
+    rescue => e
+      json_result(403, 1, 'Fail to unfollow')
+    end
   end
+
 end
+
