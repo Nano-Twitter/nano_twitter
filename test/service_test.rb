@@ -120,3 +120,25 @@ describe 'user_service' do
     User.destroy_all
   end
 end
+
+describe 'tweet_service' do 
+  before do
+    User.destroy_all
+    @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
+    @user_id = @user.id
+    @service = TweetService
+  end
+
+  it 'can create a new tweet' do
+    params = {
+      user_id: @user_id,
+      content: "I am a random tweet.",
+    }
+    response = @service.create_tweet(params)
+    JSON.parse(response)['status'].must_equal 200
+    JSON.parse(JSON.parse(response)['payload']['data'])['content'].must_equal 'I am a random tweet.'
+  end
+
+  # it 'can create a repo' do
+  # end
+end

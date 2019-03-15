@@ -6,8 +6,8 @@ require_relative '../model/tweet.rb'
 Mongoid.load! "config/mongoid.yml", :test
 
 follows = File.read('seed/follows.csv')
-tweets = File.read('seed/tweets.csv')
-users = File.read('seed/users.csv')
+tweets = File.read('seed/tweet.csv')
+users = File.read('seed/user.csv')
 
 User.delete_all
 Tweet.delete_all
@@ -16,10 +16,11 @@ Tweet.delete_all
 user_hash = {}
 users.split(/\n/).map {|x| x.split(',')}.each do |array|
   user_hash[array[0]] = User.create(name: array[1])
-  puts array[0]
+  puts array[0].to_s
 end
+
 tweets.split(/\n/).shuffle[1..7000].map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
-  puts Tweet.create x
+  puts (Tweet.create x)
 end
 
 follows = follows.split(/\n/).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
