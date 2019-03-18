@@ -30,5 +30,21 @@ class FollowService
     end
   end
 
+  def self.get_follower_ids(params)
+    
+  end
+
+  def self.get_followee_ids(params)
+    
+  end
+
+  def self.get_followers(params)
+    
+  end
+
+  def self.get_followees(params)
+    
+  end
+
 end
 

@@ -39,27 +39,113 @@ class App < Sinatra::Base
   end
 
   # Endpoints
-  # sign up
+  # Users
+
+  # sign up： create a new user
   post '/users/signup' do
     @result = UserService.signup(params)
     pass
   end
 
-  # sign in
-  post '/users/login' do
-    @result = UserService.login(params)
-    pass
-  end
-
-  delete '/users/signout' do
-    session[:user] = nil;
-  end
-
+  # find a user's info
   get '/users/:id' do
     @result = UserService.get_profile(params)
     pass
   end
 
+  # update a user's info
+  put '/users/:id' do
+    @result = UserService.update_profile(params)
+    pass
+  end
+
+  # user authencation
+  # sign in
+  post '/users/login' do
+    @result = UserService.login(params)
+    if @result[:status] == 200
+      session[:user] = @result[:payload][:data]
+    pass
+  end
+
+  # sign out
+  delete '/users/signout' do
+    session[:user] = nil;
+  end
+
+  # Follow
+
+  # get all followee ids
+  get '/followees/ids/:id' do
+    
+  end
+
+  # get all follower ids
+  get '/followers/list/:id' do
+  end
+
+  # get all followees
+  get '/followees/list/:id' do
+  end
+
+  # get all followers
+  put '/follows/:followee_id' do
+    @result = FollowService.follow(params)
+    pass
+  end
+
+  delete '/follows/:followee_id' do
+    @result = FollowService.unfollow(params)
+    pass
+  end
+
+# Tweets
+
+  post '/tweets' do
+    @result = TweetService.create_tweet(params)
+    pass
+  end
+
+  get '/tweets/:id' do
+    @result = TweetService.get_tweet(params)
+    pass
+  end
+
+  delete '/tweets/:id' do
+    @result = TweetService.delete_tweet(params)
+    pass
+  end
+
+  get '/tweets/:id/comments' do
+
+  end
+
+  post '/tweets/:id/comments' do
+
+  end
+
+  post '/tweets/:id/like' do
+
+  end
+
+  delete '/tweets/:id/like' do
+
+  end
+
+  get '/tweets/recent' do
+    @result = TweetService.get_followee_tweets(params)
+    pass
+  end
+
+  get '/tweets/user/:id' do
+    @result = TweetService.get_tweets_by_user(params[:data], params[:start], params[:count])
+    pass
+  end
+
+  # Search (left blank for the moment)
+
+
+  
   # for protected routes 
   get '/example_protected_route', :auth => :user do
     "I am protected"
@@ -67,10 +153,11 @@ class App < Sinatra::Base
 
 
   get '/*' do
-    # unless request.xhr?
-    #   pass
-    # end
-    process_result
+    if request.xhr?
+      process_result
+    else
+      pass
+    end
   end
 
   post "/*" do
@@ -88,6 +175,25 @@ class App < Sinatra::Base
 
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')
+  end
+
+  # test interface
+  post '/test/reset/all' do
+
+  end
+  
+  post '/test/reset?users=u' do
+
+  end
+
+  post '/test/user/{u}/tweets?count=n' do
+    # delete all users, tweets and follows
+    # recreate
+    # example: /test/reset/standard?users=100&tweets=100
+  end
+
+  get '/test/status' do
+
   end
 
   run! if app_file == $0
