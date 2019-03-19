@@ -38,7 +38,8 @@ class App < Sinatra::Base
     session[:user] != nil ? @user = User.find(session[:user]) : nil
   end
 
-  # Endpoints
+# Endpoints
+
   # Users
 
   # sign up： create a new user
@@ -100,50 +101,85 @@ class App < Sinatra::Base
     pass
   end
 
-# Tweets
+  # Tweets
 
+  # create a tweet
   post '/tweets' do
     @result = TweetService.create_tweet(params)
     pass
   end
 
+  # retrieve a tweet
   get '/tweets/:id' do
     @result = TweetService.get_tweet(params)
     pass
   end
 
+  # delete a tweet
   delete '/tweets/:id' do
     @result = TweetService.delete_tweet(params)
     pass
   end
 
-  get '/tweets/:id/comments' do
-
+  # get a user's timeline
+  get '/tweets/users/:user_id' do
+    @result = TweetService.get_tweets_by_user(params)
+    pass
   end
 
-  post '/tweets/:id/comments' do
-
-  end
-
-  post '/tweets/:id/like' do
-
-  end
-
-  delete '/tweets/:id/like' do
-
-  end
-
+  # get personal homepage timeline
   get '/tweets/recent' do
     @result = TweetService.get_followee_tweets(params)
     pass
   end
 
-  get '/tweets/user/:user_id' do
-    @result = TweetService.get_tweets_by_user(params)
+  # Tweet: Comment
+
+  # count the number of comments
+  get '/tweets/:tweet_id/comments/count' do
+    @result = CommentService.total_comment_by_tweet(params)
     pass
   end
 
-  # Search (left blank for the moment)
+  # create a comment
+  post '/tweets/:tweet_id/comments' do
+    @result = CommentService.create_comment(params)
+    pass
+  end
+
+  # retrieve comments of a tweet
+  get '/tweets/:tweet_id/comments' do
+    @result = CommentService.get_comment_by_tweet(params)
+    pass
+  end
+
+  # delete a comment of a tweet
+  delete '/tweets/:tweet_id/comments/:comment_id' do
+    @result = CommentService.delete_comment(params)
+    pass
+  end
+
+  # Tweet: Like
+
+  # count the number of likes
+  get '/tweets/:tweet_id/likes/count' do
+    @result = LikeService.total_likes_by_tweet(params)
+    pass
+  end
+
+  # create a like of a tweet (like) 
+  post '/tweets/:tweet_id/likes' do
+    @result = LikeService.create_like(params)
+    pass
+  end
+
+  # delete a like of a tweet (unlike)
+  delete '/tweets/:tweet_id/likes/:like_id' do
+    @result = LikeService.delete_like(params)
+    pass
+  end
+
+  # Search (Blank for the moment)
 
 
   
