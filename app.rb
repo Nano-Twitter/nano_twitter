@@ -137,8 +137,8 @@ class App < Sinatra::Base
     pass
   end
 
-  get '/tweets/user/:id' do
-    @result = TweetService.get_tweets_by_user(params[:data], params[:start], params[:count])
+  get '/tweets/user/:user_id' do
+    @result = TweetService.get_tweets_by_user(params)
     pass
   end
 
