@@ -65,6 +65,7 @@ class App < Sinatra::Base
     @result = UserService.login(params)
     if @result[:status] == 200
       session[:user] = @result[:payload][:data]
+    end
     pass
   end
 
