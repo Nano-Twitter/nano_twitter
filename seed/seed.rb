@@ -51,6 +51,7 @@ class Seed
   end
 
   def self.create_tweet(user_id, sum = 7000)
+    user_id=User.find
     @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_id}}.each do |x|
       puts (Tweet.create x)
     end
