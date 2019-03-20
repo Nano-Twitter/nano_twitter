@@ -24,26 +24,23 @@ class Seed
   def self.create_user_and_related(sum = 1000)
     reset
     @user_hash = {}
-    user_bson_hash = {}
     User.collection.insert_many(@users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.map {|array| {name: array[1]}})
         .inserted_ids
         .each_with_index do |id, index|
       key = (index + 1).to_s
       @user_hash[key] = id
-      user_bson_hash[key] = User.find(id)
     end
     Tweet.collection.insert_many(@tweets.split(/\n/).map {|x| x.split(',')}.select {|user_id, _content| @user_hash.key? user_id}
                                      .map {|array| {content: array[1], user_id: @user_hash[array[0]]}})
 
     follows = @follows.split(/\n/).lazy.map {|x| x.split(',')}
                   .select {|follower, followee| (@user_hash.key? follower) && (@user_hash.key? followee)}
-    follows.group_by {|follower, followee| user_bson_hash[followee]}.each do |user, relation_ids|
-      puts user
-      puts relation_ids.size
+    follows.group_by {|follower, followee| @user_hash[followee]}.each do |user, relation_ids|
       if user
-        user.update_attributes(follower_ids:relation_ids.map {|follower_id, followee_id| @user_hash[follower_id]})
+        User.find(user).update_attribute(:follower_ids ,relation_ids.map {|follower_id, followee_id|  @user_hash[follower_id]})
       end
-      puts user.followers.first.name
+        puts User.find(user).following.size
+
     end
   end
 
