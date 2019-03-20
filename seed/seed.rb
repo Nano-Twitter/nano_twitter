@@ -16,17 +16,41 @@ class Seed
     User.destroy_all
     Tweet.destroy_all
 
-    user_hash = {}
-    @users.split(/\n/).map {|x| x.split(',')}.each do |array|
-      user_hash[array[0]] = User.create(name: array[1])
-      puts array[0].to_s
-    end
+    create_test_user
+    create_test_tweet
+    create_test_follow
+      # @tweets.split(/\n/).shuffle[1..7000].map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
+      #   puts (Tweet.create x)
+      # end
+      #
+      # follows = @follows.split(/\n/).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
+      #
+      # follows.group_by {|x| user_hash[x[:followee]]}
+      #     .each do |user, follower_ids|
+      #   if user
+      #     follower_ids.each {|follower_id| user.followers.push user_hash[follower_id]}
+      #   end
+      #   puts user
+      # end
 
-    @tweets.split(/\n/).shuffle[1..7000].map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
+  end
+
+  def self.create_test_user(sum = 1000)
+    user_hash = {}
+    @users.split(/\n/).take(sum).map {|x| x.split(',')}.each do |array|
+      user_hash[array[0]] = User.create(name: array[1])
+      puts array[1].to_s
+    end
+  end
+
+  def self.create_test_tweet(sum = 7000)
+    @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
       puts (Tweet.create x)
     end
+  end
 
-    follows = @follows.split(/\n/).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
+  def self.create_test_follow(sum = 5000)
+    follows = @follows.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
 
     follows.group_by {|x| user_hash[x[:followee]]}
         .each do |user, follower_ids|
@@ -36,14 +60,6 @@ class Seed
       puts user
     end
 
-  end
-
-  def self.create_test_user(sum=1000)
-    user_hash = {}
-    @users.split(/\n/).take(sum).map {|x| x.split(',')}.each do |array|
-      user_hash[array[0]] = User.create(name: array[1])
-      puts array[1].to_s
-    end
   end
 end
 

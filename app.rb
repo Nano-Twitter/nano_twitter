@@ -234,7 +234,6 @@ class App < Sinatra::Base
   post '/test/reset/all' do
     TestService.destroy_all
     TestService.seed_user
-    @result = {status: 200}
   end
 
 

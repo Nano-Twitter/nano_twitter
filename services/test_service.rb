@@ -18,7 +18,10 @@ class TestService
       Seed.create_test_user
     end
   end
+
+  def self.seed_tweet(params=nil)
+    if params and params[:tweets]
+      # Seed.
+    end
+  end
 end
-
-
-# TestService.seed_user
