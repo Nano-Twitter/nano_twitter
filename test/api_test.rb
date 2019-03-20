@@ -86,10 +86,15 @@ describe "users api" do
 
 
   describe 'test interface api' do
-    it 'can resets all data and recreates TestUser' do
-      post '/test/reset/all'
-      last_response.ok?
+    # it 'can resets all data and recreates TestUser' do
+    #   post '/test/reset/all'
+    #   last_response.ok?
+    #
+    # end
 
+    it 'can reset all data and recreates TestUser at given number' do
+      post '/test/reset?users=10'
+      last_response.ok?
     end
   end
 end

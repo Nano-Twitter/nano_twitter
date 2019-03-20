@@ -1,5 +1,3 @@
-# require_relative '../app'
-require 'mongoid'
 require_relative '../model/user'
 require_relative '../model/tweet'
 require_relative '../seed/seed'
@@ -13,10 +11,9 @@ class TestService
     Tweet.destroy_all
   end
 
-  def self.seed_user(params=Null)
-    if params[:users]
-      Seed.create_test_user(params[:users])
-      pp 'iiixx'
+  def self.seed_user(params=nil)
+    if params and params[:users]
+      Seed.create_test_user(params[:users].to_i)
     else
       Seed.create_test_user
     end

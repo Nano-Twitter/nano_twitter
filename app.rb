@@ -189,7 +189,7 @@ class App < Sinatra::Base
 
 
   get '/*' do
-    if request.xhr?
+    if request.xhr? and @result
       process_result
     else
       pass
@@ -197,15 +197,27 @@ class App < Sinatra::Base
   end
 
   post "/*" do
-    process_result
+    if @result
+      process_result
+    else
+      pass
+    end
   end
 
   put "/*" do
-    process_result
+    if @result
+      process_result
+    else
+      pass
+    end
   end
 
   delete "/*" do
-    process_result
+    if @result
+      process_result
+    else
+      pass
+    end
   end
 
 
@@ -233,8 +245,9 @@ class App < Sinatra::Base
 #   Including all the related follows (i.e. both users need to be present)
 #   And all the related tweets
 # Example: `/test/reset/standard?users=100&tweets=100
-  post '/test/reset?users=u' do
+  post '/test/reset' do
     TestService.destroy_all
+    TestService.seed_user(params)
 
   end
 
