@@ -6,31 +6,19 @@ ENV['APP_ENV'] = 'test'
 
 class TestService
 
-  def self.destroy_all
-    User.destroy_all
-    Tweet.destroy_all
+  def self.reset
+    Seed.reset
+    Seed.create_user
   end
 
-  def self.seed_user(params=nil)
-    if params and params[:users]
-      Seed.create_user(params[:users].to_i)
-    else
-      Seed.create_user
-    end
+
+  def self.seed_user_and_related(number)
+    Seed.reset
+    Seed.create_user_and_related number
   end
 
-  def self.seed_user_and_related(params=nil)
-    if params and params[:users]
-      Seed.create_user_and_related(params[:users].to_i)
-    else
-      Seed.create_user_and_related
-    end
-  end
-
-  def self.seed_tweet(params=nil)
-    if params and params[:tweets]
-      # Seed.
-    end
+  def self.seed_tweet(user_id,number)
+    Seed.create_tweet user_id,number
   end
 
 

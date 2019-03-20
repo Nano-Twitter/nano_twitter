@@ -9,50 +9,52 @@ class Seed
   @follows = File.read('./seed/follows.csv')
   @tweets = File.read('./seed/tweets.csv')
 
-  def self.setup
+  def self.reset
     User.destroy_all
     Tweet.destroy_all
-
-    create_test_user
-    create_test_tweet
-    create_test_follow
   end
 
   def self.create_user(sum = 1000)
     user_hash = {}
-    @users.split(/\n/).take(sum).map {|x| x.split(',')}.each do |array|
+    @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
       user_hash[array[0]] = User.create(name: array[1])
       puts array[1].to_s
     end
+    user_hash
   end
 
   def self.create_user_and_related(sum = 1000)
+    reset
     user_hash = {}
-    @users.split(/\n/).take(sum).map {|x| x.split(',')}.each do |array|
+    @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
       user_hash[array[0]] = User.create(name: array[1])
       puts array[1].to_s
     end
 
-    follows = @follows.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
-
-
-  end
-
-  def self.create_tweet(sum = 7000)
-    @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_hash[array[0]]}}.each do |x|
+    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| user_hash[user_id]}
+        .map {|array| {content: array[1], user_id: user_hash[array[0]]}}
+        .each do |x|
       puts (Tweet.create x)
     end
-  end
 
-  def self.create_follow(sum = 5000)
-    follows = @follows.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {follower: array[0], followee: array[1]}}
+    follows = @follows.split(/\n/).lazy.map {|x| x.split(',')}
+                  .take_while {|follower, followee| user_hash[follower] && user_hash[followee]}
+                  .map {|array| {follower: array[0], followee: array[1]}}
+
 
     follows.group_by {|x| user_hash[x[:followee]]}.each do |user, follower_ids|
       if user
         follower_ids.each {|follower_id| user.followers.push user_hash[follower_id]}
       end
-      puts user
+      #puts user
     end
   end
+
+  def self.create_tweet(user_id,sum = 7000)
+    @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_id}}.each do |x|
+      puts (Tweet.create x)
+    end
+  end
+
 end
 

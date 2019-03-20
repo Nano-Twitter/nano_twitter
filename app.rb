@@ -189,43 +189,6 @@ class App < Sinatra::Base
   end
 
 
-  get '/*' do
-    if request.xhr? and @result
-      process_result
-    else
-      pass
-    end
-  end
-
-  post "/*" do
-    if @result
-      process_result
-    else
-      pass
-    end
-  end
-
-  put "/*" do
-    if @result
-      process_result
-    else
-      pass
-    end
-  end
-
-  delete "/*" do
-    if @result
-      process_result
-    else
-      pass
-    end
-  end
-
-
-  get '/*' do
-    send_file File.join(settings.public_folder, 'index.html')
-  end
-
 # test interface
 
 
@@ -233,8 +196,7 @@ class App < Sinatra::Base
 # Recreates TestUser
 # Example: test/reset/all
   post '/test/reset/all' do
-    TestService.destroy_all
-    TestService.seed_user
+    TestService.reset
   end
 
 
@@ -246,15 +208,17 @@ class App < Sinatra::Base
 #   And all the related tweets
 # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
-    TestService.destroy_all
-    TestService.seed_user_and_related(params)
-
+    number = params[users]
+    TestService.seed_user_and_related(number)
   end
 
 
 # {u} can be the user id of some user, or the keyword testuser
 # n is how many randomly generated tweets are submitted on that users behalf
-  post '/test/user/{u}/tweets?count=n' do
+  post '/test/user/:id/tweets' do
+    count = params[:count]
+    user_id = params[:id]
+    TestService.seed_tweet user_id, count
   end
 
 
@@ -264,6 +228,35 @@ class App < Sinatra::Base
 # Example: /test/status
   get '/test/status' do
 
+  end
+
+
+# following are route end point, will only be accessed when calling pass in the previous route
+
+
+  get '/*' do
+    if request.xhr?
+      process_result
+    else
+      pass
+    end
+  end
+
+  post "/*" do
+    process_result
+  end
+
+  put "/*" do
+    process_result
+  end
+
+  delete "/*" do
+    process_result
+  end
+
+
+  get '/*' do
+    send_file File.join(settings.public_folder, 'index.html')
   end
 
 
