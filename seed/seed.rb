@@ -31,14 +31,14 @@ class Seed
       puts array[1].to_s
     end
 
-    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| user_hash[user_id]}
+    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| user_hash.key? user_id}
         .map {|array| {content: array[1], user_id: user_hash[array[0]]}}
         .each do |x|
       puts (Tweet.create x)
     end
 
     follows = @follows.split(/\n/).lazy.map {|x| x.split(',')}
-                  .take_while {|follower, followee| user_hash[follower] && user_hash[followee]}
+                  .take_while {|follower, followee| (user_hash.key? follower) && (user_hash.key? followee)}
                   .map {|array| {follower: array[0], followee: array[1]}}
 
 
@@ -50,7 +50,7 @@ class Seed
     end
   end
 
-  def self.create_tweet(user_id,sum = 7000)
+  def self.create_tweet(user_id, sum = 7000)
     @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_id}}.each do |x|
       puts (Tweet.create x)
     end
