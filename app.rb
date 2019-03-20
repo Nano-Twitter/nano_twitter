@@ -6,7 +6,7 @@ require 'json'
 require_relative 'services/services'
 
 # DB Setup
-Mongoid.load! "config/mongoid.yml",:test
+Mongoid.load! "config/mongoid.yml"
 
 # GET Success: 200
 # POST Success: 201
@@ -259,7 +259,7 @@ class App < Sinatra::Base
     send_file File.join(settings.public_folder, 'index.html')
   end
   #TestService.reset
-  TestService.seed_user_and_related 1000
+  #TestService.seed_user_and_related 1000
   #TestService.seed_tweet 5,500
   run! if app_file == $0
 
