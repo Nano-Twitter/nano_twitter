@@ -52,12 +52,12 @@ class TweetService
     end
   end
 
-  def self.get_tweets_by_user(params, start, count)
+  def self.get_tweets_by_user(params)
     """
     Get a list of tweets
     param params: a hash containing the user_id of the requested tweet
     """
-    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(start).limit(count)
+    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
