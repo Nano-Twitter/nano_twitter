@@ -2,7 +2,7 @@ require 'json'
 require 'mongoid'
 require_relative '../model/user.rb'
 require_relative '../model/tweet.rb'
-
+require 'faker'
 class Seed
 
   @users = File.read('./seed/users.csv')
@@ -15,30 +15,29 @@ class Seed
   end
 
   def self.create_user(sum = 1000)
-    user_hash = {}
+    @user_hash = {}
     @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
-      user_hash[array[0]] = User.create(name: array[1])
+      @user_hash[array[0]] = User.create(name: array[1])
       puts array[1].to_s
     end
-    user_hash
   end
 
   def self.create_user_and_related(sum = 1000)
     reset
-    user_hash = {}
+    @user_hash = {}
     @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
-      user_hash[array[0]] = User.create(name: array[1])
+      @user_hash[array[0]] = User.create(name: array[1])
       puts array[1].to_s
     end
 
-    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| user_hash.key? user_id}
-        .map {|array| {content: array[1], user_id: user_hash[array[0]]}}
+    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| @user_hash.key? user_id}
+        .map {|array| {content: array[1], user_id: @user_hash[array[0]].id}}
         .each do |x|
       puts (Tweet.create x)
     end
 
     follows = @follows.split(/\n/).lazy.map {|x| x.split(',')}
-                  .take_while {|follower, followee| (user_hash.key? follower) && (user_hash.key? followee)}
+                  .take_while {|follower, followee| (@user_hash.key? follower) && (@user_hash.key? followee)}
                   .map {|array| {follower: array[0], followee: array[1]}}
 
 
@@ -51,8 +50,8 @@ class Seed
   end
 
   def self.create_tweet(user_id, sum = 7000)
-    user_id=User.find
-    @tweets.split(/\n/).take(sum).map {|x| x.split(',')}.map {|array| {content: array[1], user_id: user_id}}.each do |x|
+    user_id = @user_hash[user_id.to_s].id
+    (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}.map {|x| {content: x, user_id: user_id}}.each do |x|
       puts (Tweet.create x)
     end
   end
