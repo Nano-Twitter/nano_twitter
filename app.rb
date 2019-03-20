@@ -246,7 +246,7 @@ class App < Sinatra::Base
 # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
     TestService.destroy_all
-    TestService.seed_user(params)
+    TestService.seed_user_and_related(params)
 
   end
 

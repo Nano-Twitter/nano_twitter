@@ -13,9 +13,17 @@ class TestService
 
   def self.seed_user(params=nil)
     if params and params[:users]
-      Seed.create_test_user(params[:users].to_i)
+      Seed.create_user(params[:users].to_i)
     else
-      Seed.create_test_user
+      Seed.create_user
+    end
+  end
+
+  def self.seed_user_and_related(params=nil)
+    if params and params[:users]
+      Seed.create_user_and_related(params[:users].to_i)
+    else
+      Seed.create_user_and_related
     end
   end
 
@@ -24,4 +32,6 @@ class TestService
       # Seed.
     end
   end
+
+
 end
