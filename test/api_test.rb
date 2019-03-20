@@ -1,4 +1,4 @@
-ENV['APP_ENV'] = 'development'
+ENV['APP_ENV'] = 'test'
 
 require_relative '../app.rb'
 require 'minitest/autorun'
@@ -84,4 +84,17 @@ describe "users api" do
     User.destroy_all
   end
 
+
+  describe 'test interface api' do
+    # it 'can resets all data and recreates TestUser' do
+    #   post '/test/reset/all'
+    #   last_response.ok?
+    #
+    # end
+
+    it 'can reset all data and recreates TestUser at given number' do
+      post '/test/reset?users=10'
+      last_response.ok?
+    end
+  end
 end
