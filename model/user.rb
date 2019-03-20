@@ -23,8 +23,8 @@ class User
 
   # tentative association
   include Mongoid::Attributes::Dynamic
-  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
-  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, counter_cache: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, counter_cache: true
   has_many :tweets
 
   before_save :encrypt_password
