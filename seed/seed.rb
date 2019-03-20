@@ -16,41 +16,37 @@ class Seed
 
   def self.create_user(sum = 1000)
     @user_hash = {}
-    @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
-      @user_hash[array[0]] = User.create(name: array[1])
-      puts array[1].to_s
-    end
+    User.collection.insert_many(@users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.map {|array| {name: array[1]}})
+        .inserted_ids
+        .each_with_index {|id, index| @user_hash[(index + 1).to_s] = id}
   end
 
   def self.create_user_and_related(sum = 1000)
     reset
     @user_hash = {}
-    @users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.each do |array|
-      @user_hash[array[0]] = User.create(name: array[1])
-      puts array[1].to_s
+    user_bson_hash = {}
+    User.collection.insert_many(@users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.map {|array| {name: array[1]}})
+        .inserted_ids
+        .each_with_index do |id, index|
+      key = (index + 1).to_s
+      @user_hash[key] = id
+      user_bson_hash[key] = User.find(id)
     end
-
-    @tweets.split(/\n/).lazy.map {|x| x.split(',')}.take_while {|user_id, _content| @user_hash.key? user_id}
-        .map {|array| {content: array[1], user_id: @user_hash[array[0]].id}}
-        .each do |x|
-      puts (Tweet.create x)
-    end
+    Tweet.collection.insert_many(@tweets.split(/\n/).map {|x| x.split(',')}.select {|user_id, _content| @user_hash.key? user_id}
+                                     .map {|array| {content: array[1], user_id: @user_hash[array[0]]}})
 
     follows = @follows.split(/\n/).lazy.map {|x| x.split(',')}
-                  .take_while {|follower, followee| (@user_hash.key? follower) && (@user_hash.key? followee)}
-                  .map {|array| {follower: array[0], followee: array[1]}}
-
-
-    follows.group_by {|x| user_hash[x[:followee]]}.each do |user, follower_ids|
+                  .select {|follower, followee| (@user_hash.key? follower) && (@user_hash.key? followee)}
+    follows.group_by {|follower, followee| user_bson_hash[followee]}.each do |user, relation_ids|
+      puts user
       if user
-        follower_ids.each {|follower_id| user.followers.push user_hash[follower_id]}
+        user.followers = (relation_ids.map {|follower_id, followee_id| user_bson_hash[follower_id]})
       end
-      #puts user
     end
   end
 
   def self.create_tweet(user_id, sum = 7000)
-    user_id = @user_hash[user_id.to_s].id
+    user_id = @user_hash[user_id.to_s]
     (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}.map {|x| {content: x, user_id: user_id}}.each do |x|
       puts (Tweet.create x)
     end
