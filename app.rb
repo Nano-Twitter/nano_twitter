@@ -60,10 +60,11 @@ class App < Sinatra::Base
     pass
   end
 
-# user authencation
-# sign in
-  post '/users/login' do
+  # user authencation
+  # sign in
+  post '/users/signin' do
     @result = UserService.login(params)
+    pp @result
     if @result[:status] == 200
       session[:user] = @result[:payload][:data]
     end
@@ -181,8 +182,13 @@ class App < Sinatra::Base
 
 # Search (Blank for the moment)
 
+<<<<<<< HEAD
+  
+  # for protected routes 
+=======
 
 # for protected routes
+>>>>>>> 6211f4445ab38fadbdd5eb4a826a55449627e2c3
   get '/example_protected_route', :auth => :user do
     "I am protected"
   end
