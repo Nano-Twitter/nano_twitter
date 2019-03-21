@@ -273,13 +273,15 @@ describe 'tweet_service' do
   it 'can get tweets by user' do
 
     params = {
+      start: 0,
+      count: 10,
       user_id: @user_id
     }
-    response = @service.get_tweets_by_user(params, 0, 10)
+    response = @service.get_tweets_by_user(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal 'Tweets found.'
     response[:payload][:data].count.must_equal 3
-
+    
   end
 
   it 'can get tweets of all followees' do

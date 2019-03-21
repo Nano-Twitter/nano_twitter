@@ -77,7 +77,7 @@ class App < Sinatra::Base
 
 # sign out
 # better use post here
-  post '/users/signout' do
+  delete '/users/signout' do
     session[:user] = nil;
   end
 
