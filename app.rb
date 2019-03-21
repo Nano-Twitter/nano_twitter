@@ -260,7 +260,8 @@ class App < Sinatra::Base
     send_file File.join(settings.public_folder, 'index.html')
   end
 #TestService.reset
-  TestService.seed_user_and_related 50
+  TestService.seed_user_and_related 100
+#TestService.destroy
 #TestService.seed_tweet 5,500
   run! if app_file == $0
 
