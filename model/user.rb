@@ -13,7 +13,6 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
-  field :tweet_count, type: Integer
 
   validates_presence_of :name
   validates_uniqueness_of :name

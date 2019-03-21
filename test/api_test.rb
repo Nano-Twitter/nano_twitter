@@ -74,7 +74,7 @@ describe "users api" do
   end
 
   it 'can get user\'s profile' do
-    get "/users/#{@user.id.to_s}"
+    get "/users/#{@user.id}"
     last_response.ok?
     last_response.status.must_equal 200
     JSON.parse(last_response.body)['data']['_id']['$oid'].must_equal @user.id.to_s

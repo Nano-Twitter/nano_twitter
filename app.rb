@@ -226,7 +226,7 @@ class App < Sinatra::Base
 #   And all the related tweets
 # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
-    number = params[users]
+    number = params[:users]
     @result=TestService.seed_user_and_related(number)
   end
 
