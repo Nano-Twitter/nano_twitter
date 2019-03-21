@@ -5,7 +5,7 @@ class Comment
   field :tweet_id, type: String
   field :content, type: String
 
-  belongs_to :tweet, counter_cache: true
+  belongs_to :tweet, counter_cache: :comments_count
   has_and_belongs_to_many :hashtags, counter_cache: true, inverse_of: :tweets
 
 end
