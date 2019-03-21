@@ -14,8 +14,6 @@ class User
   field :bio, type: String
   field :gender, type: Integer
   field :tweet_count, type: Integer
-  # field :follower_count, type: Integer
-  # field :following_count, type: Integer
 
   validates_presence_of :name
   validates_uniqueness_of :name

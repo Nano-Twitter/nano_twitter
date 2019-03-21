@@ -50,7 +50,7 @@ class App < Sinatra::Base
 
 # find a user's info
   get '/users/:id' do
-    unless params[:id] == 'c'
+    if params[:id] == 'c'
       params[:id] = session[:id]
     end
     @result = UserService.get_profile(params)
@@ -86,21 +86,21 @@ class App < Sinatra::Base
 # get all followee ids
 # not so useful?
   get '/followees/ids/:id' do
-    unless params[:id] == 'c'
+    if params[:id] == 'c'
       params[:id] = session[:id]
     end
   end
 
 # get all follower ids
   get '/followers/list/:id' do
-    unless params[:id] == 'c'
+    if params[:id] == 'c'
       params[:id] = session[:id]
     end
   end
 
 # get all followees
   get '/followees/list/:id' do
-    unless params[:id] == 'c'
+    if params[:id] == 'c'
       params[:id] = session[:id]
     end
   end
@@ -214,7 +214,7 @@ class App < Sinatra::Base
 # Recreates TestUser
 # Example: test/reset/all
   post '/test/reset/all' do
-    TestService.reset
+    @result=TestService.reset
   end
 
 
@@ -226,8 +226,8 @@ class App < Sinatra::Base
 #   And all the related tweets
 # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
-    number = params[users]
-    TestService.seed_user_and_related(number)
+    number = params[:users]
+    @result=TestService.seed_user_and_related(number)
   end
 
 
@@ -236,7 +236,7 @@ class App < Sinatra::Base
   post '/test/user/:id/tweets' do
     count = params[:count]
     user_id = params[:id]
-    TestService.seed_tweet user_id, count
+    @result=TestService.seed_tweet user_id, count
   end
 
 
