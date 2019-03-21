@@ -31,8 +31,8 @@ describe "users api" do
   end
 
   it "can authenticate a user" do
-    post '/users/login', {
-        email: "goo@gmail.com",
+    post '/users/signin', {
+        email: "bad@gmail.com",
         password: "qwer123456ty"
     }
     last_response.ok?
@@ -40,7 +40,7 @@ describe "users api" do
     # JSON.parse()
     # JSON.parse(last_response.body)["error"].must_equal "Username and password do not match!"
 
-    post '/users/login', {
+    post '/users/signin', {
         email: "good@gmail.com",
         password: "qwer123456ty"
     }
