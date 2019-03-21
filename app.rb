@@ -112,7 +112,7 @@ class App < Sinatra::Base
     pass
   end
 
-# delete follower
+# unfollow
   delete '/follows/:followee_id' do
     params[:follower_id] = session[:id]
     @result = FollowService.unfollow(params)
