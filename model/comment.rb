@@ -6,6 +6,6 @@ class Comment
   field :content, type: String
 
   belongs_to :tweet, counter_cache: :comments_count
-  has_and_belongs_to_many :hashtags, counter_cache: true, inverse_of: :tweets
+  has_and_belongs_to_many :hashtags, inverse_of: :tweets
 
 end

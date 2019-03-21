@@ -13,7 +13,7 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
-  field :tweet_count, type: Integer
+  field :tweets_count, type: Integer
 
   index({email: 1}, {unique: true})
   #index({name: 1}, {unique: true})
@@ -27,8 +27,8 @@ class User
 
 
   # tentative association
-  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, counter_cache: true
-  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, counter_cache: true
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
   
   has_many :tweets
 
