@@ -91,12 +91,13 @@ class App < Sinatra::Base
   get '/followees/list/:id' do
   end
 
-# get all followers
+# follow
   put '/follows/:followee_id' do
     @result = FollowService.follow(params)
     pass
   end
-
+  
+# unfollow
   delete '/follows/:followee_id' do
     @result = FollowService.unfollow(params)
     pass
