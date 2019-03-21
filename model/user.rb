@@ -13,6 +13,7 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
+  field :tweet_count, type: Integer
 
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -23,8 +24,8 @@ class User
 
 
   # tentative association
-  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
-  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, counter_cache: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, counter_cache: true
   has_many :tweets
 
   before_save :encrypt_password

@@ -37,9 +37,9 @@ class Seed
                   .select {|follower, followee| (@user_hash.key? follower) && (@user_hash.key? followee)}
     follows.group_by {|follower, followee| @user_hash[followee]}.each do |user, relation_ids|
       if user
-        User.find(user).update_attribute(:follower_ids ,relation_ids.map {|follower_id, followee_id|  @user_hash[follower_id]})
+        User.find(user).update_attribute(:follower_ids, relation_ids.map {|follower_id, followee_id| @user_hash[follower_id]})
       end
-        puts User.find(user).following.size
+      puts User.find(user).following_count, User.find(user).follower_count
 
     end
   end
