@@ -50,6 +50,9 @@ class App < Sinatra::Base
 
 # find a user's info
   get '/users/:id' do
+    unless params.key? ":id"
+      params[:id] = session[:id]
+    end
     @result = UserService.get_profile(params)
     pass
   end
@@ -67,12 +70,14 @@ class App < Sinatra::Base
     pp @result
     if @result[:status] == 200
       session[:user] = @result[:payload][:data]
+      session[:id] = @result[:payload][:data]['id']
     end
     pass
   end
 
 # sign out
-  delete '/users/signout' do
+# better use post here
+  post '/users/signout' do
     session[:user] = nil;
   end
 
