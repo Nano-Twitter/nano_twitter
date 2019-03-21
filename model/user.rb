@@ -18,6 +18,9 @@ class User
   index({email: 1}, {unique: true})
   #index({name: 1}, {unique: true})
 
+  index({email: 1}, {unique: true})
+  #index({name: 1}, {unique: true})
+
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_presence_of :email
