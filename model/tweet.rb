@@ -5,6 +5,7 @@ class Tweet
   field :content, type: String
   field :parent_id, type: BSON::ObjectId
 
-  belongs_to :user, counter_cache: :tweet_count
-  
+  has_many :comments
+  belongs_to :user, counter_cache: true
+  has_and_belongs_to_many :hashtags, inverse_of: :tweets, counter_cache: true
 end

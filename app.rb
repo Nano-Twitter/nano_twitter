@@ -50,7 +50,7 @@ class App < Sinatra::Base
 
 # find a user's info
   get '/users/:id' do
-    unless params.key? ":id"
+    unless params[:id] == 'c'
       params[:id] = session[:id]
     end
     @result = UserService.get_profile(params)
@@ -84,26 +84,37 @@ class App < Sinatra::Base
 # Follow
 
 # get all followee ids
+# not so useful?
   get '/followees/ids/:id' do
-
+    unless params[:id] == 'c'
+      params[:id] = session[:id]
+    end
   end
 
 # get all follower ids
   get '/followers/list/:id' do
+    unless params[:id] == 'c'
+      params[:id] = session[:id]
+    end
   end
 
 # get all followees
   get '/followees/list/:id' do
+    unless params[:id] == 'c'
+      params[:id] = session[:id]
+    end
   end
 
 # add follower
   post '/follows/:followee_id' do
+    params[:follower_id] = session[:id]
     @result = FollowService.follow(params)
     pass
   end
 
 # delete follower
   delete '/follows/:followee_id' do
+    params[:follower_id] = session[:id]
     @result = FollowService.unfollow(params)
     pass
   end
@@ -143,6 +154,7 @@ class App < Sinatra::Base
 # Tweet: Comment
 
 # count the number of comments
+# not so useful
   get '/tweets/:tweet_id/comments/count' do
     @result = CommentService.total_comment_by_tweet(params)
     pass

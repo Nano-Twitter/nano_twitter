@@ -3,4 +3,5 @@ class Like
 
   field :user_id, type: String
   field :tweet_id, type: String
+
 end
