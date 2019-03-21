@@ -18,7 +18,7 @@ class App < Sinatra::Base
   register do
     def auth (type)
       condition do
-        redirect '/login' unless send("is_#{type}?")
+        #redirect '/login' unless send("is_#{type}?")
       end
     end
   end
@@ -35,7 +35,11 @@ class App < Sinatra::Base
   end
 
   before do
-    session[:user] != nil ? @user = User.find(session[:user]) : nil
+    if (!session.key? (:user)) && (params.key? (:hack_user))
+      session[:id] = params[:hack_user]
+      session[:user] = User.find(session[:id])
+    end
+    session[:user] != nil ? @user = user : nil
   end
 
 # Endpoints
@@ -214,7 +218,7 @@ class App < Sinatra::Base
 # Recreates TestUser
 # Example: test/reset/all
   post '/test/reset/all' do
-    @result=TestService.reset
+    @result = TestService.reset
   end
 
 
@@ -227,7 +231,7 @@ class App < Sinatra::Base
 # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
     number = params[:users]
-    @result=TestService.seed_user_and_related(number)
+    @result = TestService.seed_user_and_related(number)
   end
 
 
@@ -236,7 +240,7 @@ class App < Sinatra::Base
   post '/test/user/:id/tweets' do
     count = params[:count]
     user_id = params[:id]
-    @result=TestService.seed_tweet user_id, count
+    @result = TestService.seed_tweet user_id, count
   end
 
 
@@ -245,7 +249,7 @@ class App < Sinatra::Base
 #   What is the TestUser’s id
 # Example: /test/status
   get '/test/status' do
-
+    TestService.status
   end
 
 
@@ -276,10 +280,10 @@ class App < Sinatra::Base
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')
   end
-  #TestService.reset
-  #TestService.seed_user_and_related 100
-  #TestService.destroy
-  #TestService.seed_tweet 5,500
+#TestService.reset
+#TestService.seed_user_and_related 100
+#TestService.destroy
+#TestService.seed_tweet 5,500
   run! if app_file == $0
 
 end

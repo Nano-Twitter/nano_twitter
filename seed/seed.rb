@@ -2,6 +2,7 @@ require 'json'
 require 'mongoid'
 require_relative '../model/user.rb'
 require_relative '../model/tweet.rb'
+require_relative '../model/hashtag.rb'
 require 'faker'
 class Seed
 
@@ -49,6 +50,10 @@ class Seed
     (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}.map {|x| {content: x, user_id: user_id}}.each do |x|
       puts (Tweet.create x)
     end
+  end
+
+  def self.stauts
+    {users: User.size, tweets: Twitter.size, follows: User.map {|x| x.followers.size}.sum}
   end
 
 end
