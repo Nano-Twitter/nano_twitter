@@ -91,12 +91,13 @@ class App < Sinatra::Base
   get '/followees/list/:id' do
   end
 
-# get all followers
-  put '/follows/:followee_id' do
+# add follower
+  post '/follows/:followee_id' do
     @result = FollowService.follow(params)
     pass
   end
 
+# delete follower
   delete '/follows/:followee_id' do
     @result = FollowService.unfollow(params)
     pass
@@ -260,7 +261,7 @@ class App < Sinatra::Base
   end
 #TestService.reset
   TestService.seed_user_and_related 100
-  #TestService.destroy
+#TestService.destroy
 #TestService.seed_tweet 5,500
   run! if app_file == $0
 
