@@ -28,5 +28,8 @@ class TestService
     json_result(200, 0, "good", {})
   end
 
+  def self.status
+    json_result(200, 'cool', seed.status)
+  end
 
 end

@@ -249,7 +249,7 @@ class App < Sinatra::Base
 #   What is the TestUser’s id
 # Example: /test/status
   get '/test/status' do
-
+    TestService.status
   end
 
 

@@ -110,5 +110,10 @@ describe "users api" do
       last_response.ok?
     end
 
+    it 'can get status' do
+      get '/test/stats'
+      last_response.ok?
+    end
+
   end
 end
