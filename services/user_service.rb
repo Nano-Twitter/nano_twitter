@@ -13,11 +13,15 @@ class UserService
 
   def self.login(params)
     if User.authenticate(params[:email], params[:password])
-      user = User.find_by_email(params[:email]).unset(:password_hash)
+      user = User.without(:password_hash).find_by_email(params[:email])
       return json_result(200, 0, "Login success!", user)
     else
       return json_result(403, 1, "Username and password do not match!")
     end
+  end
+
+  def self.signout(params = {})
+    json_result(200, 0, "Sign out success!")
   end
 
   def self.get_profile(params)

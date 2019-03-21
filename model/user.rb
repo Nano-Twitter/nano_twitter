@@ -67,7 +67,7 @@ class User
 
   def as_json(options = {})
     attrs = super(options)
-    attrs.delete("password_hash")
+    attrs.except("password_hash")
     attrs
   end
 

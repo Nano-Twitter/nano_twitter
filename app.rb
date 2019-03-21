@@ -39,7 +39,7 @@ class App < Sinatra::Base
       session[:id] = params[:hack_user]
       session[:user] = User.find(session[:id])
     end
-    session[:user] != nil ? @user = user : nil
+    session[:user] != nil ? @user = session[:user] : nil
   end
 
 # Endpoints
@@ -83,6 +83,8 @@ class App < Sinatra::Base
 # better use post here
   delete '/users/signout' do
     session[:user] = nil;
+    @result = UserService.signout
+    pass
   end
 
 # Follow
