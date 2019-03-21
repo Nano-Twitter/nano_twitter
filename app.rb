@@ -35,7 +35,7 @@ class App < Sinatra::Base
   end
 
   before do
-    unless (session.key? (:user)) && (params.key? (:hack_user))
+    if (!session.key? (:user)) && (params.key? (:hack_user))
       session[:id] = params[:hack_user]
       session[:user] = User.find(session[:id])
     end

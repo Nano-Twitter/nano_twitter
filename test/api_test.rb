@@ -10,6 +10,12 @@ def app
   App
 end
 
+
+
+def set_request_headers
+  header 'HTTP_X_REQUESTED_WITH', 'XMLHttpRequest'
+end
+
 describe "users api" do
 
   before do
@@ -96,5 +102,13 @@ describe "users api" do
       post '/test/reset?users=10'
       last_response.ok?
     end
+
+    it 'can reset all data and recreates users and seet tweet to the first one' do
+      post '/test/reset/all'
+      last_response.ok?
+      post '/test/user/1/tweets?count=100'
+      last_response.ok?
+    end
+
   end
 end

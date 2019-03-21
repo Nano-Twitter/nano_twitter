@@ -2,6 +2,7 @@ require 'json'
 require 'mongoid'
 require_relative '../model/user.rb'
 require_relative '../model/tweet.rb'
+require_relative '../model/hashtag.rb'
 require 'faker'
 class Seed
 
