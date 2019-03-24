@@ -11,7 +11,6 @@ def app
 end
 
 
-
 def set_request_headers
   header 'HTTP_X_REQUESTED_WITH', 'XMLHttpRequest'
 end
@@ -80,7 +79,7 @@ describe "users api" do
   end
 
   it 'can get user\'s profile' do
-    get "/users/#{@user.id}"
+    get "/users/#{@user.id}", nil, {'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'}
     last_response.ok?
     last_response.status.must_equal 200
     JSON.parse(last_response.body)['data']['_id']['$oid'].must_equal @user.id.to_s

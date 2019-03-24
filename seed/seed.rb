@@ -40,7 +40,6 @@ class Seed
       if user
         User.find(user).update_attribute(:follower_ids, relation_ids.map {|follower_id, followee_id| @user_hash[follower_id]})
       end
-      puts User.find(user).following_count, User.find(user).follower_count
 
     end
   end
@@ -48,7 +47,7 @@ class Seed
   def self.create_tweet(user_id, sum = 7000)
     user_id = @user_hash[user_id.to_s]
     (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}.map {|x| {content: x, user_id: user_id}}.each do |x|
-      puts (Tweet.create x)
+      Tweet.create x
     end
   end
 
