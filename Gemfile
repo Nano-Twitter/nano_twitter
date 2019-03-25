@@ -10,3 +10,5 @@ gem 'mongoid'
 gem 'thin'
 gem 'mongoid_includes'
 gem 'faker'
+gem 'redis'
+

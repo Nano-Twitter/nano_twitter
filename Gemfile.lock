@@ -33,6 +33,7 @@ GEM
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rake (12.3.2)
+    redis (4.1.0)
     sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -58,6 +59,7 @@ DEPENDENCIES
   mongoid_includes
   rack-test
   rake
+  redis
   sinatra
   thin
 
