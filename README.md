@@ -1,7 +1,12 @@
 # Nano Twitter V 0.3
 
 ## Deployment in AWS:
+currently removed due to change of architecture
 [Nanotwitter](http://nanotwitter2019.us-east-2.elasticbeanstalk.com/)
+
+##repo
+* server: https://github.com/Nano-Twitter/nano_twitter
+* client: https://github.com/Nano-Twitter/nano_twitter_client
 
 ## Tech Stacks
 * Front-end: [React](https://reactjs.org/)
@@ -37,7 +42,7 @@
 * Finished NanoTwitter API Version 1 design
 * Set up Code Pipeline auto testing and deployment on AWS
 
-### Version 0.4 TO DO
+### Version 0.4 
 * Connect our AWS project to mongoDB.
 * Finish writing core backend services and apis: 
   - User
@@ -51,6 +56,14 @@
   - POST /test/user/{u}/tweets?count=n
   - GET /test/status
 * Try Loader.io to add artificial load
+
+### version 0.5
+* adding homepage
+* adding redis, but not yet used
+* change server from Thin to Falcon
+* building index in mongoid
+* optimizing mongoid schema
+* optimizing test interface efficiency
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 
