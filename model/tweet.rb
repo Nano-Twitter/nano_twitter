@@ -10,8 +10,6 @@ class Tweet
 
   index({created_at: 1}, {unique: true})
 
-  index({created_at: 1}, {unique: true})
-
   has_many :comments
   belongs_to :user
   # has_and_belongs_to_many :hashtags, inverse_of: :tweets
