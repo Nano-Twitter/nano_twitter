@@ -15,14 +15,14 @@ class Seed
     User.destroy_all
   end
 
-  def self.create_user(sum = 1000)
+  def self.create_user(sum = 100)
     @user_hash = {}
     User.collection.insert_many(@users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.map {|array| {name: array[1]}})
         .inserted_ids
         .each_with_index {|id, index| @user_hash[(index + 1).to_s] = id}
   end
 
-  def self.create_user_and_related(sum = 1000)
+  def self.create_user_and_related(sum = 100)
     reset
     @user_hash = {}
     User.collection.insert_many(@users.split(/\n/).lazy.take(sum).map {|x| x.split(',')}.map {|array| {name: array[1]}})
@@ -44,7 +44,7 @@ class Seed
     end
   end
 
-  def self.create_tweet(user_id, sum = 7000)
+  def self.create_tweet(user_id, sum = 70)
     user_id = @user_hash[user_id.to_s]
     (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}.map {|x| {content: x, user_id: user_id}}.each do |x|
       Tweet.create x
