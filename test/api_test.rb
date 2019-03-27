@@ -110,7 +110,7 @@ describe "users api" do
     end
 
     it 'can get status' do
-      get '/test/stats'
+      get '/test/status'
       last_response.ok?
     end
 
