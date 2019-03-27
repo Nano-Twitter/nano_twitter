@@ -29,7 +29,7 @@ class TestService
   end
 
   def self.status
-    json_result(200, 'cool', seed.status)
+    json_result(200, 'cool', Seed.status)
   end
 
 end
