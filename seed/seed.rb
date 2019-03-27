@@ -51,7 +51,7 @@ class Seed
     end
   end
 
-  def self.stauts
+  def self.status
     {users: User.size, tweets: Twitter.size, follows: User.map {|x| x.followers.size}.sum}
   end
 
