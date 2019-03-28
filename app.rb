@@ -221,6 +221,7 @@ class App < Sinatra::Base
 # Example: test/reset/all
   post '/test/reset/all' do
     @result = TestService.reset
+    pass
   end
 
 
@@ -234,6 +235,7 @@ class App < Sinatra::Base
   post '/test/reset' do
     number = params[:users]
     @result = TestService.seed_user_and_related(number)
+    pass
   end
 
 
@@ -243,6 +245,7 @@ class App < Sinatra::Base
     count = params[:count]
     user_id = params[:id]
     @result = TestService.seed_tweet user_id, count
+    pass
   end
 
 
@@ -251,7 +254,8 @@ class App < Sinatra::Base
 #   What is the TestUser’s id
 # Example: /test/status
   get '/test/status' do
-    TestService.status
+    @result=TestService.status
+    pass
   end
 
 
