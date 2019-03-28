@@ -20,6 +20,9 @@ currently removed due to change of architecture
 * [Limian Guo](mailto:limianguo@brandeis.edu)
 * [Chenfeng Fan](mailto:fanc@brandeis.edu)
 
+## Test
+Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.
+
 ## Version Changelogs
 
 ### Version 0.1
