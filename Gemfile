@@ -1,4 +1,3 @@
-
 source "https://rubygems.org"
 
 gem 'sinatra'
@@ -11,4 +10,5 @@ gem 'mongoid'
 gem 'mongoid_includes'
 gem 'faker'
 gem 'redis'
+gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 
