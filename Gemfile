@@ -8,7 +8,6 @@ gem 'rack-test'
 gem 'rake'
 gem 'bcrypt'
 gem 'mongoid'
-gem 'mongoid_includes'
 gem 'faker'
 gem 'redis'
 
