@@ -18,6 +18,9 @@ class TweetService
       params[:parent_id] = BSON::ObjectId(params[:parent_id]) if params[:parent_id]
       params[:user_id] = BSON::ObjectId(params[:user_id])
       tweet = Tweet.new(params)
+
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id], name: User.find(BSON::ObjectId(tweet[:user_id]))[:name]})
+
       if tweet.save
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
@@ -46,6 +49,8 @@ class TweetService
     param params: a hash containing the id of a tweet
     " ""
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
+    tweet.write_attribute(:user_attr, {id: tweet[:user_id], name: User.find(BSON::ObjectId(tweet[:user_id]))[:name]})
+
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -59,6 +64,7 @@ class TweetService
     param params: a hash containing the user_id of the requested tweet
     " ""
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
+
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
