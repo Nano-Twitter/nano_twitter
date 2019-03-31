@@ -27,9 +27,9 @@ class User
 
 
   # tentative association
-  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true
-  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
-  
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, index: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, index: true
+
   has_many :tweets
 
   before_save :encrypt_password
