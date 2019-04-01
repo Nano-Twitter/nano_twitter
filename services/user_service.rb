@@ -5,10 +5,11 @@ class UserService
 
   def self.signup(params)
     user = User.new(params)
-    if user.save
+    begin
+      user.save
       json_result(201, 0, "Signup success!")
-    else
-      json_result(403, 1, "Signup failed")
+    rescue => e
+      json_result(403, 1, "Exception #{e}")
     end
   end
 
