@@ -89,7 +89,7 @@ YH
 * AmazonMQ server registered, gem installed YH
 * adding rake db:create_indexes to the rake task LG
 * adding full text index to tweet schema LG
-* testing mongodb replica set function LgiG
+* testing mongodb replica set function LG
 * timeline function optimization YH
 * nano_twitter client YH
 
