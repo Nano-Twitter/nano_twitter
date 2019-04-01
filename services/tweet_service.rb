@@ -4,11 +4,9 @@ require_relative '../model/tweet_hashtag'
 class TweetService
 
   def self.create_tweet(params)
-    "" "
-    Create a new tweet
-    param params: a hashmap containing info of a new tweet
-    return: an json response
-    " ""
+    # Create a new tweet
+    # param params: a hashmap containing info of a new tweet
+    # return: an json response
     if params[:content] == '' && params[:parent_id] != '' # if it is a repost
       params[:content] = 'Repost' # add 'Repost' to the tweet content
     end
@@ -30,11 +28,9 @@ class TweetService
   end
 
   def self.delete_tweet(params)
-    "" "
-    Delete a tweet
-    param params: a hashmap containing info of a tweet to delete
-    return: an json response
-    " ""
+    # Delete a tweet
+    # param params: a hashmap containing info of a tweet to delete
+    # return: an json response
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     if tweet.delete
       json_result(200, 0, "Tweet deleted successfully.")
@@ -44,10 +40,8 @@ class TweetService
   end
 
   def self.get_tweet(params)
-    "" "
-    Get a tweet
-    param params: a hash containing the id of a tweet
-    " ""
+    # Get a tweet
+    # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     tweet.write_attribute(:user_attr, {id: tweet[:user_id], name: User.find(BSON::ObjectId(tweet[:user_id]))[:name]})
 
@@ -59,10 +53,8 @@ class TweetService
   end
 
   def self.get_tweets_by_user(params)
-    "" "
-    Get a list of tweets
-    param params: a hash containing the user_id of the requested tweet
-    " ""
+    # Get a list of tweets
+    # param params: a hash containing the user_id of the requested tweet
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
     tweet_arr = Array.new
     tweets.each do |tweet|
@@ -78,10 +70,8 @@ class TweetService
   end
 
   def self.get_total_by_user(params)
-    "" "
-    Get a the number of tweets of a user
-    param params: a hash containing the user_id of the requested tweet
-    " ""
+    # Get a the number of tweets of a user
+    # param params: a hash containing the user_id of the requested tweet
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).count
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
@@ -91,10 +81,8 @@ class TweetService
   end
 
   def self.get_followee_tweets(params)
-    "" "
-    Get a list of tweets of followees
-    param params: a hash containing the user_id of the requested tweet
-    " ""
+    # Get a list of tweets of followees
+    # param params: a hash containing the user_id of the requested tweet
     tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
     tweets = tweets.flatten(1)
     # following_ids = User.find(params[:user_id]).following_ids

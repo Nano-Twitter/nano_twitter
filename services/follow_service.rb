@@ -2,9 +2,7 @@ require_relative '../model/tweet'
 
 class FollowService
   def self.follow(params)
-    """
-      One who follows, comes after another.
-    """
+    #   One who follows, comes after another.
     follower = User.find(BSON::ObjectId(params[:follower_id]))
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
@@ -17,9 +15,7 @@ class FollowService
   end
 
   def self.unfollow(params)
-    """
-      One who is followed (has his/her posts monitored by another user).
-    """
+    #   One who is followed (has his/her posts monitored by another user).
     follower = User.find(BSON::ObjectId(params[:follower_id]))
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
