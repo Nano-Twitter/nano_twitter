@@ -44,7 +44,7 @@ class App < Sinatra::Base
 
 # Endpoints
 
-  get '/' do 
+  get '/' do
     "shit"
   end
 # Users
@@ -263,7 +263,7 @@ class App < Sinatra::Base
 #   What is the TestUser’s id
 # Example: /test/status
   get '/test/status' do
-    @result=TestService.status
+    @result = TestService.status
     pass
   end
 
