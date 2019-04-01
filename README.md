@@ -4,9 +4,7 @@
 
 [Nanotwitter](http://18.219.120.204:3000/)
 
-
-
-##Repo
+## Repo
 * server: https://github.com/Nano-Twitter/nano_twitter
 * client: https://github.com/Nano-Twitter/nano_twitter_client
 
