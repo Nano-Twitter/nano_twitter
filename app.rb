@@ -44,7 +44,7 @@ class App < Sinatra::Base
 
 # Endpoints
 
-  get '/' do 
+  get '/' do
     "shit"
   end
 # Users
@@ -141,8 +141,7 @@ class App < Sinatra::Base
     pp params
     # @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
     @result = TweetService.get_tweets_by_user(params)
-    pp @result
-    pass
+    process_result
   end
 
 # create a tweet
@@ -266,7 +265,7 @@ class App < Sinatra::Base
 #   What is the TestUser’s id
 # Example: /test/status
   get '/test/status' do
-    @result=TestService.status
+    @result = TestService.status
     pass
   end
 

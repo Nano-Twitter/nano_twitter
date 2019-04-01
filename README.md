@@ -20,6 +20,9 @@
 * [Limian Guo](mailto:limianguo@brandeis.edu)
 * [Chenfeng Fan](mailto:fanc@brandeis.edu)
 
+## Server Start
+```bundle exec rackup -p8000 --host 127.0.0.1```
+
 ## Test
 Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.
 
@@ -95,5 +98,6 @@ YH
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 
-* [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
 * [Mongoid Manual](https://docs.mongodb.com/mongoid/current/)
+* [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
+* [Material-UI](https://material-ui.com/getting-started/installation/)
