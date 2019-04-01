@@ -55,6 +55,18 @@ class App < Sinatra::Base
     process_result
   end
 
+
+  # user authencation
+  # sign in
+  post '/users/signin' do
+    @result = UserService.login(params)
+    if @result[:status] == 200
+      session[:user] = @result[:payload][:data]
+      session[:id] = @result[:payload][:data]['_id']
+    end
+    process_result
+  end
+
   # find a user's info
   get '/users/:id' do
     if params[:id] == ''
@@ -69,17 +81,6 @@ class App < Sinatra::Base
   put '/users/:id' do
     @result = UserService.update_profile(params)
     pass
-  end
-
-  # user authencation
-  # sign in
-  post '/users/signin' do
-    @result = UserService.login(params)
-    if @result[:status] == 200
-      session[:user] = @result[:payload][:data]
-      session[:id] = @result[:payload][:data]['_id']
-    end
-    process_result
   end
 
   # sign out
