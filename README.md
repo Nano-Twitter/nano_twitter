@@ -29,7 +29,7 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 * Created github repo  LG
 * Finished schema design YH
 * Completed writing all data models  CF
-* design basic 
+* design basic function implementation CF
 * setting up readme.md CF
 
 ### Version 0.2
