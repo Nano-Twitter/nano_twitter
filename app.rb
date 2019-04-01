@@ -153,7 +153,7 @@ class App < Sinatra::Base
 
 # get personal homepage timeline
   get '/tweets/recent' do
-    @result = TweetService.get_followee_tweets(params)
+    @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
     pass
   end
 

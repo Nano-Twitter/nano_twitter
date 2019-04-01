@@ -64,9 +64,14 @@ class TweetService
     param params: a hash containing the user_id of the requested tweet
     " ""
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
+    tweet_arr = Array.new
+    tweets.each do |tweet|
+      tweet_arr.push(tweet)
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id], name: User.find(BSON::ObjectId(tweet[:user_id]))[:name]})
+    end
 
     if tweets
-      json_result(200, 0, "Tweets found.", tweets)
+      json_result(200, 0, "Tweets found.", tweet_arr)
     else
       json_result(403, 1, "Tweets not found.")
     end
@@ -96,6 +101,7 @@ class TweetService
     # tweets = Tweet.where(user_id: following_ids[0])
     # pp following_ids
     # pp tweets
+    tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id], name: User.find(BSON::ObjectId(tweet[:user_id]))[:name]})}
     if tweets
       json_result(200, 0, "All tweets found.", tweets)
     else
