@@ -216,10 +216,10 @@ class App < Sinatra::Base
 # Search (Blank for the moment)
 
 
-# for protected routes
-  get '/example_protected_route', :auth => :user do
-    "I am protected"
-  end
+# # for protected routes
+#   get '/example_protected_route', :auth => :user do
+#     "I am protected"
+#   end
 
 
 # test interface
