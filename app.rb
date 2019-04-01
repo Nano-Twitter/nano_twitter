@@ -57,7 +57,7 @@ class App < Sinatra::Base
 
 # find a user's info
   get '/users/:id' do
-    if params[:id] == 'c'
+    if params[:id] == ''
       params[:id] = session[:id]
     end
     @result = UserService.get_profile(params)
