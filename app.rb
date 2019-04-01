@@ -45,7 +45,7 @@ class App < Sinatra::Base
 # Endpoints
 
   get '/' do
-    "shit"
+    ":)"
   end
 # Users
 
@@ -88,6 +88,11 @@ class App < Sinatra::Base
     @result = UserService.signout
     pass
   end
+
+  get '/users/recommend/:id' do
+    @result = UserService.recommend(params)
+  end
+
 
 # Follow
 
@@ -290,7 +295,6 @@ class App < Sinatra::Base
   delete "/*" do
     process_result
   end
-
 
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')

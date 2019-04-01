@@ -119,6 +119,11 @@ describe 'user_service' do
     response[:status].must_equal 403
   end
 
+  it 'can recommend user' do
+    response = @service.recommend(num: 3)
+    response[:status].must_equal 200
+  end
+
   after do
     User.destroy_all
   end
