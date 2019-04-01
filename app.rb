@@ -93,7 +93,7 @@ class App < Sinatra::Base
   get '/users_recommend' do
     @result = UserService.recommend(params)
     pp @result
-    pass
+    process_result
   end
 
   # Follow
