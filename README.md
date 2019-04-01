@@ -4,6 +4,8 @@
 
 [Nanotwitter](http://18.219.120.204:3000/)
 
+
+
 ##Repo
 * server: https://github.com/Nano-Twitter/nano_twitter
 * client: https://github.com/Nano-Twitter/nano_twitter_client
@@ -31,9 +33,11 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 * Completed writing all data models  CF
 * design basic function implementation YH
 * setting up readme.md CF
+* adding front-end authorization logic YH
+* setting up Typescript in front-end
 
 ### Version 0.2
-* Created skeleton Sinatra and React apps  LG
+* Created skeleton Sinatra and React apps  YH
 * Finished writing routes concerning authentication YH
 * Tests passed on the User model and the routes written. CF
 * Completed the login, register and home pages YH
@@ -47,6 +51,7 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 * Finished NanoTwitter API Version 1 design CF
 * Set up Code Pipeline auto testing and deployment on AWS(currently removed due to financial reason 2019.3.28)
 YH
+* remove typescript due to its difficulty,rewrite all the typescript file to javascript YH
 
 ### Version 0.4 
 * Connect our AWS project to mongoDB. YH
