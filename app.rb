@@ -45,7 +45,7 @@ class App < Sinatra::Base
 # Endpoints
 
   get '/' do
-    "shit"
+    ":)"
   end
 # Users
 
@@ -88,6 +88,11 @@ class App < Sinatra::Base
     @result = UserService.signout
     pass
   end
+
+  get '/users/recommend/:id' do
+    @result = UserService.recommend(params)
+  end
+
 
 # Follow
 

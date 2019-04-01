@@ -1,4 +1,5 @@
 require_relative '../model/user'
+require 'faker'
 
 class UserService
 
@@ -59,4 +60,15 @@ class UserService
   end
 
 
+  def self.recommend(params)
+    begin
+      user = params[:num].times.map {|i| User.create(name: Faker::Name.first_name, email: Faker::Internet.email, password_hash: Faker::Internet.password(12))}
+      json_result(200, 0, 'Amway success', user)
+    rescue
+      json_result(403, 1, 'Amway failed')
+    end
+  end
+
 end
+
+UserService.recommend('')
