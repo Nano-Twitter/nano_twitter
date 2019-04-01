@@ -52,7 +52,7 @@ class App < Sinatra::Base
   # sign up： create a new user
   post '/users/signup' do
     @result = UserService.signup(params)
-    pass
+    process_result
   end
 
   # find a user's info
@@ -79,7 +79,7 @@ class App < Sinatra::Base
       session[:user] = @result[:payload][:data]
       session[:id] = @result[:payload][:data]['_id']
     end
-    pass
+    process_result
   end
 
   # sign out
@@ -87,7 +87,7 @@ class App < Sinatra::Base
   delete '/users/signout' do
     session[:user] = nil
     @result = UserService.signout
-    pass
+    process_result
   end
 
   get '/users_recommend' do
@@ -280,9 +280,7 @@ class App < Sinatra::Base
     pass
   end
 
-
   # following are route end point, will only be accessed when calling pass in the previous route
-
 
   get '/*' do
     if request.xhr?
