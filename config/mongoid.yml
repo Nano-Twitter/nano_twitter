@@ -19,11 +19,14 @@ test:
     raise_not_found_error: false
 
 production:
-  
-  uri: <%= ENV['MONGODB_URI'] || ENV['MONGOHQ_URL'] || ENV['MONGO_URL'] || ENV['MONGOLAB_URI'] %>
+
   max_retries_on_connection_failure: 20
   persist_in_safe_mode: true
   skip_version_check: true
+  default:
+    database: twitter_production
+    hosts:
+      -  <%= ENV['MONGODB_URI'] || ENV['MONGOHQ_URL'] || ENV['MONGO_URL'] || ENV['MONGOLAB_URI'] %>
   
   options:
     raise_not_found_error: false

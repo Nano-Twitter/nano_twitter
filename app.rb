@@ -6,7 +6,7 @@ require 'json'
 require_relative 'services/services'
 
 # DB Setup
-Mongoid.load! "config/mongoid.yml", ENV['RACK_ENV']
+Mongoid.load! "config/mongoid.yml"
 
 # GET Success: 200
 # POST Success: 201
