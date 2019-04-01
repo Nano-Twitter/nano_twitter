@@ -29,7 +29,7 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 * Created github repo  LG
 * Finished schema design YH
 * Completed writing all data models  CF
-* design basic function implementation CF
+* design basic function implementation YH
 * setting up readme.md CF
 
 ### Version 0.2
@@ -49,7 +49,7 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 YH
 
 ### Version 0.4 
-* Connect our AWS project to mongoDB. LG
+* Connect our AWS project to mongoDB. YH
 * Finish writing core backend services and apis:  CF
   - User
   - Follow
@@ -70,7 +70,7 @@ YH
 
 ### version 0.5
 * adding tweeting function in front-end CF
-* adding homepage CF
+* adding homepage YH
 * adding redis, but not yet used LG
 * change server from Thin to Falcon LG
 * building index in mongoid LG
@@ -83,7 +83,9 @@ YH
 * AmazonMQ server registered, gem installed YH
 * adding rake db:create_indexes to the rake task LG
 * adding full text index to tweet schema LG
-
+* testing mongodb replica set function LG
+* timeline function optimization YH
+* nano_twitter client YH
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 
