@@ -74,7 +74,6 @@ class App < Sinatra::Base
 # sign in
   post '/users/signin' do
     @result = UserService.login(params)
-    pp @result
     if @result[:status] == 200
       session[:user] = @result[:payload][:data]
       session[:id] = @result[:payload][:data]['id']
