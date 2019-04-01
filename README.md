@@ -32,7 +32,7 @@ Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `mo
 * design basic function implementation YH
 * setting up readme.md CF
 * adding front-end authorization logic YH
-* setting up Typescript in front-end
+* setting up Typescript in front-end LG
 
 ### Version 0.2
 * Created skeleton Sinatra and React apps  YH
