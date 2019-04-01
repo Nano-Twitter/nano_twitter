@@ -82,9 +82,6 @@ class App < Sinatra::Base
     pass
   end
 
-  get '/users_recommend' do
-    @result = UserService.recommend(params)
-  end
   # sign out
   # better use post here
   delete '/users/signout' do
@@ -93,6 +90,11 @@ class App < Sinatra::Base
     pass
   end
 
+  get '/users_recommend' do
+    @result = UserService.recommend(params)
+    pp @result
+    pass
+  end
 
   # Follow
 
