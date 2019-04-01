@@ -34,13 +34,13 @@ class App < Sinatra::Base
     end
   end
 
-  before do
-    if (!session.key? (:user)) && (params.key? (:hack_user))
-      session[:id] = params[:hack_user]
-      session[:user] = User.find(session[:id])
-    end
-    session[:user] != nil ? @user = session[:user] : nil
-  end
+  # before do
+  #   if (!session.key? (:user)) && (params.key? (:hack_user))
+  #     session[:id] = params[:hack_user]
+  #     session[:user] = User.find(session[:id])
+  #   end
+  #   session[:user] != nil ? @user = session[:user] : nil
+  # end
 
   # Endpoints
 
@@ -77,7 +77,7 @@ class App < Sinatra::Base
     @result = UserService.login(params)
     if @result[:status] == 200
       session[:user] = @result[:payload][:data]
-      session[:id] = @result[:payload][:data]['id']
+      session[:id] = @result[:payload][:data]['_id']
     end
     pass
   end
@@ -85,14 +85,14 @@ class App < Sinatra::Base
   # sign out
   # better use post here
   delete '/users/signout' do
-    session[:user] = nil;
+    session[:user] = nil
     @result = UserService.signout
     pass
   end
 
   get '/users_recommend' do
     @result = UserService.recommend(params)
-    pp @result
+    # pp @result
     process_result
   end
 
@@ -122,7 +122,13 @@ class App < Sinatra::Base
 
   # add follower
   post '/follows/:followee_id' do
-    params[:follower_id] = session[:id]
+    pp '!!!!!!!!!!!!!!im here'
+    pp params[:user_id]
+    # puts session[:id]
+    # pp session
+    # params[:follower_id] = session[:id]
+    params[:follower_id] = params[:user_id]
+    pp params
     @result = FollowService.follow(params)
     pass
   end

@@ -5,10 +5,14 @@ class FollowService
     #   One who follows, comes after another.
     follower = User.find(BSON::ObjectId(params[:follower_id]))
     followee = User.find(BSON::ObjectId(params[:followee_id]))
+    pp 'jedsajiodjsioahfoida'
+    pp follower
+    pp followee
     begin
       follower.follow!(followee)
       json_result(200, 0, 'Follow successfully')
     rescue => e
+      pp e
       json_result(403, 1, 'Fail to follow')
     end
     
