@@ -1,4 +1,3 @@
-
 require './app'
 require 'mongoid'
 require 'rake/testtask'
@@ -11,7 +10,23 @@ Rake::TestTask.new do |t|
 
 end
 
-# calling rake seed to seed the data
-task :seed do
-  ruby 'seed/seed.rb'
+
+namespace :db do
+  task :create_indexes, :environment do |t, args|
+    unless args[:environment]
+      puts "Must provide an environment"
+      exit
+    end
+
+    Mongoid.load!('config/mongoid.yml', args[:environment])
+
+
+    User.create_indexes
+    Comment.create_indexes
+    Hashtag.create_indexes
+    Like.create_indexes
+    Tweet.create_indexes
+    TweetHashtag.create_indexes
+
+  end
 end

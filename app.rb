@@ -44,6 +44,9 @@ class App < Sinatra::Base
 
 # Endpoints
 
+  get '/' do 
+    "shit"
+  end
 # Users
 
 # sign up： create a new user
@@ -127,6 +130,20 @@ class App < Sinatra::Base
 
 # Tweets
 
+# get a user's timeline
+  get '/tweets/users/:user_id' do
+    @result = TweetService.get_tweets_by_user(params)
+    pass
+  end
+
+# get personal homepage timeline
+  get '/tweets/recent' do
+    pp params
+    @result = TweetService.get_followee_tweets(params)
+    pp @result
+    pass
+  end
+
 # create a tweet
   post '/tweets' do
     @result = TweetService.create_tweet(params)
@@ -134,7 +151,7 @@ class App < Sinatra::Base
   end
 
 # retrieve a tweet
-  get '/tweets/:id' do
+  get '/tweet/:id' do
     @result = TweetService.get_tweet(params)
     pass
   end
@@ -145,17 +162,6 @@ class App < Sinatra::Base
     pass
   end
 
-# get a user's timeline
-  get '/tweets/users/:user_id' do
-    @result = TweetService.get_tweets_by_user(params)
-    pass
-  end
-
-# get personal homepage timeline
-  get '/tweets/recent' do
-    @result = TweetService.get_followee_tweets(params)
-    pass
-  end
 
 # Tweet: Comment
 

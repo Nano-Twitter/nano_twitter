@@ -9,6 +9,7 @@ class Tweet
   field :comments_count, type: Integer
 
   index({created_at: 1}, {unique: true})
+  index({content: 'text'})
 
   has_many :comments
   belongs_to :user
