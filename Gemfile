@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem 'sinatra'
-gem 'falcon'
+gem 'passenger'
 gem 'byebug'
 gem 'rack-test'
 gem 'rake'

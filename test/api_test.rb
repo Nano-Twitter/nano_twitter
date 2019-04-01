@@ -96,15 +96,15 @@ describe "users api" do
     #
     # end
 
-    it 'can reset all data and recreates TestUser at given number' do
-      post '/test/reset?users=10'
-      last_response.ok?
-    end
-
     it 'can reset all data and recreates users and seet tweet to the first one' do
       post '/test/reset/all'
       last_response.ok?
       post '/test/user/1/tweets?count=100'
+      last_response.ok?
+    end
+
+    it 'can reset all data and recreates TestUser at given number' do
+      post '/test/reset?users=10'
       last_response.ok?
     end
 
