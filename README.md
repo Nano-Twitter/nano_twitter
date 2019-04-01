@@ -1,8 +1,8 @@
 # Nano Twitter V 0.6
 
 ## Deployment in AWS:
-currently removed due to change of architecture
-[Nanotwitter](http://nanotwitter2019.us-east-2.elasticbeanstalk.com/)
+
+[Nanotwitter](http://18.219.120.204:3000/)
 
 ##repo
 * server: https://github.com/Nano-Twitter/nano_twitter
