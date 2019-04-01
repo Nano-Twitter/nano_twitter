@@ -42,12 +42,12 @@ class App < Sinatra::Base
   #   session[:user] != nil ? @user = session[:user] : nil
   # end
 
-  # Endpoints
+  # # Endpoints
 
-  get '/' do
-    ":)"
-  end
-  # Users
+  # get '/' do
+  #   ":)"
+  # end
+  # # Users
 
   # sign up： create a new user
   post '/users/signup' do
