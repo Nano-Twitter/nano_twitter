@@ -139,7 +139,8 @@ class App < Sinatra::Base
 # get personal homepage timeline
   get '/tweets/recent' do
     pp params
-    @result = TweetService.get_followee_tweets(params)
+    # @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
+    @result = TweetService.get_tweets_by_user(params)
     pp @result
     pass
   end
@@ -151,7 +152,7 @@ class App < Sinatra::Base
   end
 
 # retrieve a tweet
-  get '/tweet/:id' do
+  get '/tweeto/:id' do
     @result = TweetService.get_tweet(params)
     pass
   end
@@ -165,12 +166,6 @@ class App < Sinatra::Base
 # get a user's timeline
   get '/tweets/users/:user_id' do
     @result = TweetService.get_tweets_by_user(params)
-    pass
-  end
-
-# get personal homepage timeline
-  get '/tweets/recent' do
-    @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
     pass
   end
 
