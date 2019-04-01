@@ -4,7 +4,7 @@
 
 [Nanotwitter](http://18.219.120.204:3000/)
 
-##repo
+###repo
 * server: https://github.com/Nano-Twitter/nano_twitter
 * client: https://github.com/Nano-Twitter/nano_twitter_client
 
@@ -83,7 +83,7 @@ YH
 * AmazonMQ server registered, gem installed YH
 * adding rake db:create_indexes to the rake task LG
 * adding full text index to tweet schema LG
-* testing mongodb replica set function LG
+* testing mongodb replica set function LgiG
 * timeline function optimization YH
 * nano_twitter client YH
 
