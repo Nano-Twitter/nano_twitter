@@ -15,13 +15,13 @@ Mongoid.load! "config/mongoid.yml"
 class App < Sinatra::Base
   enable :sessions
 
-  register do
-    def auth (type)
-      condition do
-        redirect '/login' unless send("is_#{type}?")
-      end
-    end
-  end
+  # register do
+  #   def auth (type)
+  #     condition do
+  #       redirect '/login' unless send("is_#{type}?")
+  #     end
+  #   end
+  # end
 
   helpers do
     def is_user?
@@ -137,11 +137,9 @@ class App < Sinatra::Base
 
 # get personal homepage timeline
   get '/tweets/recent' do
-    pp params
     # @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
     @result = TweetService.get_tweets_by_user(params)
-    pp @result
-    pass
+    process_result
   end
 
 # create a tweet
