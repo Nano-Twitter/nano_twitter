@@ -52,6 +52,9 @@ YH
 * remove typescript due to its difficulty, rewrite all the typescript file to javascript YH
 
 ### Version 0.4 
+* restructure route to integrate service CF
+* reorganized current business logic into service CF
+* estimating the cost and benefits change sinatra to vert.x LG
 * Connect our AWS project to mongoDB. YH
 * Finish writing core backend services and apis:  CF
   - User
@@ -86,7 +89,7 @@ YH
 * AmazonMQ server registered, gem installed YH
 * adding rake db:create_indexes to the rake task LG
 * adding full text index to tweet schema LG
-* testing mongodb replica set function LgiG
+* testing mongodb replica set function LG
 * timeline function optimization YH
 * nano_twitter client YH
 
