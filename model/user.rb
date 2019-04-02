@@ -32,7 +32,7 @@ class User
 
   has_many :tweets
 
-  before_save :encrypt_password
+  # before_save :encrypt_password
 
 
   def follow!(user)
