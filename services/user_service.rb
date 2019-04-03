@@ -6,10 +6,12 @@ class UserService
   def self.signup(params)
     user = User.new(params)
     begin
-      user.save
+      user.save!
       json_result(201, 0, "Signup success!")
     rescue => e
-      json_result(403, 1, "Exception #{e}")
+      pp e
+      json_result(403, 1, "Signup failed!")
+      
     end
   end
 
