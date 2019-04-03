@@ -8,7 +8,7 @@ class Tweet
   field :parent_id, type: BSON::ObjectId
   field :comments_count, type: Integer
 
-  index({created_at: 1}, {unique: true})
+  index({created_at: 1})
   index({content: 'text'})
 
   has_many :comments
