@@ -84,34 +84,30 @@ describe "users api" do
     JSON.parse(last_response.body)['data']['_id']['$oid'].must_equal @user.id.to_s
   end
 
-  after do
-    User.destroy_all
+end
+
+describe 'test interface api' do
+  # it 'can resets all data and recreates TestUser' do
+  #   post '/test/reset/all'
+  #   last_response.ok?
+  #
+  # end
+
+  it 'can reset all data and recreates users and seet tweet to the first one' do
+    post '/test/reset/all'
+    last_response.ok?
+    post '/test/user/1/tweets?count=100'
+    last_response.ok?
   end
 
-
-  describe 'test interface api' do
-    # it 'can resets all data and recreates TestUser' do
-    #   post '/test/reset/all'
-    #   last_response.ok?
-    #
-    # end
-
-    it 'can reset all data and recreates TestUser at given number' do
-      post '/test/reset?users=10'
-      last_response.ok?
-    end
-
-    it 'can reset all data and recreates users and seet tweet to the first one' do
-      post '/test/reset/all'
-      last_response.ok?
-      post '/test/user/1/tweets?count=100'
-      last_response.ok?
-    end
-
-    it 'can get status' do
-      get '/test/status'
-      last_response.ok?
-    end
-
+  it 'can reset all data and recreates TestUser at given number' do
+    post '/test/reset?users=100'
+    last_response.ok?
   end
+
+  it 'can get status' do
+    get '/test/status'
+    last_response.ok?
+  end
+
 end

@@ -10,7 +10,7 @@ def app
   App
 end
 
-Mongoid.load! "config/mongoid.yml"
+Mongoid.load! "config/mongoid.yml", :test
 
 describe 'user_service' do
 
@@ -135,7 +135,7 @@ describe 'user_service' do
 
 end
 
-describe 'follow_service' do 
+describe 'follow_service' do
 
   before do
 
@@ -151,8 +151,8 @@ describe 'follow_service' do
   it 'can follow someone' do
 
     params = {
-      follower_id: @follower_id,
-      followee_id: @user_id
+        follower_id: @follower_id,
+        followee_id: @user_id
     }
     response = @service.follow(params)
     response[:status].must_equal 200
@@ -163,30 +163,30 @@ describe 'follow_service' do
   it 'cannot follow a user twice' do
 
     params = {
-      follower_id: @follower_id,
-      followee_id: @user_id
+        follower_id: @follower_id,
+        followee_id: @user_id
     }
 
     response = @service.follow(params)
     response[:status].must_equal 200
-    response[:payload][:message].must_equal "Follow successfully" 
+    response[:payload][:message].must_equal "Follow successfully"
 
     response = @service.follow(params)
     response[:status].must_equal 403
-    response[:payload][:message].must_equal "Fail to follow" 
+    response[:payload][:message].must_equal "Fail to follow"
 
   end
 
   it 'can unfollow someone' do
 
     params = {
-      follower_id: @follower_id,
-      followee_id: @user_id
+        follower_id: @follower_id,
+        followee_id: @user_id
     }
     response = @service.follow(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal "Follow successfully"
-    
+
     response = @service.unfollow(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal "Unfollow successfully"
@@ -199,7 +199,7 @@ describe 'follow_service' do
 
 end
 
-describe 'tweet_service' do 
+describe 'tweet_service' do
 
   before do
 
@@ -221,21 +221,21 @@ describe 'tweet_service' do
   it 'can create a new tweet' do
 
     params = {
-      user_id: @user_id,
-      content: "I am a random tweet.",
+        user_id: @user_id,
+        content: "I am a random tweet.",
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
     response[:payload][:data]['content'].must_equal 'I am a random tweet.'
-  
+
   end
 
   it 'can create a repo without entering content' do
 
     params = {
-      user_id: @user_id,
-      content: "",
-      parent_id: @tweet_id
+        user_id: @user_id,
+        content: "",
+        parent_id: @tweet_id
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
@@ -247,9 +247,9 @@ describe 'tweet_service' do
   it 'can create a repo with a content' do
 
     params = {
-      user_id: @user_id,
-      content: "I am a repost",
-      parent_id: @tweet_id
+        user_id: @user_id,
+        content: "I am a repost",
+        parent_id: @tweet_id
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
@@ -261,18 +261,18 @@ describe 'tweet_service' do
   it 'can delete an existing tweet' do
 
     params = {
-      tweet_id: @tweet_id
+        tweet_id: @tweet_id
     }
     response = @service.delete_tweet(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal 'Tweet deleted successfully.'
-  
+
   end
 
   it 'can get an existing tweet' do
 
     params = {
-      tweet_id: @tweet_id
+        tweet_id: @tweet_id
     }
     response = @service.get_tweet(params)
     response[:status].must_equal 200
@@ -283,21 +283,21 @@ describe 'tweet_service' do
   it 'can get tweets by user' do
 
     params = {
-      start: 0,
-      count: 10,
-      user_id: @user_id
+        start: 0,
+        count: 10,
+        user_id: @user_id
     }
     response = @service.get_tweets_by_user(params)
     response[:status].must_equal 200
     response[:payload][:message].must_equal 'Tweets found.'
     response[:payload][:data].count.must_equal 3
-    
+
   end
 
   it 'can get tweets of all followees' do
 
     params = {
-      user_id: @follower_id
+        user_id: @follower_id
     }
     response = @service.get_followee_tweets(params)
     response[:status].must_equal 200

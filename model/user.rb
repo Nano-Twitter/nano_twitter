@@ -13,10 +13,8 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
-  field :tweets_count, type: Integer
 
   index({email: 1}, {unique: true})
-  #index({name: 1}, {unique: true})
 
   validates_presence_of :name
   validates_uniqueness_of :name

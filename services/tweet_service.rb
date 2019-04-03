@@ -1,5 +1,4 @@
 require_relative '../model/tweet'
-require_relative '../model/tweet_hashtag'
 
 class TweetService
 

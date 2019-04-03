@@ -42,34 +42,19 @@ class App < Sinatra::Base
   #   session[:user] != nil ? @user = session[:user] : nil
   # end
 
-  # Endpoints
+  # # Endpoints
 
-  get '/' do
-    ":)"
-  end
-  # Users
+  # get '/' do
+  #   ":)"
+  # end
+  # # Users
 
   # sign up： create a new user
   post '/users/signup' do
     @result = UserService.signup(params)
-    pass
+    process_result
   end
 
-  # find a user's info
-  get '/users/:id' do
-    if params[:id] == ''
-      params[:id] = session[:id]
-    end
-    @result = UserService.get_profile(params)
-    pass
-  end
-
-
-  # update a user's info
-  put '/users/:id' do
-    @result = UserService.update_profile(params)
-    pass
-  end
 
   # user authencation
   # sign in
@@ -79,7 +64,23 @@ class App < Sinatra::Base
       session[:user] = @result[:payload][:data]
       session[:id] = @result[:payload][:data]['_id']
     end
-    pass
+    process_result
+  end
+
+  # find a user's info
+  get '/users/:id' do
+    if params[:id] == ''
+      params[:id] = session[:id]
+    end
+    @result = UserService.get_profile(params)
+    process_result
+  end
+
+
+  # update a user's info
+  put '/users/:id' do
+    @result = UserService.update_profile(params)
+    process_result
   end
 
   # sign out
@@ -87,7 +88,7 @@ class App < Sinatra::Base
   delete '/users/signout' do
     session[:user] = nil
     @result = UserService.signout
-    pass
+    process_result
   end
 
   get '/users_recommend' do
@@ -130,14 +131,14 @@ class App < Sinatra::Base
     params[:follower_id] = params[:user_id]
     pp params
     @result = FollowService.follow(params)
-    pass
+    process_result
   end
 
   # unfollow
   delete '/follows/:followee_id' do
     params[:follower_id] = session[:id]
     @result = FollowService.unfollow(params)
-    pass
+    process_result
   end
 
   # Tweets
@@ -145,7 +146,7 @@ class App < Sinatra::Base
   # get a user's timeline
   get '/tweets/users/:user_id' do
     @result = TweetService.get_tweets_by_user(params)
-    pass
+    process_result
   end
 
   # get personal homepage timeline
@@ -158,25 +159,25 @@ class App < Sinatra::Base
   # create a tweet
   post '/tweets' do
     @result = TweetService.create_tweet(params)
-    pass
+    process_result
   end
 
   # retrieve a tweet
   get '/tweeto/:id' do
     @result = TweetService.get_tweet(params)
-    pass
+    process_result
   end
 
   # delete a tweet
   delete '/tweets/:id' do
     @result = TweetService.delete_tweet(params)
-    pass
+    process_result
   end
 
   # get a user's timeline
   get '/tweets/users/:user_id' do
     @result = TweetService.get_tweets_by_user(params)
-    pass
+    process_result
   end
 
   # Tweet: Comment
@@ -185,25 +186,25 @@ class App < Sinatra::Base
   # not so useful
   get '/tweets/:tweet_id/comments/count' do
     @result = CommentService.total_comment_by_tweet(params)
-    pass
+    process_result
   end
 
   # create a comment
   post '/tweets/:tweet_id/comments' do
     @result = CommentService.create_comment(params)
-    pass
+    process_result
   end
 
   # retrieve comments of a tweet
   get '/tweets/:tweet_id/comments' do
     @result = CommentService.get_comment_by_tweet(params)
-    pass
+    process_result
   end
 
   # delete a comment of a tweet
   delete '/tweets/:tweet_id/comments/:comment_id' do
     @result = CommentService.delete_comment(params)
-    pass
+    process_result
   end
 
   # Tweet: Like
@@ -211,19 +212,19 @@ class App < Sinatra::Base
   # count the number of likes
   get '/tweets/:tweet_id/likes/count' do
     @result = LikeService.total_likes_by_tweet(params)
-    pass
+    process_result
   end
 
   # create a like of a tweet (like)
   post '/tweets/:tweet_id/likes' do
     @result = LikeService.create_like(params)
-    pass
+    process_result
   end
 
   # delete a like of a tweet (unlike)
   delete '/tweets/:tweet_id/likes/:like_id' do
     @result = LikeService.delete_like(params)
-    pass
+    process_result
   end
 
   # Search (Blank for the moment)
@@ -243,7 +244,7 @@ class App < Sinatra::Base
   # Example: test/reset/all
   post '/test/reset/all' do
     @result = TestService.reset
-    pass
+    process_result
   end
 
 
@@ -257,7 +258,7 @@ class App < Sinatra::Base
   post '/test/reset' do
     number = params[:users]
     @result = TestService.seed_user_and_related(number)
-    pass
+    process_result
   end
 
 
@@ -267,7 +268,7 @@ class App < Sinatra::Base
     count = params[:count]
     user_id = params[:id]
     @result = TestService.seed_tweet user_id, count
-    pass
+    process_result
   end
 
 
@@ -277,18 +278,16 @@ class App < Sinatra::Base
   # Example: /test/status
   get '/test/status' do
     @result = TestService.status
-    pass
+    process_result
   end
 
-
-  # following are route end point, will only be accessed when calling pass in the previous route
-
+  # following are route end point, will only be accessed when calling process_result in the previous route
 
   get '/*' do
     if request.xhr?
       process_result
     else
-      pass
+      process_result
     end
   end
 
