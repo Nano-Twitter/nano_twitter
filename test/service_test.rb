@@ -15,12 +15,10 @@ Mongoid.load! "config/mongoid.yml"
 describe 'user_service' do
 
   before do
-    
     User.destroy_all
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
     @service = UserService
-
   end
 
   it "can create a user" do
@@ -76,8 +74,15 @@ describe 'user_service' do
   end
 
   it 'can get user\'s profile' do
+    # params = {
+    #     id: @user_id,
+    # }
+    # response = @service.get_profile(params)
+    # response[:status].must_equal 200
+    # response[:payload][:data]['name'].must_equal 'Adam Stark'
+
     params = {
-        id: @user_id,
+        id: '5ca5249503848ef9101a1efd',
     }
     response = @service.get_profile(params)
     response[:status].must_equal 200
@@ -302,7 +307,7 @@ describe 'tweet_service' do
   end
 
   after do
-    User.destroy_all
+    # User.destroy_all
     Tweet.destroy_all
   end
 
