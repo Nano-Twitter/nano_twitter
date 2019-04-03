@@ -9,9 +9,7 @@ class UserService
       user.save!
       json_result(201, 0, "Signup success!")
     rescue => e
-      pp e
       json_result(403, 1, "Signup failed!")
-      
     end
   end
 

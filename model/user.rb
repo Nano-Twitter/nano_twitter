@@ -13,7 +13,7 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
-  field :tweets_count, type: Integer
+  field :tweets_count, type: Integer, default: 0
 
   index({email: 1}, {unique: true})
 
