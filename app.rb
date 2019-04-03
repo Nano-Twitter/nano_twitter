@@ -123,10 +123,6 @@ class App < Sinatra::Base
 
   # add follower
   post '/follows/:followee_id' do
-    pp '!!!!!!!!!!!!!!im here'
-    pp params[:user_id]
-    # puts session[:id]
-    # pp session
     # params[:follower_id] = session[:id]
     params[:follower_id] = params[:user_id]
     pp params
@@ -136,7 +132,10 @@ class App < Sinatra::Base
 
   # unfollow
   delete '/follows/:followee_id' do
-    params[:follower_id] = session[:id]
+    # params[:follower_id] = session[:id]
+    params[:follower_id] = params[:user_id]
+    pp '!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    pp params[:user_id]
     @result = FollowService.unfollow(params)
     process_result
   end
