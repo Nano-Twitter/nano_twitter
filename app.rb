@@ -93,7 +93,6 @@ class App < Sinatra::Base
 
   get '/users_recommend' do
     @result = UserService.recommend(params)
-    # pp @result
     process_result
   end
 
@@ -125,7 +124,6 @@ class App < Sinatra::Base
   post '/follows/:followee_id' do
     # params[:follower_id] = session[:id]
     params[:follower_id] = params[:user_id]
-    pp params
     @result = FollowService.follow(params)
     process_result
   end
@@ -134,8 +132,6 @@ class App < Sinatra::Base
   delete '/follows/:followee_id' do
     # params[:follower_id] = session[:id]
     params[:follower_id] = params[:user_id]
-    pp '!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    pp params[:user_id]
     @result = FollowService.unfollow(params)
     process_result
   end
