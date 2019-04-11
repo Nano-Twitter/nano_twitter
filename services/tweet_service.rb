@@ -15,7 +15,6 @@ class TweetService
       params[:parent_id] = BSON::ObjectId(params[:parent_id]) if params[:parent_id]
       params[:user_id] = BSON::ObjectId(params[:user_id])
       tweet = Tweet.new(params)
-
       if tweet.save
         # add to timeline
         tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
@@ -24,7 +23,6 @@ class TweetService
       else
         json_result(403, 1, "Unable to send the tweet.")
       end
-
     end
   end
 

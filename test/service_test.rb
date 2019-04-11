@@ -23,7 +23,7 @@ describe 'user_service' do
     @user_id = @user.id.to_s
     push_single_user $redisStore, "user_#{@user_id}", @user.to_json
     @service = UserService
-    
+
   end
 
   it "can create a user" do
@@ -205,6 +205,7 @@ describe 'follow_service' do
 
   after do
     User.destroy_all
+    clear $redisStore
   end
 
 end
@@ -212,6 +213,7 @@ describe 'redis' do
   before do
     User.destroy_all
     Tweet.destroy_all
+    clear $redisStore
     @us = UserService
     @ts = TweetService
   end
@@ -368,7 +370,7 @@ describe 'tweet_service' do
   end
 
   after do
-    # User.destroy_all
+    User.destroy_all
     Tweet.destroy_all
     clear $redisStore
   end
