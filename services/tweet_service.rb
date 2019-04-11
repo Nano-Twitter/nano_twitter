@@ -18,7 +18,7 @@ class TweetService
 
       if tweet.save
         # add to timeline
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")[:name]})
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
         push_single_tweet $redisStore, "timeline_#{params[:user_id]}", tweet.id.to_s
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
@@ -44,7 +44,7 @@ class TweetService
     # Get a tweet
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
-    tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")[:name]})
+    tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -60,7 +60,7 @@ class TweetService
     if tweets
       tweets.each do |tweet|
         tweet_arr.push(tweet)
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")[:name]})
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
       end
       json_result(200, 0, "Tweets found.", tweet_arr)
     else
@@ -86,12 +86,12 @@ class TweetService
     if cached? $redisStore, "timeline_#{params[:user_id]}"
       tweet_ids = get_timeline($redisStore, "timeline_#{params[:user_id]}")[params[:start], params[:start] + params[:count]]
       tweets = Tweet.find(tweet_ids)
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")[:name]})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
       tweets = tweets.flatten(1)
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")[:name]})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets)
       else
