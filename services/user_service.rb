@@ -70,7 +70,6 @@ class UserService
 
   end
 
-
   def self.recommend(params)
     begin
       user = params[:num].to_i.times.map {|i| User.create!(name: Faker::Name.first_name, email: Faker::Internet.email, password: Faker::Internet.password(12))}
