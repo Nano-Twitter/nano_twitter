@@ -17,6 +17,12 @@ class User
 
   index({email: 1}, {unique: true})
 
+  has_many :tweets
+
+  # tentative association
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, index: true
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, index: true
+  
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_presence_of :email
@@ -24,14 +30,7 @@ class User
   validates_length_of :password, minimum: 12
   # validates_confirmation_of :password, message: "Password confirmation must be the same as the password."
 
-
-  # tentative association
-  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, index: true
-  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, index: true
-  has_many :tweets
-
   before_save :encrypt_password
-
 
   def follow!(user)
     if self.following.include?(user)

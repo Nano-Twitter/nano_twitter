@@ -18,6 +18,7 @@ class UserService
   def self.login(params)
     if User.authenticate(params[:email], params[:password])
       user = User.without(:password_hash).find_by_email(params[:email])
+      push_single_user $redisStore, "user_#{user.id.to_s}", user if !cached? $redisStore, "user_#{user.id.to_s}"
       return json_result(200, 0, "Login success!", user)
     else
       return json_result(403, 1, "Username and password do not match!")
