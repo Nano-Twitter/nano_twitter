@@ -13,6 +13,7 @@ class User
   field :email, type: String
   field :bio, type: String
   field :gender, type: Integer
+  field :tweets_count, type: Integer, default: 0
 
   index({email: 1}, {unique: true})
 
@@ -27,7 +28,6 @@ class User
   # tentative association
   has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, index: true
   has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, index: true
-
   has_many :tweets
 
   before_save :encrypt_password
@@ -44,7 +44,6 @@ class User
   def unfollow!(user)
     self.following.delete(user)
   end
-
 
   def self.find_by_email(email)
     find_by(email: email)

@@ -32,6 +32,12 @@ describe "user_model" do
     User.find(@user.id).name.must_equal "Jean"
   end
 
+  it "can update info without destroying password" do 
+    (User.authenticate("good@gmail.com", "qwer123456ty")).must_equal true
+    @user.update_attribute(:name, "Jean")
+    (User.authenticate("good@gmail.com", "qwer123456ty")).must_equal true
+  end
+
   it "can authenticate" do
     (User.authenticate("good@gmail.com", "qwer123456ty")).must_equal true
     (User.authenticate("good@gmail.com", "qwer123456t")).must_equal false

@@ -1,14 +1,16 @@
 require_relative '../model/user'
 require 'faker'
+require 'json'
 
 class UserService
 
   def self.signup(params)
     user = User.new(params)
-    begin
-      user.save!
+    if user.save
+      user = User.without(:password_hash).find(user.id)
+      push_single_user $redisStore, "user_#{user.id.to_s}", user
       json_result(201, 0, "Signup success!")
-    rescue => e
+    else
       json_result(403, 1, "Signup failed!")
     end
   end
@@ -28,13 +30,16 @@ class UserService
 
   def self.get_profile(params)
     if params.has_key?(:id)
-      user = User.find(BSON::ObjectId(params[:id]))
+      if cached? $redisStore, "user_#{params[:id]}"
+        user = get_single_user $redisStore, "user_#{params[:id]}"
+      else
+        user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
+      end
     else
       return json_result(403, 1, 'Profile get failed')
     end
 
     if user
-      user.unset(:password_hash)
       json_result(200, 0, 'Profile get success', user)
     else
       json_result(403, 1, 'User not found')
@@ -42,6 +47,7 @@ class UserService
   end
 
   def self.update_profile(params)
+
     if params.has_key?(:id)
       user = User.find(BSON::ObjectId(params[:id]))
     else
@@ -49,26 +55,27 @@ class UserService
     end
 
     if user
-      begin
-        user.update!(params)
-        json_result(200, 0, 'Profile update succeed', user)
-      rescue => e
-        json_result(403, 1, 'Profile update failed')
+      if user.update(params)
+        temp_user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
+        if cached? $redisStore, "user_#{params[:id]}"
+          push_single_user $redisStore, "user_#{params[:id]}", temp_user
+        end
+        json_result(200, 0, 'Profile update succeed', temp_user)
+      else
+        json_result(403, 1, 'Cannot update user info!')
       end
     else
-      json_result(403, 1, 'Profile update failed')
+      json_result(403, 1, 'Cannot find the user!')
     end
+
   end
 
 
   def self.recommend(params)
     begin
       user = params[:num].to_i.times.map {|i| User.create!(name: Faker::Name.first_name, email: Faker::Internet.email, password: Faker::Internet.password(12))}
-
-      pp user
       json_result(200, 0, 'Amway success', user)
     rescue => e
-      pp e
       json_result(403, 1, 'Amway failed')
     end
   end
