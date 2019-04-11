@@ -34,7 +34,8 @@ def push_single_user(store, key, user)
 end 
 
 def get_single_user(store, key)
-    JSON.parse(JSON.parse(store.get(key)))
+    # JSON.parse(JSON.parse(store.get(key)))
+    JSON.parse(store.get(key))
 end
 
 def clear(store)
