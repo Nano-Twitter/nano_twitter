@@ -13,6 +13,7 @@ Mongoid.load! "config/mongoid.yml"
 # Fail: 403
 
 class App < Sinatra::Base
+  
   enable :sessions
 
   # register do
@@ -26,6 +27,10 @@ class App < Sinatra::Base
   helpers do
     def is_user?
       @user != nil
+    end
+
+    def curr_user 
+      session[:user]
     end
 
     def process_result

@@ -9,12 +9,14 @@ class Tweet
   field :comments_count, type: Integer, default: 0
   field :likes_count, type: Integer, default: 0
 
+  belongs_to :user, counter_cache: true
+
   index({created_at: 1})
   index({content: 'text'})
 
   has_many :comments
   has_many :likes
 
-  belongs_to :user, counter_cache: true
+  
 
 end

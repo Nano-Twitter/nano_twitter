@@ -15,7 +15,7 @@ Mongoid.load! "config/mongoid.yml", :test
 describe 'user_service' do
 
   before do
-
+    Tweet.destroy_all
     User.destroy_all
     clear $redisStore
 
@@ -23,7 +23,7 @@ describe 'user_service' do
     @user_id = @user.id.to_s
     push_single_user $redisStore, "user_#{@user_id}", @user.to_json
     @service = UserService
-    
+
   end
 
   it "can create a user" do
@@ -135,6 +135,7 @@ describe 'user_service' do
   end
 
   after do
+    Tweet.destroy_all
     User.destroy_all
     clear $redisStore
   end
@@ -145,6 +146,7 @@ describe 'follow_service' do
 
   before do
 
+    Tweet.destroy_all
     User.destroy_all
     clear $redisStore
 
@@ -204,14 +206,17 @@ describe 'follow_service' do
   end
 
   after do
+    Tweet.destroy_all
     User.destroy_all
+    clear $redisStore
   end
 
 end
 describe 'redis' do 
   before do
-    User.destroy_all
     Tweet.destroy_all
+    User.destroy_all
+    clear $redisStore
     @us = UserService
     @ts = TweetService
   end
@@ -243,8 +248,8 @@ describe 'redis' do
   end
 
   after do
-    User.destroy_all
     Tweet.destroy_all
+    User.destroy_all
     clear $redisStore
   end
 end
@@ -253,8 +258,8 @@ describe 'tweet_service' do
 
   before do
 
-    User.destroy_all
     Tweet.destroy_all
+    User.destroy_all
     clear $redisStore
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
@@ -368,8 +373,8 @@ describe 'tweet_service' do
   end
 
   after do
-    # User.destroy_all
     Tweet.destroy_all
+    User.destroy_all
     clear $redisStore
   end
 

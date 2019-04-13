@@ -721,6 +721,7 @@ GEM
       amq-protocol (~> 2.3, >= 2.3.0)
     byebug (11.0.0)
     concurrent-ruby (1.1.5)
+    connection_pool (2.2.2)
     faker (1.9.3)
       i18n (>= 0.7)
     i18n (1.6.0)
@@ -761,6 +762,7 @@ DEPENDENCIES
   bcrypt
   bunny
   byebug
+  connection_pool
   faker
   mongoid
   passenger
