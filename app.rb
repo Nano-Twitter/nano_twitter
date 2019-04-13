@@ -1,8 +1,7 @@
-require 'sinatra'
-require 'byebug'
-require 'mongoid'
 require 'json'
-# require_relative 'model/user.rb'
+require 'byebug'
+require 'sinatra'
+require 'mongoid'
 require_relative 'services/services'
 
 # DB Setup
@@ -13,7 +12,7 @@ Mongoid.load! "config/mongoid.yml"
 # Fail: 403
 
 class App < Sinatra::Base
-  
+
   enable :sessions
 
   # register do
@@ -29,7 +28,7 @@ class App < Sinatra::Base
       @user != nil
     end
 
-    def curr_user 
+    def curr_user
       session[:user]
     end
 
