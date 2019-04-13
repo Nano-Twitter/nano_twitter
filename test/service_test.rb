@@ -1,4 +1,4 @@
-ENV['APP_ENV'] = 'test'
+ENV['APP_ENV'] = 'development'
 
 require_relative '../app.rb'
 require 'minitest/autorun'

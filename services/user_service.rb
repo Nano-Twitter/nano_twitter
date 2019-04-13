@@ -11,6 +11,7 @@ class UserService
       push_single_user $redisStore, "user_#{user.id.to_s}", user
       json_result(201, 0, "Signup success!")
     else
+      pp user.errors
       json_result(403, 1, "Signup failed!")
     end
   end
