@@ -82,6 +82,7 @@ class TweetService
     # Get a list of tweets of followees
     # params: user_id; start; count
     if cached? $redisStore, "timeline_#{params[:user_id]}"
+      pp "timeline_#{params[:user_id]}"
       tweet_ids = get_timeline($redisStore, "timeline_#{params[:user_id]}")[params[:start], params[:start] + params[:count]]
       tweets = Tweet.find(tweet_ids)
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}

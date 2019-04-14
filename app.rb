@@ -13,7 +13,7 @@ Mongoid.load! "config/mongoid.yml"
 # Fail: 403
 
 class App < Sinatra::Base
-  
+
   enable :sessions
 
   # register do
@@ -151,8 +151,7 @@ class App < Sinatra::Base
 
   # get personal homepage timeline
   get '/tweets/recent' do
-    # @result = {self: TweetService.get_tweets_by_user(params), other: TweetService.get_followee_tweets(params)}
-    @result = TweetService.get_tweets_by_user(params)
+    @result = TweetService.get_followee_tweets(params)
     process_result
   end
 
