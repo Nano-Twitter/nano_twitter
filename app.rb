@@ -1,8 +1,7 @@
-require 'sinatra'
-require 'byebug'
-require 'mongoid'
 require 'json'
-# require_relative 'model/user.rb'
+require 'byebug'
+require 'sinatra'
+require 'mongoid'
 require_relative 'services/services'
 
 # DB Setup
@@ -29,7 +28,7 @@ class App < Sinatra::Base
       @user != nil
     end
 
-    def curr_user 
+    def curr_user
       session[:user]
     end
 

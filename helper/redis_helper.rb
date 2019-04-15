@@ -6,6 +6,7 @@ require 'connection_pool'
 # $redisStore = Redis.new(host: 'localhost', port: 6379)
 $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) { Redis.new(host: 'localhost', port: 6379) }
 
+
 def cached?(store, key)
     store.exists(key)
 end
@@ -14,18 +15,23 @@ end
 # user_id: [tweet_id1, tweet_id2, ...]
 def push_mass_tweets(store, key, tweets)
     tweets.each do |t|
-        store.rpush(key, t)
+        store.lpush(key, t)
         store.expire(key, 24.hours.to_i)
     end
 end
 
-def get_timeline(store, key)
-    store.get(key)
+def get_timeline(store, key, start, count)
+    pp store
+    pp key
+    pp start
+    pp count
+    pp store.lrange(key, start, start + count - 1)
+    store.lrange(key, start, start + count - 1)
 end
 
 def push_single_tweet(store, key, tweet)
-    store.rpush(key, tweet)
-    store.expire(key, 24.hours.to_i)
+    store.lpush(key, tweet)
+    store.expire(key, 120.hours.to_i)
 end
 
 # user info cache

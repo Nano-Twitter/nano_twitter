@@ -21,7 +21,11 @@
 * [Chenfeng Fan](mailto:fanc@brandeis.edu)
 
 ## Server Start
-```bundle exec rackup -p8000 --host 127.0.0.1```
+* Sinatra  ```$ bundle exec rackup -p8000 --host 127.0.0.1```
+* React ```$ npm start```
+* MongoDB ```$ mongod```
+* Redis ```$ redis-server```
+* RabbitMQ ```$ rabbitmq-server```
 
 ## Test
 Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.

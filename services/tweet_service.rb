@@ -18,7 +18,11 @@ class TweetService
       if tweet.save
         # add to timeline
         tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
-        push_single_tweet $redisStore, "timeline_#{params[:user_id]}", tweet.id.to_s
+        fanout_helper(params[:user_id], tweet)
+        # update user_info
+        user = get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")
+        user['tweets_count'] += 1
+        push_single_user $redisStore, "user_#{tweet[:user_id].to_s}", user
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
         json_result(403, 1, "Unable to send the tweet.")
@@ -82,14 +86,15 @@ class TweetService
     # Get a list of tweets of followees
     # params: user_id; start; count
     if cached? $redisStore, "timeline_#{params[:user_id]}"
-      pp "timeline_#{params[:user_id]}"
-      tweet_ids = get_timeline($redisStore, "timeline_#{params[:user_id]}")[params[:start], params[:start] + params[:count]]
-      tweets = Tweet.find(tweet_ids)
+      tweet_ids = get_timeline $redisStore, "timeline_#{params[:user_id]}", params[:start].to_i, params[:count].to_i
+      tweets = Tweet.order(created_at: :desc).find(tweet_ids.map{|t| BSON::ObjectId(t)})
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
       tweets = tweets.flatten(1)
+      # 这里考虑另开一个thread
+      push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map{|t| t.id.to_s}
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets)
