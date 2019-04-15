@@ -21,11 +21,6 @@ def push_mass_tweets(store, key, tweets)
 end
 
 def get_timeline(store, key, start, count)
-    pp store
-    pp key
-    pp start
-    pp count
-    pp store.lrange(key, start, start + count - 1)
     store.lrange(key, start, start + count - 1)
 end
 
