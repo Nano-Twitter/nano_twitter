@@ -23,10 +23,8 @@ namespace :db do
 
     User.create_indexes
     Comment.create_indexes
-    Hashtag.create_indexes
     Like.create_indexes
     Tweet.create_indexes
-    TweetHashtag.create_indexes
 
   end
 end
