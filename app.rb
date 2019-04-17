@@ -3,19 +3,10 @@ require 'byebug'
 require 'sinatra'
 require 'mongoid'
 require_relative 'services/services'
-require_relative 'helper/rabbit_helper'
 
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
-begin
-  $rabbit_mq = RabbitServer.new('amqp://hlrvcajf:utjxKFQuDk6d5CdGxhAJbygq5ad5xg19@cat.rmq.cloudamqp.com/hlrvcajf')
-rescue
-  $rabbit_mq = RabbitServer.new
-end
-$rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
-$rabbit_mq.subscribe('fanout')
-pp "RabbitMQ Start"
 
 # GET Success: 200
 # POST Success: 201

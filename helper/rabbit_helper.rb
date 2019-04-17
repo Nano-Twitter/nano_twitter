@@ -3,8 +3,8 @@ require 'bunny'
 class RabbitServer
   # attr_reader :connection, :channel
 
-  def initialize(host='')
-    @connection = Bunny.new(hostname: host, automatically_recover: false)
+  def initialize(host = '')
+    @connection = Bunny.new(host, automatically_recover: false)
     @connection.start
     @channel = @connection.create_channel
   end
@@ -43,7 +43,8 @@ class RabbitServer
   end
 end
 
-# Q = RabbitServer.new
-# Q.close
-# Q.enqueue('a', 'good')
-# Q.dequeue'a'
+
+$rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
+# $rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
+$rabbit_mq.subscribe('fanout')
+pp "RabbitMQ Start"
