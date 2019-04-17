@@ -25,7 +25,10 @@
 * React ```$ npm start```
 * MongoDB ```$ mongod```
 * Redis ```$ redis-server```
-* RabbitMQ ```$ rabbitmq-server```
+* RabbitMQ
+  1. ```$ brew install rabbitmq``` 
+  2. ```$ export PATH=$PATH:/usr/local/opt/rabbitmq/sbin``` 
+  3. ```$ rabbitmq-server```
 
 ## Test
 Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.

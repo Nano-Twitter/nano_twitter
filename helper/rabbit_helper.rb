@@ -1,39 +1,45 @@
 require 'bunny'
 
-# @rabbit_connection = Bunny.new(automatically_recover: false)
+class RabbitServer
+  attr_reader :connection, :channel
 
-def enqueue(channel, params)
-  connection = Bunny.new(automatically_recover: false)
-  connection.start
+  def initialize(host='')
+    @connection = Bunny.new(hostname: host, automatically_recover: false)
+    @connection.start
+    @channel = @connection.create_channel
+  end
 
-  rabbit_channel = connection.create_channel
-  # rabbit_channel.prefetch(1)
-  queue = rabbit_channel.queue(channel, durable: true)
-  rabbit_channel.default_exchange.publish(params, routing_key: queue.name, persistent: true)
-  pp " [x] Sent #{params}"
+  def enqueue(channel, message)
+    # rabbit_channel.prefetch(1)
+    queue = @channel.queue(channel, durable: true)
+    @channel.default_exchange.publish(message, routing_key: queue.name, persistent: true)
+    pp " [x] Sent #{message}"
+  end
 
-  connection.close
-end
+  def dequeue(channel)
+    queue = @channel.queue(channel, durable: true)
 
-
-def dequeue(channel)
-  connection = Bunny.new(automatically_recover: false)
-  connection.start
-
-  rabbit_channel = connection.create_channel
-  queue = rabbit_channel.queue(channel, durable: true)
-
-  begin
-    puts ' [*] Waiting for messages. To exit press CTRL+C'
-    # block: true is only used to keep the main thread
-    # alive. Please avoid using it in real world applications.
-    queue.subscribe(manual_ack: true, block: true) do |_delivery_info, _properties, body|
-      # pp  _delivery_info
-      # pp _properties
-      puts " [x] Received #{body}"
-      rabbit_channel.ack(_delivery_info.delivery_tag)
+    begin
+      puts ' [*] Waiting for messages. To exit press CTRL+C'
+      # block: true is only used to keep the main thread
+      # alive. Please avoid using it in real world applications.
+      queue.subscribe(manual_ack: true, block: true) do |_delivery_info, _properties, message|
+        # pp  _delivery_info
+        # pp _properties
+        puts " [x] Received #{message}"
+        @channel.ack(_delivery_info.delivery_tag)
+      end
+    rescue Interrupt => _
+      # @connection.close
+      pp 'Unsubscribed'
     end
-  rescue Interrupt => _
-    connection.close
+  end
+
+  def close
+    @connection.close
   end
 end
+
+# Q = RabbitServer.new
+# Q.enqueue('a', 'good')
+# Q.dequeue'a'
