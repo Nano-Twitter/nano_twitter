@@ -13,7 +13,7 @@ begin
 rescue
   $rabbit_mq = RabbitServer.new
 end
-$rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
+# $rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
 $rabbit_mq.subscribe('fanout')
 pp "RabbitMQ Start"
 
