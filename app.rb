@@ -34,15 +34,15 @@ class App < Sinatra::Base
     end
 
     def process_result
-      status (@result[:status] || 500)
+      status(@result[:status] || 500)
       (@result[:payload] || {}).to_json
     end
   end
 
   before do
-    if (!session.key? (:user)) && (params.key? (:hack_user))
+    if (!session.key?(:user)) && (params.key?(:hack_user))
       session[:id] = params[:hack_user]
-      session[:user] = User.find(session[:id])
+      session[:user] = User.find(BSON::ObjectId(session[:id]))
     end
     session[:user] != nil ? @user = session[:user] : nil
   end
@@ -277,6 +277,25 @@ class App < Sinatra::Base
   # Example: /test/status
   get '/test/status' do
     @result = TestService.status
+    process_result
+  end
+  # test for search
+  get '/search' do
+    @result = TweetService.search params
+    process_result
+  end
+  # test for tweet
+  get '/test/tweet' do
+    request_params = params
+    request_params[:user_id] = session[:id]
+    request_params[:content] = Faker::TvShows::BojackHorseman.quote
+    @result = TweetService.create_tweet(request_params)
+    process_result
+  end
+  # test for timeline
+  get '/timeline' do
+    params[:user_id] = session[:id]
+    @result = TweetService.get_followee_tweets(params)
     process_result
   end
 
