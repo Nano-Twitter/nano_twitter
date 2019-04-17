@@ -18,7 +18,8 @@ class TweetService
       if tweet.save
         # add to timeline
         tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
-        fanout_helper(params[:user_id], tweet)
+        $rabbit_mq.enqueue('fanout', {user_id: params[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
+        # fanout_helper(params[:user_id], tweet)
         # update user_info
         user = get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")
         user['tweets_count'] += 1

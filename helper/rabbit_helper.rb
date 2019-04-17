@@ -1,7 +1,7 @@
 require 'bunny'
 
 class RabbitServer
-  attr_reader :connection, :channel
+  # attr_reader :connection, :channel
 
   def initialize(host='')
     @connection = Bunny.new(hostname: host, automatically_recover: false)
@@ -16,17 +16,19 @@ class RabbitServer
     pp " [x] Sent #{message}"
   end
 
-  def dequeue(channel)
+  def subscribe(channel)
     queue = @channel.queue(channel, durable: true)
 
     begin
       puts ' [*] Waiting for messages. To exit press CTRL+C'
       # block: true is only used to keep the main thread
       # alive. Please avoid using it in real world applications.
-      queue.subscribe(manual_ack: true, block: true) do |_delivery_info, _properties, message|
+      queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
         # pp  _delivery_info
         # pp _properties
+        message = JSON.parse(message)
         puts " [x] Received #{message}"
+        fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
       end
     rescue Interrupt => _

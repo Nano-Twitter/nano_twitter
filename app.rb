@@ -3,9 +3,14 @@ require 'byebug'
 require 'sinatra'
 require 'mongoid'
 require_relative 'services/services'
+require_relative 'helper/rabbit_helper'
 
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
+
+$rabbit_mq = RabbitServer.new
+$rabbit_mq.subscribe('fanout')
+pp "RabbitMQ Start"
 
 # GET Success: 200
 # POST Success: 201
@@ -38,13 +43,17 @@ class App < Sinatra::Base
     end
   end
 
-  # before do
-  #   if (!session.key? (:user)) && (params.key? (:hack_user))
-  #     session[:id] = params[:hack_user]
-  #     session[:user] = User.find(session[:id])
-  #   end
-  #   session[:user] != nil ? @user = session[:user] : nil
-  # end
+  before do
+    if (!session.key? (:user)) && (params.key? (:hack_user))
+      session[:id] = params[:hack_user]
+      session[:user] = User.find(session[:id])
+    end
+    session[:user] != nil ? @user = session[:user] : nil
+
+    # $rabbit_mq = RabbitServer.new
+    # pp '!!!!!!!hello'
+    # $rabbit_mq.subscribe('fanout')
+  end
 
   # # Endpoints
 
