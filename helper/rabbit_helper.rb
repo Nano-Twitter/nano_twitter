@@ -44,11 +44,7 @@ class RabbitServer
 end
 
 
-begin
-  $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
-rescue
-  $rabbit_mq = RabbitServer.new
-end
+$rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
 # $rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
 $rabbit_mq.subscribe('fanout')
 pp "RabbitMQ Start"

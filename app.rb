@@ -3,7 +3,6 @@ require 'byebug'
 require 'sinatra'
 require 'mongoid'
 require_relative 'services/services'
-require_relative 'helper/rabbit_helper'
 
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
