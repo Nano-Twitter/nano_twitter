@@ -212,7 +212,7 @@ describe 'follow_service' do
   end
 
 end
-describe 'redis' do 
+describe 'redis' do
   before do
     Tweet.destroy_all
     User.destroy_all
@@ -240,8 +240,8 @@ describe 'redis' do
     push_single_user $redisStore, "user_#{@follower_id}", @follower.to_json
     @follower.follow! @user
     params = {
-      user_id: @user_id, 
-      content: "This is the base tweet1."
+        user_id: @user_id,
+        content: "This is the base tweet1."
     }
     @ts.create_tweet params
     cached?($redisStore, "timeline_#{@user_id}").must_equal true
@@ -277,7 +277,7 @@ describe 'tweet_service' do
     @tweet2 = Tweet.create!(user_id: @user_id, content: "This is the base tweet3.")
     @tweet_id2 = @tweet2.id.to_s
     push_single_tweet $redisStore, "timeline_#{@user_id}", @tweet_id2
-    
+
     @service = TweetService
 
   end
@@ -370,6 +370,10 @@ describe 'tweet_service' do
     response[:payload][:message].must_equal 'All tweets found.'
     response[:payload][:data].count.must_equal 3
 
+  end
+
+  it 'can search' do
+    TweetService.search(page_num: 1, page_size: 10, content: 'wireless HTTP ')
   end
 
   after do
