@@ -6,7 +6,7 @@ class UserService
 
   def self.signup(params)
     user = User.new(params)
-    if user.save
+    if user.save!
       user = User.without(:password_hash).find(user.id)
       push_single_user $redisStore, "user_#{user.id.to_s}", user
       json_result(201, 0, "Signup success!")
