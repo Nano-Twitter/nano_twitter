@@ -72,6 +72,17 @@ class TweetService
 
   end
 
+  def self.search(params)
+    page_num = params[:page_num] || 1
+    page_size = params[:page_size] || 10
+    tweets=Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    if tweets
+      json_result(200, 0, "Tweets found.", tweets)
+    else
+      json_result(403, 1, "Tweets not found.")
+    end
+  end
+
   def self.get_total_by_user(params)
     # Get a the number of tweets of a user
     # params: user_id
@@ -88,14 +99,14 @@ class TweetService
     # params: user_id; start; count
     if cached? $redisStore, "timeline_#{params[:user_id]}"
       tweet_ids = get_timeline $redisStore, "timeline_#{params[:user_id]}", params[:start].to_i, params[:count].to_i
-      tweets = Tweet.order(created_at: :desc).find(tweet_ids.map{|t| BSON::ObjectId(t)})
+      tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
       tweets = tweets.flatten(1)
       # 这里考虑另开一个thread
-      push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map{|t| t.id.to_s}
+      push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map {|t| t.id.to_s}
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets)
