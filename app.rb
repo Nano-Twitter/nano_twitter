@@ -289,30 +289,35 @@ class App < Sinatra::Base
     process_result
   end
 
+  post '/create_index' do
+    create_index
+  end
+
   # following are route end point, will only be accessed when calling process_result in the previous route
 
+  # get '/*' do
+  #   if request.xhr?
+  #     process_result
+  #   else
+  #     process_result
+  #   end
+  # end
+
+
+  # post "/*" do
+  #   process_result
+  # end
+  #
+  # put "/*" do
+  #   process_result
+  # end
+  #
+  # delete "/*" do
+  #   process_result
+  # end
+
   get '/*' do
-    if request.xhr?
-      process_result
-    else
-      process_result
-    end
-  end
-
-  post "/*" do
-    process_result
-  end
-
-  put "/*" do
-    process_result
-  end
-
-  delete "/*" do
-    process_result
-  end
-
-  get '/*' do
-    send_file File.join(settings.public_folder, 'index.html')
+    send_file File.join(settings.public_dir, 'index.html')
   end
   run! if app_file == $0
 
