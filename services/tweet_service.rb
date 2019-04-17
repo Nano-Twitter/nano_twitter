@@ -75,7 +75,7 @@ class TweetService
   def self.search(params)
     page_num = params[:page_num] || 1
     page_size = params[:page_size] || 10
-    tweets=Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    tweets = Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
@@ -105,7 +105,7 @@ class TweetService
     else
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
       tweets = tweets.flatten(1)
-      # 这里考虑另开一个thread
+      # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
       push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map {|t| t.id.to_s}
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
@@ -115,5 +115,4 @@ class TweetService
       end
     end
   end
-
 end

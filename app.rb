@@ -8,8 +8,12 @@ require_relative 'helper/rabbit_helper'
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
-$rabbit_mq = RabbitServer.new
-$rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) { RabbitServer.new }
+begin
+  $rabbit_mq = RabbitServer.new('amqp://hlrvcajf:utjxKFQuDk6d5CdGxhAJbygq5ad5xg19@cat.rmq.cloudamqp.com/hlrvcajf')
+rescue
+  $rabbit_mq = RabbitServer.new
+end
+$rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
 $rabbit_mq.subscribe('fanout')
 pp "RabbitMQ Start"
 
@@ -50,10 +54,6 @@ class App < Sinatra::Base
       session[:user] = User.find(session[:id])
     end
     session[:user] != nil ? @user = session[:user] : nil
-
-    # $rabbit_mq = RabbitServer.new
-    # pp '!!!!!!!hello'
-    # $rabbit_mq.subscribe('fanout')
   end
 
   # # Endpoints
