@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "variables": [{
+    "names": ["login"],
+    "values": [
+      [
+        "user_id=7042"
+      ],
+      [
+        "user_id=7204"
+      ],
+      [
+        "user_id=7042"
+      ],
+      [
+        "user_id=7204"
+      ],
+      [
+        "user_id=7035"
+      ],
+      [
+        "user_id=7035"
+      ],
+      [
+        "user_id=7035"
+      ]
+    ]
+  },
+    {
+      "names": ["commands"],
+      "values": [
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["?x=y"],
+        ["search?search=person"],
+        ["search?search=drive"],
+        ["test/tweet?count=1"]
+      ]
+    }
+  ]
+}
