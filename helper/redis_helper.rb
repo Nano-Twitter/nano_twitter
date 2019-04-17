@@ -7,7 +7,7 @@ require 'connection_pool'
 #
 begin
   $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(host: ENV['REDIS_URL'])}
-rescure
+rescue
   $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(host: 'localhost', port: 6379)}
 end
 
