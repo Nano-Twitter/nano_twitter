@@ -9,7 +9,7 @@ require_relative 'helper/rabbit_helper'
 Mongoid.load! "config/mongoid.yml"
 
 begin
-  $rabbit_mq = RabbitServer.new('amqp://hlrvcajf:utjxKFQuDk6d5CdGxhAJbygq5ad5xg19@cat.rmq.cloudamqp.com/hlrvcajf')
+  $rabbit_mq = RabbitServer.new(ENV["CLOUDAMQP_URL"])
 rescue
   $rabbit_mq = RabbitServer.new
 end
