@@ -8,7 +8,8 @@ require_relative 'helper/rabbit_helper'
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
-$rabbit_mq = RabbitServer.new
+# $rabbit_mq = RabbitServer.new
+$rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) { RabbitServer.new }
 $rabbit_mq.subscribe('fanout')
 pp "RabbitMQ Start"
 
