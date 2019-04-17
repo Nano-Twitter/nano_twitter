@@ -26,8 +26,8 @@ class RabbitServer
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
         # pp  _delivery_info
         # pp _properties
-        message = JSON.parse(message)
         puts " [x] Received #{message}"
+        message = JSON.parse(message)
         fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
       end
@@ -38,10 +38,12 @@ class RabbitServer
   end
 
   def close
+    @channel.close
     @connection.close
   end
 end
 
 # Q = RabbitServer.new
+# Q.close
 # Q.enqueue('a', 'good')
 # Q.dequeue'a'
