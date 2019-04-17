@@ -4,7 +4,7 @@ class RabbitServer
   # attr_reader :connection, :channel
 
   def initialize(host='')
-    @connection = Bunny.new(hostname: host, automatically_recover: false)
+    @connection = Bunny.new(host, automatically_recover: false)
     @connection.start
     @channel = @connection.create_channel
   end
