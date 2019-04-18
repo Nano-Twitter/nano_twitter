@@ -58,7 +58,7 @@ class RedisHelper
 end
 
 begin
-  $redis =ConnectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(ENV['REDIS_URL'])}
+  $redis =ConnectionPool::Wrapper.new(size: 20, timeout: 3) {Redis.new(ENV['REDIS_URL'])}
   pp "Redis online :)"
 rescue
   pp "Redis launch failed :("
