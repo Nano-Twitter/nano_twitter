@@ -50,9 +50,9 @@ class App < Sinatra::Base
   # # Endpoints
 
   # get '/' do
-  #   ":)"
+  #   redirect '/login'
   # end
-  # # Users
+  # Users
 
   # sign up： create a new user
   post '/users/signup' do
@@ -329,6 +329,7 @@ class App < Sinatra::Base
   get '/*' do
     send_file File.join(settings.public_dir, 'index.html')
   end
+  
   run! if app_file == $0
 
 end

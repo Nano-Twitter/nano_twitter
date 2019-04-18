@@ -6,9 +6,9 @@ class UserService
 
   def self.signup(params)
     user = User.new(params)
-    if user.save!
+    if user.save
       user = User.without(:password_hash).find(user.id)
-      push_single_user $redisStore, "user_#{user.id.to_s}", user
+      $redis.push_single_user "user_#{user.id.to_s}", user
       json_result(201, 0, "Signup success!")
     else
       pp user.errors
@@ -19,7 +19,7 @@ class UserService
   def self.login(params)
     if User.authenticate(params[:email], params[:password])
       user = User.without(:password_hash).find_by_email(params[:email])
-      push_single_user $redisStore, "user_#{user.id.to_s}", user if !cached? $redisStore, "user_#{user.id.to_s}"
+      $redis.push_single_user "user_#{user.id.to_s}", user if !$redis.cached? "user_#{user.id.to_s}"
       return json_result(200, 0, "Login success!", user)
     else
       return json_result(403, 1, "Username and password do not match!")
@@ -32,8 +32,8 @@ class UserService
 
   def self.get_profile(params)
     if params.has_key?(:id)
-      if cached? $redisStore, "user_#{params[:id]}"
-        user = get_single_user $redisStore, "user_#{params[:id]}"
+      if $redis.cached? "user_#{params[:id]}"
+        user = $redis.get_single_user "user_#{params[:id]}"
       else
         user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
       end
@@ -59,8 +59,8 @@ class UserService
     if user
       if user.update(params)
         temp_user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
-        if cached? $redisStore, "user_#{params[:id]}"
-          push_single_user $redisStore, "user_#{params[:id]}", temp_user
+        if $redis.cached? "user_#{params[:id]}"
+          $redis.push_single_user "user_#{params[:id]}", temp_user
         end
         json_result(200, 0, 'Profile update succeed', temp_user)
       else

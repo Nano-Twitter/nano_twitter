@@ -17,11 +17,11 @@ describe 'user_service' do
   before do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    push_single_user $redisStore, "user_#{@user_id}", @user.to_json
+    $redis.push_single_user "user_#{@user_id}", @user.to_json
     @service = UserService
 
   end
@@ -137,7 +137,7 @@ describe 'user_service' do
   after do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
   end
 
 end
@@ -148,14 +148,14 @@ describe 'follow_service' do
 
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    push_single_user $redisStore, "user_#{@user_id}", @user.to_json
+    $redis.push_single_user "user_#{@user_id}", @user.to_json
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    push_single_user $redisStore, "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
     @service = FollowService
 
   end
@@ -208,7 +208,7 @@ describe 'follow_service' do
   after do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
   end
 
 end
@@ -216,7 +216,7 @@ describe 'redis' do
   before do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
     @us = UserService
     @ts = TweetService
   end
@@ -228,29 +228,29 @@ describe 'redis' do
         gender: 0
     }
     @us.signup(params)
-    cached?($redisStore, "user_#{User.find_by(email: "g@gmail.com").id.to_s}").must_equal true
+    $redis.cached?("user_#{User.find_by(email: "g@gmail.com").id.to_s}").must_equal true
   end
 
   it 'can cache timeline' do
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    push_single_user $redisStore, "user_#{@user_id}", @user.to_json
+    $redis.push_single_user "user_#{@user_id}", @user.to_json
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    push_single_user $redisStore, "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
     @follower.follow! @user
     params = {
         user_id: @user_id,
         content: "This is the base tweet1."
     }
     @ts.create_tweet params
-    cached?($redisStore, "timeline_#{@user_id}").must_equal true
+    $redis.cached?("timeline_#{@user_id}").must_equal true
   end
 
   after do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
   end
 end
 
@@ -260,23 +260,23 @@ describe 'tweet_service' do
 
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    push_single_user $redisStore, "user_#{@user_id}", @user.to_json
+    $redis.push_single_user "user_#{@user_id}", @user.to_json
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    push_single_user $redisStore, "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
     @follower.follow! @user
     @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet1.")
     @tweet_id = @tweet.id.to_s
-    push_single_tweet $redisStore, "timeline_#{@user_id}", @tweet_id
+    $redis.push_single_tweet "timeline_#{@user_id}", @tweet_id
     @tweet1 = Tweet.create!(user_id: @user_id, content: "This is the base tweet2.")
     @tweet_id1 = @tweet1.id.to_s
-    push_single_tweet $redisStore, "timeline_#{@user_id}", @tweet_id1
+    $redis.push_single_tweet "timeline_#{@user_id}", @tweet_id1
     @tweet2 = Tweet.create!(user_id: @user_id, content: "This is the base tweet3.")
     @tweet_id2 = @tweet2.id.to_s
-    push_single_tweet $redisStore, "timeline_#{@user_id}", @tweet_id2
+    $redis.push_single_tweet "timeline_#{@user_id}", @tweet_id2
 
     @service = TweetService
 
@@ -379,7 +379,7 @@ describe 'tweet_service' do
   after do
     Tweet.destroy_all
     User.destroy_all
-    clear $redisStore
+    $redis.clear
   end
 
 end
