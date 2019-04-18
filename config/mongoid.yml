@@ -8,7 +8,7 @@ development:
         # - cluster0-shard-00-00-jj21z.mongodb.net:27017
         # - cluster0-shard-00-01-jj21z.mongodb.net:27017
         # - cluster0-shard-00-02-jj21z.mongodb.net:27017
-      # options: 
+      # options:
       #   user: admin
       #   password: uK3Y8VbJiljxfTp9
   options:
@@ -26,6 +26,7 @@ test:
     raise_not_found_error: false
 
 production:
+
   max_retries_on_connection_failure: 20
   persist_in_safe_mode: true
   skip_version_check: true
@@ -33,6 +34,13 @@ production:
     default:
       database: twitter_production
       hosts:
+        # -  <%= ENV['MONGODB_MAIN'] %>
+        # -  <%= ENV['MONGODB_SECOND'] %>
+        # -  <%= ENV['MONGODB_THIRD'] %>
         - 18.219.120.204:27017
+      # options:
+      #   user: admin
+      #   password: uK3Y8VbJiljxfTp9
+
   options:
     raise_not_found_error: false
