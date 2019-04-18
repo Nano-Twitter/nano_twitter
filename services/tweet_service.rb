@@ -103,7 +103,7 @@ class TweetService
     if $redis.cached? "timeline_#{user_id}"
       tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{user_id}")['name']})}
+      # tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{user_id}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       # 这里考虑另开一个thread
