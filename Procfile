@@ -1,1 +1,1 @@
-web: bundle exec passenger start -p $PORT --max-pool-size 10 --engine nginx  --max-request-queue-time 20
+web: bundle exec passenger start -p $PORT --max-pool-size 10 --engine nginx  --max-request-queue-size 1000000
