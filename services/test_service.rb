@@ -2,7 +2,6 @@ require_relative '../model/user'
 require_relative '../model/tweet'
 require_relative '../seed/seed'
 
-ENV['APP_ENV'] = 'test'
 
 class TestService
 
