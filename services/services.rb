@@ -8,7 +8,6 @@ require_relative 'like_service.rb'
 require_relative 'comment_service.rb'
 require_relative 'test_service.rb'
 
-
 def create_index
   User.create_indexes
   Comment.create_indexes

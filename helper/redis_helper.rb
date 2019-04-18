@@ -4,9 +4,9 @@ require 'connection_pool'
 
 # $redis = Redis.new(host: 'nanotwitter.aouf4s.0001.use2.cache.amazonaws.com', port: 6379)
 # $redisStore = Redis.new(host: 'localhost', port: 6379)
-#
+
 begin
-  # $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(host: ENV['REDIS_URL'])}
+  # $redisStore = ConnxectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(host: ENV['REDIS_URL'])}
   $redisStore = Redis.new(url: ENV['REDIS_URL'])
 rescue
   pp '!!!!!error in redis'

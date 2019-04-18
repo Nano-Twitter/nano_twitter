@@ -1,6 +1,5 @@
 require 'json'
 
-# @redis = Redis.new(host: 'nanotwitter.aouf4s.0001.use2.cache.amazonaws.com', port: 6379)
 
 def json_result(status, code, message, data = {})
   {
