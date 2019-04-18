@@ -30,6 +30,7 @@ class UserService
     user = User.without(:password_hash).find(BSON::ObjectId(id))
     $redis.push_single_user "user_#{user.id.to_s}", user if (!$redis.cached?( "user_#{user.id.to_s}"))
     pp "imit login succees #{user}"
+    pp user
   end
 
   def self.signout(params = {})
