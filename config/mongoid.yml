@@ -25,7 +25,6 @@ test:
     raise_not_found_error: false
 
 production:
-
   max_retries_on_connection_failure: 20
   persist_in_safe_mode: true
   skip_version_check: true
@@ -33,7 +32,6 @@ production:
     default:
       database: twitter_production
       hosts:
-        - 18.219.120.204
-  
+        - 18.219.120.204:27017
   options:
     raise_not_found_error: false
