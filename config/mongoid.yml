@@ -33,9 +33,6 @@ production:
     default:
       database: twitter_production
       hosts:
-        # -  <%= ENV['MONGODB_MAIN'] %>
-        # -  <%= ENV['MONGODB_SECOND'] %>
-        # -  <%= ENV['MONGODB_THIRD'] %>
         - 18.219.120.204:27017
   options:
     raise_not_found_error: false
