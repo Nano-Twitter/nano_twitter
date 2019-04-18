@@ -7,6 +7,7 @@ require_relative 'services/services'
 # DB Setup
 Mongoid.load! "config/mongoid.yml"
 
+
 # GET Success: 200
 # POST Success: 201
 # Fail: 403
@@ -33,18 +34,18 @@ class App < Sinatra::Base
     end
 
     def process_result
-      status (@result[:status] || 500)
+      status(@result[:status] || 500)
       (@result[:payload] || {}).to_json
     end
   end
 
-  # before do
-  #   if (!session.key? (:user)) && (params.key? (:hack_user))
-  #     session[:id] = params[:hack_user]
-  #     session[:user] = User.find(session[:id])
-  #   end
-  #   session[:user] != nil ? @user = session[:user] : nil
-  # end
+  before do
+    if (!session.key?(:user)) && (params.key?(:hack_user))
+      session[:id] = params[:hack_user]
+      session[:user] = User.find(BSON::ObjectId(session[:id]))
+    end
+    session[:user] != nil ? @user = session[:user] : nil
+  end
 
   # # Endpoints
 
@@ -278,6 +279,29 @@ class App < Sinatra::Base
     @result = TestService.status
     process_result
   end
+  # test for search
+  get '/search' do
+    @result = TweetService.search params
+    process_result
+  end
+  # test for tweet
+  get '/test/tweet' do
+    request_params = params
+    request_params[:user_id] = session[:id]
+    request_params[:content] = Faker::TvShows::BojackHorseman.quote
+    @result = TweetService.create_tweet(request_params)
+    process_result
+  end
+  # test for timeline
+  get '/timeline' do
+    params[:user_id] = session[:id]
+    @result = TweetService.get_followee_tweets(params)
+    process_result
+  end
+
+  post '/create_index' do
+    create_index
+  end
 
   # following are route end point, will only be accessed when calling process_result in the previous route
 
@@ -289,20 +313,21 @@ class App < Sinatra::Base
   #   end
   # end
 
+
   # post "/*" do
   #   process_result
   # end
-
+  #
   # put "/*" do
   #   process_result
   # end
-
+  #
   # delete "/*" do
   #   process_result
   # end
 
   get '/*' do
-    send_file File.join(settings.public_folder, 'index.html')
+    send_file File.join(settings.public_dir, 'index.html')
   end
   
   run! if app_file == $0

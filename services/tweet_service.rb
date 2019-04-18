@@ -17,12 +17,13 @@ class TweetService
       tweet = Tweet.new(params)
       if tweet.save
         # add to timeline
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
-        fanout_helper(params[:user_id], tweet)
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+        $rabbit_mq.enqueue('fanout', {user_id: params[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
+        # fanout_helper(params[:user_id], tweet)
         # update user_info
-        user = get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")
+        user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
         user['tweets_count'] += 1
-        push_single_user $redisStore, "user_#{tweet[:user_id].to_s}", user
+        $redis.push_single_user "user_#{tweet[:user_id].to_s}", user
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
         json_result(403, 1, "Unable to send the tweet.")
@@ -46,7 +47,7 @@ class TweetService
     # Get a tweet
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
-    tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
+    tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -62,13 +63,24 @@ class TweetService
     if tweets
       tweets.each do |tweet|
         tweet_arr.push(tweet)
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
       end
       json_result(200, 0, "Tweets found.", tweet_arr)
     else
       json_result(403, 1, "Tweets not found.")
     end
 
+  end
+
+  def self.search(params)
+    page_num = params[:page_num] || 1
+    page_size = params[:page_size] || 10
+    tweets = Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    if tweets
+      json_result(200, 0, "Tweets found.", tweets)
+    else
+      json_result(403, 1, "Tweets not found.")
+    end
   end
 
   def self.get_total_by_user(params)
@@ -85,16 +97,17 @@ class TweetService
   def self.get_followee_tweets(params)
     # Get a list of tweets of followees
     # params: user_id; start; count
-    if cached? $redisStore, "timeline_#{params[:user_id]}"
-      tweet_ids = get_timeline $redisStore, "timeline_#{params[:user_id]}", params[:start].to_i, params[:count].to_i
-      tweets = Tweet.order(created_at: :desc).find(tweet_ids.map{|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
+    if $redis.cached? "timeline_#{params[:user_id]}"
+      tweet_ids = $redis.get_timeline "timeline_#{params[:user_id]}", params[:start].to_i, params[:count].to_i
+      tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       # 这里考虑另开一个thread
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
-      tweets = tweets.flatten(1)
-      push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map{|t| t.id.to_s}
+      tweets = tweets.flatten(1)[0, 500]
+      # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
+      $redis.push_mass_tweets "timeline_#{params[:user_id]}", tweets.map {|t| t.id.to_s}
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets)
@@ -103,5 +116,4 @@ class TweetService
       end
     end
   end
-
 end

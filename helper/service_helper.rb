@@ -13,13 +13,16 @@ def json_result(status, code, message, data = {})
   }
 end
 
-def fanout_helper(user_id, tweet)
-  push_single_tweet $redisStore, "timeline_#{user_id}", tweet.id.to_s
+def fanout_helper(user_id, tweet_id)
+  user_id = BSON::ObjectId(user_id)
+  tweet_id = BSON::ObjectId(tweet_id)
+
+  push_single_tweet $redisStore, "timeline_#{user_id}", tweet_id
   followers_ids = get_followers_ids(user_id)
   return if followers_ids.nil?
   followers_ids.each do |f_id|
     if cached?($redisStore, f_id)
-      push_single_tweet $redisStore, "timeline_#{f_id}", tweet.id.to_s
+      push_single_tweet $redisStore, "timeline_#{f_id}", tweet_id
     end
   end
 end

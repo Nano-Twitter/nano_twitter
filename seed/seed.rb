@@ -42,7 +42,7 @@ class Seed
         .insert_many(@tweets.split(/\r\n|\n/)
                                     .map {|x| x.split(',')}.select {|user_id, _content| @user_hash.key? user_id}
                                     .map {|array| {content: array[1],
-                                                   created_at: Faker::Time.between(30.days.ago, Date.today, :all).to_s,
+                                                   created_at: Faker::Time.between(30.days.ago, Date.today, :all),
                                                    user_id: @user_hash[array[0]]}})
 
     follows = @follows.split(/\r\n|\n/).map {|x| x.split(',')}
@@ -60,7 +60,7 @@ class Seed
     user_id = @user_hash[user_id.to_s]
     (1..sum).map {|x| Faker::TvShows::BojackHorseman.quote}
         .map {|x| {content: x,
-                   created_at: Faker::Time.between(30.days.ago, Date.today, :all).to_s,
+                   created_at: Faker::Time.between(30.days.ago, Date.today, :all),
                    user_id: user_id}}.each do |x|
       Tweet.create x
     end

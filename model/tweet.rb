@@ -12,11 +12,11 @@ class Tweet
   belongs_to :user, counter_cache: true
 
   index({created_at: 1})
+  index({user_id: 1})
   index({content: 'text'})
 
   has_many :comments
   has_many :likes
 
-  
 
 end
