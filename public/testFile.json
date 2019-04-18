@@ -29,8 +29,16 @@
     {
       "names": ["commands"],
       "values": [
-        ["search?content=person"],
-        ["search?content=drive"]
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["timeline?x=y"],
+        ["test/tweet?count=1"]
       ]
     }
   ]
