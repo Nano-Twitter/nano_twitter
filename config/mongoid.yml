@@ -26,7 +26,6 @@ test:
     raise_not_found_error: false
 
 production:
-
   max_retries_on_connection_failure: 20
   persist_in_safe_mode: true
   skip_version_check: true
