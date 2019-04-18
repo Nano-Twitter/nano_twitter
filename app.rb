@@ -5,7 +5,7 @@ require 'mongoid'
 require_relative 'services/services'
 
 # DB Setup
-Mongoid.load! "config/mongoid.yml",:production
+Mongoid.load! "config/mongoid.yml"
 
 
 # GET Success: 200
