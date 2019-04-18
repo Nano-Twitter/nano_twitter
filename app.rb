@@ -12,6 +12,9 @@ Mongoid.load! "config/mongoid.yml"
 # POST Success: 201
 # Fail: 403
 
+
+
+
 class App < Sinatra::Base
 
   enable :sessions
@@ -329,7 +332,7 @@ class App < Sinatra::Base
   get '/*' do
     send_file File.join(settings.public_dir, 'index.html')
   end
-  
+
   run! if app_file == $0
 
 end
