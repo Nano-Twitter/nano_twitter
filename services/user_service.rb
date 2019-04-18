@@ -29,6 +29,7 @@ class UserService
   def self.imit_login(id)
     user = User.without(:password_hash).find(BSON::ObjectId(id))
     $redis.push_single_user("user_#{user.id.to_s}", user) if !$redis.cached? "user_#{user.id.to_s}"
+    pp $redis.get_single_user("user_#{user.id.to_s}")
   end
 
   def self.signout(params = {})
@@ -87,12 +88,3 @@ class UserService
   end
 
 end
-
-# UserService.recommend('')
-["5cb79914f388a6008a2faa9f",
- "5cb79914f388a6008a2faaa0",
- "5cb79914f388a6008a2faaa1",
- "5cb79914f388a6008a2faaa2",
- "5cb79914f388a6008a2faaa3",
- "5cb79914f388a6008a2faaa4",
- "5cb79914f388a6008a2faaa5"].map {|id| UserService.imit_login(id)}

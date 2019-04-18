@@ -3,7 +3,7 @@ development:
     default:
       database: mongoid_development
       hosts:
-        - 18.191.227.19:27017
+        - 18.219.120.204:27017
   options:
     raise_not_found_error: false
 
@@ -12,7 +12,9 @@ test:
     default:
       database: mongoid_test
       hosts:
-        - 18.191.227.19:27017
+        # - 18.191.227.19:27017
+        # - 18.219.120.204:16082
+        - 18.219.120.204:27017
   options:
     raise_not_found_error: false
 
@@ -25,5 +27,8 @@ production:
       database: twitter_production
       hosts:
         - 18.219.120.204:27017
+      # options:
+      #   user: admin
+      #   password: uK3Y8VbJiljxfTp9
   options:
     raise_not_found_error: false

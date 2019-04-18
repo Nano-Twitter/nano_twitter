@@ -2,10 +2,20 @@ require 'json'
 require 'byebug'
 require 'sinatra'
 require 'mongoid'
-require_relative 'services/services'
 
 # DB Setup
+require_relative 'services/services'
 Mongoid.load! "config/mongoid.yml"
+
+
+# ["5cb79914f388a6008a2faa9f",
+#  "5cb79914f388a6008a2faaa0",
+#  "5cb79914f388a6008a2faaa1",
+#  "5cb79914f388a6008a2faaa2",
+#  "5cb79914f388a6008a2faaa3",
+#  "5cb79914f388a6008a2faaa4",
+#  "5cb79914f388a6008a2faaa5"].each {|id| UserService.imit_login(id)}
+
 
 # GET Success: 200
 # POST Success: 201

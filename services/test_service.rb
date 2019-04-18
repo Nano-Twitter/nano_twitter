@@ -2,7 +2,6 @@ require_relative '../model/user'
 require_relative '../model/tweet'
 require_relative '../seed/seed'
 
-ENV['APP_ENV'] = 'test'
 
 class TestService
 
@@ -20,7 +19,7 @@ class TestService
   def self.seed_user_and_related(number)
     Seed.reset
     Seed.create_user_and_related number.to_i
-    json_result(200, 0, "#{number.to_i}users created", {})
+    json_result(200, 0, "#{number.to_i} users created", {})
   end
 
   def self.seed_tweet(user_id, number)
