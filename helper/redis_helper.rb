@@ -57,4 +57,9 @@ class RedisHelper
   end
 end
 
-$redis = RedisHelper.new(ENV['REDIS_URL'])
+begin
+  $redis = RedisHelper.new(ENV['REDIS_URL'])
+  pp "Redis online :)"
+rescue
+  pp "Redis launch failed :("
+end

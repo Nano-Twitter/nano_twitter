@@ -7,12 +7,14 @@ class RabbitServer
     @connection = Bunny.new(host, automatically_recover: false)
     @connection.start
     @channel = @connection.create_channel
+    @channel.prefetch(1)
+
   end
 
   def enqueue(channel, message)
-    # rabbit_channel.prefetch(1)
     queue = @channel.queue(channel, durable: true)
-    @channel.default_exchange.publish(message, routing_key: queue.name, persistent: true)
+    # @channel.publish(message, routing_key: queue.name, persistent: true)
+    queue.publish(message, persistent: true)
     pp " [x] Sent #{message}"
   end
 
@@ -20,20 +22,17 @@ class RabbitServer
     queue = @channel.queue(channel, durable: true)
 
     begin
-      puts ' [*] Waiting for messages. To exit press CTRL+C'
+      pp "Rabbit subscribed to channel: #{channel}"
       # block: true is only used to keep the main thread
       # alive. Please avoid using it in real world applications.
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
-        # pp  _delivery_info
-        # pp _properties
         puts " [x] Received #{message}"
         message = JSON.parse(message)
         fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
       end
     rescue Interrupt => _
-      # @connection.close
-      pp 'Unsubscribed'
+      pp "Rabbit unsubscribed from channel: #{channel}"
     end
   end
 
@@ -44,7 +43,10 @@ class RabbitServer
 end
 
 
-$rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
-# $rabbit_mq = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {RabbitServer.new}
-$rabbit_mq.subscribe('fanout')
-pp "RabbitMQ Start"
+begin
+  $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
+  $rabbit_mq.subscribe('fanout')
+  pp "Rabbit online :)"
+rescue
+  pp "Rabbit launch failed :("
+end
