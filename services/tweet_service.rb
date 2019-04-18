@@ -23,7 +23,7 @@ class TweetService
         # update user_info
         user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
         user['tweets_count'] += 1
-        $redis.push_single_user "user_#{tweet[:user_id].to_s}", user
+        $redis.push_single_user("user_#{tweet[:user_id].to_s}", user)
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
         json_result(403, 1, "Unable to send the tweet.")
@@ -108,7 +108,7 @@ class TweetService
       tweets = tweets.flatten(1)[0, 500]
       # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
       $redis.push_mass_tweets "timeline_#{params[:user_id]}", tweets.map {|t| t.id.to_s}
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets)
       else
