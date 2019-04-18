@@ -1,21 +1,18 @@
 require 'bunny'
 
 class RabbitServer
-  # attr_reader :connection, :channel
 
   def initialize(host = nil)
     @connection = Bunny.new(host, automatically_recover: false)
     @connection.start
     @channel = @connection.create_channel
     @channel.prefetch(1)
-
   end
 
   def enqueue(channel, message)
     queue = @channel.queue(channel, durable: true)
-    # @channel.publish(message, routing_key: queue.name, persistent: true)
     queue.publish(message, persistent: true)
-    pp " [x] Sent #{message}"
+    pp "Rabbit sent: #{message}"
   end
 
   def subscribe(channel)
@@ -23,10 +20,8 @@ class RabbitServer
 
     begin
       pp "Rabbit subscribed to channel: #{channel}"
-      # block: true is only used to keep the main thread
-      # alive. Please avoid using it in real world applications.
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
-        puts " [x] Received #{message}"
+        puts "Rabbit received: #{message}"
         message = JSON.parse(message)
         fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
