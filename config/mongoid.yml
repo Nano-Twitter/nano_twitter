@@ -37,7 +37,7 @@ production:
         # -  <%= ENV['MONGODB_MAIN'] %>
         # -  <%= ENV['MONGODB_SECOND'] %>
         # -  <%= ENV['MONGODB_THIRD'] %>
-        - 18.191.227.19:27017
+        - 18.219.120.204:27017
       # options: 
       #   user: admin
       #   password: uK3Y8VbJiljxfTp9

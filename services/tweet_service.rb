@@ -23,7 +23,7 @@ class TweetService
         # update user_info
         user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
         user['tweets_count'] += 1
-        $redis.push_single_user "user_#{tweet[:user_id].to_s}", user
+        $redis.push_single_user("user_#{tweet[:user_id].to_s}", user)
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
         json_result(403, 1, "Unable to send the tweet.")

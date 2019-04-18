@@ -1,7 +1,5 @@
 require 'json'
 
-# @redis = Redis.new(host: 'nanotwitter.aouf4s.0001.use2.cache.amazonaws.com', port: 6379)
-
 def json_result(status, code, message, data = {})
   {
       status: status,
@@ -17,12 +15,12 @@ def fanout_helper(user_id, tweet_id)
   user_id = BSON::ObjectId(user_id)
   tweet_id = BSON::ObjectId(tweet_id)
 
-  push_single_tweet $redisStore, "timeline_#{user_id}", tweet_id
+  $redis.push_single_tweet("timeline_#{user_id}", tweet_id)
   followers_ids = get_followers_ids(user_id)
   return if followers_ids.nil?
   followers_ids.each do |f_id|
-    if cached?($redisStore, f_id)
-      push_single_tweet $redisStore, "timeline_#{f_id}", tweet_id
+    if $redis.cached?(f_id)
+      $redis.push_single_tweet("timeline_#{f_id}", tweet_id)
     end
   end
 end
