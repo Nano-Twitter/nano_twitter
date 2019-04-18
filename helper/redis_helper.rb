@@ -12,7 +12,7 @@ class RedisHelper
 
   def initialize(url = nil)
     if url
-      @store = Redis.new(url)
+      @store = Redis.new(url: url)
     else
       @store = Redis.new(host: 'localhost', port: 6379)
     end
