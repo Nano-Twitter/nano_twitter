@@ -12,7 +12,7 @@ class RedisHelper
 
   def initialize(url = nil)
     if url
-      @store = Redis.new(url: url)
+      @store = ConnectionPool::Wrapper.new(size: 20, timeout: 3) {Redis.new(url: url)}
     else
       @store = Redis.new(host: 'localhost', port: 6379)
     end
@@ -58,7 +58,7 @@ class RedisHelper
 end
 
 begin
-  $redis =ConnectionPool::Wrapper.new(size: 20, timeout: 3) {Redis.new(ENV['REDIS_URL'])}
+  $redis = RedisHelper.new(ENV['REDIS_URL'])
   pp "Redis online :)"
 rescue
   pp "Redis launch failed :("
