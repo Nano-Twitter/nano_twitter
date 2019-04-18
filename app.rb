@@ -281,11 +281,13 @@ class App < Sinatra::Base
   end
   # test for search
   get '/search' do
+    pp params
     @result = TweetService.search params
     process_result
   end
   # test for tweet
   get '/test/tweet' do
+    pp params
     request_params = params
     request_params[:content] = Faker::TvShows::BojackHorseman.quote
     @result = TweetService.create_tweet(request_params)
@@ -293,6 +295,7 @@ class App < Sinatra::Base
   end
   # test for timeline
   get '/timeline' do
+    pp params
     @result = TweetService.get_followee_tweets(params)
     process_result
   end
