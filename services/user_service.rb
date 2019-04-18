@@ -28,7 +28,7 @@ class UserService
 
   def self.imit_login(id)
     user = User.without(:password_hash).find(BSON::ObjectId(id))
-    $redis.push_single_user "user_#{user.id.to_s}", user if !$redis.cached? "user_#{user.id.to_s}"
+    $redis.push_single_user("user_#{user.id.to_s}", user) if !$redis.cached? "user_#{user.id.to_s}"
   end
 
   def self.signout(params = {})

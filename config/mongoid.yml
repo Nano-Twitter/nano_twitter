@@ -3,14 +3,7 @@ development:
     default:
       database: mongoid_development
       hosts:
-        # - localhost:27017
         - 18.191.227.19:27017
-        # - cluster0-shard-00-00-jj21z.mongodb.net:27017
-        # - cluster0-shard-00-01-jj21z.mongodb.net:27017
-        # - cluster0-shard-00-02-jj21z.mongodb.net:27017
-      # options: 
-      #   user: admin
-      #   password: uK3Y8VbJiljxfTp9
   options:
     raise_not_found_error: false
 
@@ -20,7 +13,6 @@ test:
       database: mongoid_test
       hosts:
         - 18.191.227.19:27017
-
   options:
     raise_not_found_error: false
 
