@@ -4,25 +4,25 @@
     "names": ["login"],
     "values": [
       [
-        "hack_user=5cb79914f388a6008a2faa9f"
+        "user_id=5cb79914f388a6008a2faa9f"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa0"
+        "user_id=5cb79914f388a6008a2faaa0"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa1"
+        "user_id=5cb79914f388a6008a2faaa1"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa2"
+        "user_id=5cb79914f388a6008a2faaa2"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa3"
+        "user_id=5cb79914f388a6008a2faaa3"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa4"
+        "user_id=5cb79914f388a6008a2faaa4"
       ],
       [
-        "hack_user=5cb79914f388a6008a2faaa5"
+        "user_id=5cb79914f388a6008a2faaa5"
       ]
     ]
   },
