@@ -290,14 +290,12 @@ class App < Sinatra::Base
   # test for tweet
   get '/test/tweet' do
     request_params = params
-    request_params[:user_id] = session[:id]
     request_params[:content] = Faker::TvShows::BojackHorseman.quote
     @result = TweetService.create_tweet(request_params)
     process_result
   end
   # test for timeline
   get '/timeline' do
-    params[:user_id] = session[:id]
     @result = TweetService.get_followee_tweets(params)
     process_result
   end
