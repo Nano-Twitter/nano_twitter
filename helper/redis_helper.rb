@@ -3,9 +3,8 @@ require 'redis'
 require 'connection_pool'
 
 # $redis = Redis.new(host: 'nanotwitter.aouf4s.0001.use2.cache.amazonaws.com', port: 6379)
-# $redisStore = Redis.new(host: 'localhost', port: 6379)
-$redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) { Redis.new(host: 'localhost', port: 6379) }
-
+$redisStore = Redis.new(host: 'localhost', port: 6379)
+# $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) { Redis.new(host: 'ntredis.kloma7.0001.use1.cache.amazonaws.com', port: 6379) }
 
 def cached?(store, key)
     store.exists(key)

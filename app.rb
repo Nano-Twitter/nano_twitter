@@ -49,9 +49,9 @@ class App < Sinatra::Base
   # # Endpoints
 
   # get '/' do
-  #   ":)"
+  #   redirect '/login'
   # end
-  # # Users
+  # Users
 
   # sign up： create a new user
   post '/users/signup' do
@@ -281,29 +281,30 @@ class App < Sinatra::Base
 
   # following are route end point, will only be accessed when calling process_result in the previous route
 
-  get '/*' do
-    if request.xhr?
-      process_result
-    else
-      process_result
-    end
-  end
+  # get '/*' do
+  #   if request.xhr?
+  #     process_result
+  #   else
+  #     process_result
+  #   end
+  # end
 
-  post "/*" do
-    process_result
-  end
+  # post "/*" do
+  #   process_result
+  # end
 
-  put "/*" do
-    process_result
-  end
+  # put "/*" do
+  #   process_result
+  # end
 
-  delete "/*" do
-    process_result
-  end
+  # delete "/*" do
+  #   process_result
+  # end
 
   get '/*' do
     send_file File.join(settings.public_folder, 'index.html')
   end
+  
   run! if app_file == $0
 
 end

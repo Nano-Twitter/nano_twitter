@@ -91,9 +91,9 @@ class TweetService
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
+      # 这里考虑另开一个thread
       tweets = (User.find(BSON::ObjectId(params[:user_id])).following).map {|f| f.tweets}
       tweets = tweets.flatten(1)
-      # 这里考虑另开一个thread
       push_mass_tweet $redisStore, "timeline_#{params[:user_id]}", tweets.map{|t| t.id.to_s}
       tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: get_single_user($redisStore, "user_#{tweet[:user_id].to_s}")['name']})}
       if tweets
