@@ -49,7 +49,7 @@ class RedisHelper
 
   def get_single_user(key)
     # JSON.parse(JSON.parse(store.get(key)))
-    JSON.parse(JSON.parse(@store.get(key)))
+    JSON.parse(@store.get(key))
   end
 
   def clear()
