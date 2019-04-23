@@ -31,7 +31,7 @@ describe 'user_service' do
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @service = UserService
 
   end
@@ -162,10 +162,10 @@ describe 'follow_service' do
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @service = FollowService
 
   end
@@ -245,10 +245,10 @@ describe 'redis' do
   it 'can cache timeline' do
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     params = {
         user_id: @user_id,
@@ -274,10 +274,10 @@ describe 'tweet_service' do
     $redis.clear
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet1.")
     @tweet_id = @tweet.id.to_s

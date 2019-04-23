@@ -18,10 +18,6 @@ class RedisHelper
     end
   end
 
-  def cached?(key)
-    @store.exists(key)
-  end
-
   # timeline
   # user_id: [tweet_id1, tweet_id2, ...]
   def push_mass_tweets(key, tweets)
@@ -42,23 +38,36 @@ class RedisHelper
 
   # user info cache
   # user: user_info_json
-  def push_single_user(key, user)
-    @store.set("user_#{key.to_s}", user.to_json)
-    @store.expire("user_#{key.to_s}", 24.hours.to_i)
+  def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
+    @store.set("user_#{user_id.to_s}", user.to_json)
+    @store.expire("user_#{user_id.to_s}", 24.hours.to_i)
   end
 
-
-  # @param [user_id] key
-  def get_single_user(key)
-    unless cached? "user_#{key.to_s}"
-      push_single_user(key, User.find(BSON::ObjectId(key)))
+  def get_single_user(user_id)
+    user = @store.get("user_#{user_id.to_s}")
+    if user
+      return JSON.parse(user)
+    else
+      user = User.without(:password_hash).find(BSON::ObjectId(user_id))
+      push_single_user(user_id, user)
+      return user
     end
-    # JSON.parse(JSON.parse(store.get("user_#{key.to_s}")))
-    JSON.parse(@store.get("user_#{key.to_s}"))
+
+    # unless cached? "user_#{user_id.to_s}"
+    #   push_single_user(user_id)
+    # end
+    # # TODO
+    # # JSON.parse(JSON.parse(store.get("user_#{user_id.to_s}")))
+    # JSON.parse(@store.get("user_#{user_id.to_s}"))
   end
 
   def clear()
     @store.flushall
+  end
+
+  # @deprecated, dont need this method
+  def cached?(key)
+    @store.exists(key)
   end
 end
 

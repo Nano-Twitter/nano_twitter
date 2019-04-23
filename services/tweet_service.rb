@@ -18,15 +18,8 @@ class TweetService
 
       params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
 
-      if $redis.cached? ("user_#{parent_tweet.user_id.to_s}")
-        parent_user_name = $redis.get_single_user("user_#{parent_tweet.user_id.to_s}")['name']
-      else
-        # update parent user info
-        parent_user = User.find(BSON::ObjectId(parent_tweet.user_id))
-        parent_user_name = parent_user.name
-        # TODO, using queue to push to redis
-        $redis.push_single_user("user_#{parent_user.user_id.to_s}", parent_user)
-      end
+      parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
+
       params[:content] += "//@#{parent_user_name}: " + parent_tweet.content
     end
 
@@ -34,12 +27,16 @@ class TweetService
     tweet = Tweet.new(params)
     if tweet.save
       # add to timeline
-      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
       pp "!!!!tweet: " + tweet
+
+      # send to rabbit for fanout
       $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
 
       # update user_info
       user = $redis.get_single_user(tweet[:user_id])
+      # TODO
+      # user.u
       user['tweets_count'] = user['tweets_count'].to_i + 1
       $redis.push_single_user(tweet[:user_id], user)
       json_result(201, 0, "Tweet sent successfully.", tweet)
@@ -66,7 +63,7 @@ class TweetService
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     # tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s,
-    #                                    name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+    #                                    name: $redis.get_single_user(tweet[:user_id])['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -82,7 +79,7 @@ class TweetService
     if tweets
       tweets.each do |tweet|
         tweet_arr.push(tweet)
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
       end
       json_result(200, 0, "Tweets found.", tweet_arr)
     else
@@ -122,7 +119,7 @@ class TweetService
     if $redis.cached? "timeline_#{user_id}"
       tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{user_id}")['name']})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(user_id)['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       # 这里考虑另开一个thread
@@ -130,7 +127,7 @@ class TweetService
       tweets = tweets.flatten(1)[0, 500]
       # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
       $redis.push_mass_tweets "timeline_#{user_id}", tweets.map {|t| t.id.to_s}
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id].to_s)['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets[start, start + count])
       else

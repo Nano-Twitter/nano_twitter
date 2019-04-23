@@ -8,7 +8,7 @@ class UserService
     user = User.new(params)
     if user.save
       user = User.without(:password_hash).find(user.id)
-      $redis.push_single_user "user_#{user.id.to_s}", user
+      $redis.push_single_user(user.id, user)
       json_result(201, 0, "Signup success!")
     else
       pp user.errors
@@ -19,7 +19,7 @@ class UserService
   def self.login(params)
     if User.authenticate(params[:email], params[:password])
       user = User.without(:password_hash).find_by_email(params[:email])
-      $redis.push_single_user "user_#{user.id.to_s}", user if (!$redis.cached?("user_#{user.id.to_s}"))
+      $redis.push_single_user(user.id, user)
       return json_result(200, 0, "Login success!", user)
     else
       return json_result(403, 1, "Username and password do not match!")
@@ -28,9 +28,9 @@ class UserService
 
   def self.imit_login(id)
     user = User.without(:password_hash).find(BSON::ObjectId(id))
-    $redis.push_single_user "user_#{user.id.to_s}", user if (!$redis.cached?( "user_#{user.id.to_s}"))
+    $redis.push_single_user(user.id, user)
     pp "imit login succees #{user}"
-    pp $redis.get_single_user "user_#{user.id.to_s}"
+    pp $redis.get_single_user user.id
   end
 
   def self.signout(params = {})
@@ -39,11 +39,7 @@ class UserService
 
   def self.get_profile(params)
     if params.has_key?(:id)
-      if $redis.cached? "user_#{params[:id]}"
-        user = $redis.get_single_user "user_#{params[:id]}"
-      else
-        user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
-      end
+      user = $redis.get_single_user params[:id]
     else
       return json_result(403, 1, 'Profile get failed')
     end
@@ -66,9 +62,7 @@ class UserService
     if user
       if user.update(params)
         temp_user = User.without(:password_hash).find(BSON::ObjectId(params[:id]))
-        if $redis.cached? "user_#{params[:id]}"
-          $redis.push_single_user "user_#{params[:id]}", temp_user
-        end
+        $redis.push_single_user(params[:id], temp_user)
         json_result(200, 0, 'Profile update succeed', temp_user)
       else
         json_result(403, 1, 'Cannot update user info!')
