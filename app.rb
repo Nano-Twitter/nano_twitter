@@ -58,9 +58,11 @@ class App < Sinatra::Base
 
   # # Endpoints
 
-  # get '/' do
-  #   redirect '/login'
-  # end
+  get '/*' do
+    # redirect '/login'
+
+    pass
+  end
   # Users
 
   # sign up： create a new user

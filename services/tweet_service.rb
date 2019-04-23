@@ -6,9 +6,12 @@ class TweetService
     # Create a new tweet
     # param :parent_id; content;
     # return: an json response
-    if params[:content] == '' && params[:parent_id] != '' # if it is a repost
-      params[:content] = 'Repost' # add 'Repost' to the tweet content
+    if params[:parent_id] != '' # if it is a repost
+      params[:content] ||= 'Retweet' # add 'Repost' to the tweet content if it's blank
+      params[:content] += '// ' + Tweet.find(BSON::ObjectId(params[:parent_id])).content
     end
+
+
     if params[:content] == '' && !params[:parent_id] # the tweet has no content
       json_result(403, 7, "Your tweet should not be empty.")
     else # the tweet has content
@@ -21,7 +24,7 @@ class TweetService
         $rabbit_mq.enqueue('fanout', {user_id: params[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
         # update user_info
         user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
-        user['tweets_count'] += 1
+        user['tweets_count'] = user['tweets_count'].to_i + 1
         $redis.push_single_user("user_#{tweet[:user_id].to_s}", user)
         json_result(201, 0, "Tweet sent successfully.", tweet)
       else
@@ -98,8 +101,8 @@ class TweetService
     # Get a list of tweets of followees
     # params: user_id; start; count
     user_id = params[:user_id]
-    start = params[:start] ? params[:start].to_i: 0
-    count = params[:count]? params[:count].to_i: 50
+    start = params[:start] ? params[:start].to_i : 0
+    count = params[:count] ? params[:count].to_i : 50
     if $redis.cached? "timeline_#{user_id}"
       tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})

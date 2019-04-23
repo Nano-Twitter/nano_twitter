@@ -6,6 +6,7 @@ class Tweet
   field :user_id, type: BSON::ObjectId
   field :content, type: String
   field :parent_id, type: BSON::ObjectId
+  field :root_id, type: BSON::ObjectId
   field :comments_count, type: Integer, default: 0
   field :likes_count, type: Integer, default: 0
 
@@ -17,6 +18,5 @@ class Tweet
 
   has_many :comments
   has_many :likes
-
 
 end
