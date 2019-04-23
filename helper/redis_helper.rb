@@ -43,13 +43,18 @@ class RedisHelper
   # user info cache
   # user: user_info_json
   def push_single_user(key, user)
-    @store.set(key, user.to_json)
-    @store.expire(key, 24.hours.to_i)
+    @store.set("user_#{key.to_s}", user.to_json)
+    @store.expire("user_#{key.to_s}", 24.hours.to_i)
   end
 
+
+  # @param [user_id] key
   def get_single_user(key)
-    # JSON.parse(JSON.parse(store.get(key)))
-    JSON.parse(@store.get(key))
+    unless cached? "user_#{key.to_s}"
+      push_single_user(key, User.find(BSON::ObjectId(key)))
+    end
+    # JSON.parse(JSON.parse(store.get("user_#{key.to_s}")))
+    JSON.parse(@store.get("user_#{key.to_s}"))
   end
 
   def clear()

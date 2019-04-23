@@ -6,30 +6,46 @@ class TweetService
     # Create a new tweet
     # param :parent_id; content;
     # return: an json response
-    if params[:parent_id] != '' # if it is a repost
-      params[:content] ||= 'Retweet' # add 'Repost' to the tweet content if it's blank
-      params[:content] += '// ' + Tweet.find(BSON::ObjectId(params[:parent_id])).content
+
+    if !params[:content] && !params[:parent_id] # the tweet has no content
+      return json_result(403, 7, "Your tweet should not be empty.")
     end
 
+    if params[:parent_id] # if it is a Retweet
+      params[:parent_id] = BSON::ObjectId(params[:parent_id])
+      parent_tweet = Tweet.find(params[:parent_id])
+      params[:root_id] = BSON::ObjectId(parent_tweet.root_id)
 
-    if params[:content] == '' && !params[:parent_id] # the tweet has no content
-      json_result(403, 7, "Your tweet should not be empty.")
-    else # the tweet has content
-      params[:parent_id] = BSON::ObjectId(params[:parent_id]) if params[:parent_id]
-      params[:user_id] = BSON::ObjectId(params[:user_id])
-      tweet = Tweet.new(params)
-      if tweet.save
-        # add to timeline
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
-        $rabbit_mq.enqueue('fanout', {user_id: params[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
-        # update user_info
-        user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
-        user['tweets_count'] = user['tweets_count'].to_i + 1
-        $redis.push_single_user("user_#{tweet[:user_id].to_s}", user)
-        json_result(201, 0, "Tweet sent successfully.", tweet)
+      params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
+
+      if $redis.cached? ("user_#{parent_tweet.user_id.to_s}")
+        parent_user_name = $redis.get_single_user("user_#{parent_tweet.user_id.to_s}")['name']
       else
-        json_result(403, 1, "Unable to send the tweet.")
+        # update parent user info
+        parent_user = User.find(BSON::ObjectId(parent_tweet.user_id))
+        parent_user_name = parent_user.name
+        # TODO, using queue to push to redis
+        $redis.push_single_user("user_#{parent_user.user_id.to_s}", parent_user)
       end
+      params[:content] += "//@#{parent_user_name}: " + parent_tweet.content
+    end
+
+    params[:user_id] = BSON::ObjectId(params[:user_id])
+    tweet = Tweet.new(params)
+    if tweet.save
+      # add to timeline
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+      pp "!!!!tweet: " + tweet
+      $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
+
+      # update user_info
+      user = $redis.get_single_user(tweet[:user_id])
+      user['tweets_count'] = user['tweets_count'].to_i + 1
+      $redis.push_single_user(tweet[:user_id], user)
+      json_result(201, 0, "Tweet sent successfully.", tweet)
+    else
+      pp tweet.errors
+      json_result(403, 1, "Unable to send the tweet.")
     end
   end
 
