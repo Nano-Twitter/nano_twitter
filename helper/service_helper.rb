@@ -1,4 +1,5 @@
 require 'json'
+require_relative '../model/user'
 
 def json_result(status, code, message, data = {})
   {

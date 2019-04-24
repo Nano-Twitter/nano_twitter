@@ -14,21 +14,27 @@ class TweetService
     if params[:parent_id] # if it is a Retweet
       params[:parent_id] = BSON::ObjectId(params[:parent_id])
       parent_tweet = Tweet.find(params[:parent_id])
-      params[:root_id] = BSON::ObjectId(parent_tweet.root_id)
+
+      # TODO: update enqueue
+      parent_tweet.update_attributes!(retweet_count: parent_tweet.retweet_count + 1)
+      root_id = parent_tweet.root_id || parent_tweet.id
+      params[:root_id] = BSON::ObjectId(root_id)
+      if params[:root_id] != params[:parent_id]
+        root_tweet = Tweet.find(params[:root_id])
+        root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
+      end
 
       params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
-
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
-
-      params[:content] += "//@#{parent_user_name}: " + parent_tweet.content
+      params[:content] += "//@#{parent_user_name}: #{parent_tweet.content}"
     end
 
     params[:user_id] = BSON::ObjectId(params[:user_id])
     tweet = Tweet.new(params)
     if tweet.save
       # add to timeline
+      # TODO, this will not affect db
       tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
-      pp "!!!!tweet: " + tweet
 
       # send to rabbit for fanout
       $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
@@ -36,7 +42,6 @@ class TweetService
       # update user_info
       user = $redis.get_single_user(tweet[:user_id])
       # TODO
-      # user.u
       user['tweets_count'] = user['tweets_count'].to_i + 1
       $redis.push_single_user(tweet[:user_id], user)
       json_result(201, 0, "Tweet sent successfully.", tweet)

@@ -44,7 +44,7 @@ class RedisHelper
   end
 
   def get_single_user(user_id)
-    user = @store.get("user_#{user_id.to_s}")
+    user = @store.get("user_#{user_id}")
     if user
       return JSON.parse(user)
     else

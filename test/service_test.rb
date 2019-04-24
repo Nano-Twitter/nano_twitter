@@ -306,18 +306,22 @@ describe 'tweet_service' do
   end
 
   it 'can create a repo without entering content' do
-
+    tweet_count = User.find(BSON::ObjectId(@user_id)).tweets_count
     params = {
         user_id: @user_id,
         content: nil,
         parent_id: @tweet_id,
-        root_id: @tweet_id
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
-    response[:payload][:data]['content'].must_equal ('Retweet// ' + Tweet.find(BSON::ObjectId(params[:@tweet_id])).content)
+    response[:payload][:data]['content'].must_match /Retweet.*/
     response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
 
+    after_tweet_count = User.find(response[:payload][:data]['user_id']).tweets_count
+    after_tweet_count.must_equal tweet_count + 1
+    # TODO user attr
+    a = Tweet.find(response[:payload][:data]['_id'])
+    # b = response[:payload][:data]['user_attr']['id'].must_equal Tweet.find(response[:payload][:data]['id']).user_attr[:id]
   end
 
   it 'can retweet a retweet' do
