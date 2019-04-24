@@ -273,6 +273,8 @@ describe 'tweet_service' do
     User.destroy_all
     $redis.clear
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
+    # !!!IF NOT eliminate the hassword_hash, redis mapped_hmset will raise error because of different number of argument
+    @user = User.without(:password_hash).find(@user.id)
     @user_id = @user.id.to_s
     $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)

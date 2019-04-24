@@ -38,16 +38,18 @@ class RedisHelper
 
   # user info cache
   # user: user_info_json
-  def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
+  def push_single_user(user_id, user)
     @store.mapped_hmset("user_#{user_id.to_s}", user.as_json)
     @store.expire("user_#{user_id.to_s}", 24.hours.to_i)
   end
 
   def get_single_user(user_id)
     user = @store.hgetall("user_#{user_id}")
-    unless user
+
+    if user == {}
       user = User.without(:password_hash).find(BSON::ObjectId(user_id))
       push_single_user(user_id, user)
+      user = user.as_json
     end
     user
   end
