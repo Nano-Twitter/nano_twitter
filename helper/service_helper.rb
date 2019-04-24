@@ -1,4 +1,5 @@
 require 'json'
+require_relative '../model/user'
 
 redis = RedisHelper.new(ENV['REDIS_URL'])
 

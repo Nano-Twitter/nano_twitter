@@ -1,8 +1,10 @@
-ENV['APP_ENV'] = 'development'
+ENV['APP_ENV'] = 'test'
 
 require_relative '../app.rb'
 require 'minitest/autorun'
 require 'rack/test'
+require_relative '../helper/rabbit_helper'
+require_relative '../helper/redis_helper'
 
 include Rack::Test::Methods
 
@@ -11,6 +13,14 @@ def app
 end
 
 Mongoid.load! "config/mongoid.yml", :test
+
+# describe 'reset_db' do
+#   before do
+#     Tweet.destroy_all
+#     User.destroy_all
+#   end
+# end
+
 
 describe 'user_service' do
 
@@ -21,7 +31,7 @@ describe 'user_service' do
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @service = UserService
 
   end
@@ -152,10 +162,10 @@ describe 'follow_service' do
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @service = FollowService
 
   end
@@ -212,6 +222,7 @@ describe 'follow_service' do
   end
 
 end
+
 describe 'redis' do
   before do
     Tweet.destroy_all
@@ -234,10 +245,10 @@ describe 'redis' do
   it 'can cache timeline' do
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     params = {
         user_id: @user_id,
@@ -262,11 +273,13 @@ describe 'tweet_service' do
     User.destroy_all
     $redis.clear
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
+    # !!!IF NOT eliminate the hassword_hash, redis mapped_hmset will raise error because of different number of argument
+    @user = User.without(:password_hash).find(@user.id)
     @user_id = @user.id.to_s
-    $redis.push_single_user "user_#{@user_id}", @user.to_json
+    $redis.push_single_user @user_id, @user
     @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
     @follower_id = @follower.id.to_s
-    $redis.push_single_user "user_#{@follower_id}", @follower.to_json
+    $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     @tweet = Tweet.create!(user_id: @user_id, content: "This is the base tweet1.")
     @tweet_id = @tweet.id.to_s
@@ -295,16 +308,42 @@ describe 'tweet_service' do
   end
 
   it 'can create a repo without entering content' do
-
+    tweet_count = User.find(BSON::ObjectId(@user_id)).tweets_count
     params = {
         user_id: @user_id,
-        content: "",
-        parent_id: @tweet_id
+        content: nil,
+        parent_id: @tweet_id,
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
-    response[:payload][:data]['content'].must_equal 'Repost'
+    response[:payload][:data]['content'].must_match /Retweet.*/
     response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
+
+    after_tweet_count = User.find(response[:payload][:data]['user_id']).tweets_count
+    after_tweet_count.must_equal tweet_count + 1
+    # TODO user attr
+    a = Tweet.find(response[:payload][:data]['_id'])
+  end
+
+  it 'can retweet a retweet' do
+    params = {
+        user_id: @user_id,
+        content: nil,
+        parent_id: @tweet_id,
+        root_id: @tweet_id
+    }
+    response = @service.create_tweet(params)
+    response[:status].must_equal 201
+
+    params_2 = {
+        user_id: @user_id,
+        parent_id: response[:payload][:data]['parent_id'],
+        root_id: response[:payload][:data]['root_id'],
+        content: nil
+    }
+    response_2 = @service.create_tweet(params_2)
+    response[:status].must_equal 201
+
 
   end
 

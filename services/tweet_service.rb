@@ -6,27 +6,46 @@ class TweetService
     # Create a new tweet
     # param :parent_id; content;
     # return: an json response
-    if params[:content] == '' && params[:parent_id] != '' # if it is a repost
-      params[:content] = 'Repost' # add 'Repost' to the tweet content
+
+    if !params[:content] && !params[:parent_id] # the tweet has no content
+      return json_result(403, 7, "Your tweet should not be empty.")
     end
-    if params[:content] == '' && !params[:parent_id] # the tweet has no content
-      json_result(403, 7, "Your tweet should not be empty.")
-    else # the tweet has content
-      params[:parent_id] = BSON::ObjectId(params[:parent_id]) if params[:parent_id]
-      params[:user_id] = BSON::ObjectId(params[:user_id])
-      tweet = Tweet.new(params)
-      if tweet.save
-        # add to timeline
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
-        $rabbit_mq.enqueue('fanout', {user_id: params[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
-        # update user_info
-        user = $redis.get_single_user "user_#{tweet[:user_id].to_s}"
-        user['tweets_count'] += 1
-        $redis.push_single_user("user_#{tweet[:user_id].to_s}", user)
-        json_result(201, 0, "Tweet sent successfully.", tweet)
-      else
-        json_result(403, 1, "Unable to send the tweet.")
+
+    if params[:parent_id] # if it is a Retweet
+      params[:parent_id] = BSON::ObjectId(params[:parent_id])
+      parent_tweet = Tweet.find(params[:parent_id])
+
+      # TODO: update enqueue
+      parent_tweet.update_attributes!(retweet_count: parent_tweet.retweet_count + 1)
+      root_id = parent_tweet.root_id || parent_tweet.id
+      params[:root_id] = BSON::ObjectId(root_id)
+      if params[:root_id] != params[:parent_id]
+        root_tweet = Tweet.find(params[:root_id])
+        root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
       end
+
+      params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
+      parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
+      params[:content] += "//@#{parent_user_name}: #{parent_tweet.content}"
+    end
+
+    params[:user_id] = BSON::ObjectId(params[:user_id])
+    tweet = Tweet.new(params)
+    if tweet.save
+      # add to timeline
+      # TODO, this will not affect db
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
+
+      # send to rabbit for fanout
+      $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
+
+      # update user's tweet_count
+      $redis.incr_tweet_count(tweet[:user_id])
+
+      json_result(201, 0, "Tweet sent successfully.", tweet)
+    else
+      pp tweet.errors
+      json_result(403, 1, "Unable to send the tweet.")
     end
   end
 
@@ -47,7 +66,7 @@ class TweetService
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
     # tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s,
-    #                                    name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+    #                                    name: $redis.get_single_user(tweet[:user_id])['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -63,7 +82,7 @@ class TweetService
     if tweets
       tweets.each do |tweet|
         tweet_arr.push(tweet)
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
       end
       json_result(200, 0, "Tweets found.", tweet_arr)
     else
@@ -98,12 +117,12 @@ class TweetService
     # Get a list of tweets of followees
     # params: user_id; start; count
     user_id = params[:user_id]
-    start = params[:start] ? params[:start].to_i: 0
-    count = params[:count]? params[:count].to_i: 50
+    start = params[:start] ? params[:start].to_i : 0
+    count = params[:count] ? params[:count].to_i : 50
     if $redis.cached? "timeline_#{user_id}"
       tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{user_id}")['name']})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(user_id)['name']})}
       json_result(200, 0, "All tweets found.", tweets)
     else
       # 这里考虑另开一个thread
@@ -111,7 +130,7 @@ class TweetService
       tweets = tweets.flatten(1)[0, 500]
       # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
       $redis.push_mass_tweets "timeline_#{user_id}", tweets.map {|t| t.id.to_s}
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})}
+      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id].to_s)['name']})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets[start, start + count])
       else

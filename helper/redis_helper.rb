@@ -18,10 +18,6 @@ class RedisHelper
     end
   end
 
-  def cached?(key)
-    @store.exists(key)
-  end
-
   # timeline
   # user_id: [tweet_id1, tweet_id2, ...]
   def push_mass_tweets(key, tweets)
@@ -42,18 +38,33 @@ class RedisHelper
 
   # user info cache
   # user: user_info_json
-  def push_single_user(key, user)
-    @store.set(key, user.to_json)
-    @store.expire(key, 24.hours.to_i)
+  def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
+    @store.mapped_hmset("user_#{user_id.to_s}", user.as_json)
+    @store.expire("user_#{user_id.to_s}", 24.hours.to_i)
   end
 
-  def get_single_user(key)
-    # JSON.parse(JSON.parse(store.get(key)))
-    JSON.parse(@store.get(key))
+  def get_single_user(user_id)
+    user = @store.hgetall("user_#{user_id}")
+
+    if user == {}
+      user = User.without(:password_hash).find(BSON::ObjectId(user_id))
+      push_single_user(user_id, user)
+      user = user.as_json
+    end
+    user
+  end
+
+  def incr_tweet_count(user_id)
+    @store.hincrby("user_#{user_id}", 'tweets_count', 1)
   end
 
   def clear()
     @store.flushall
+  end
+
+  # @deprecated, dont need this method
+  def cached?(key)
+    @store.exists(key)
   end
 end
 
