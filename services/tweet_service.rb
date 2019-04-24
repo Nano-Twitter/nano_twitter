@@ -46,7 +46,8 @@ class TweetService
     # Get a tweet
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
-    tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
+    # tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s,
+    #                                    name: $redis.get_single_user("user_#{tweet[:user_id].to_s}")['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
