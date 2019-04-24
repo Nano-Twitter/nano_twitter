@@ -319,6 +319,7 @@ describe 'tweet_service' do
 
     after_tweet_count = User.find(response[:payload][:data]['user_id']).tweets_count
     after_tweet_count.must_equal tweet_count + 1
+    a = $redis.get_single_user(@user_id)
     # TODO user attr
     a = Tweet.find(response[:payload][:data]['_id'])
     # b = response[:payload][:data]['user_attr']['id'].must_equal Tweet.find(response[:payload][:data]['id']).user_attr[:id]

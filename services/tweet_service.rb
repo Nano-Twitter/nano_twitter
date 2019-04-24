@@ -39,11 +39,9 @@ class TweetService
       # send to rabbit for fanout
       $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
 
-      # update user_info
-      user = $redis.get_single_user(tweet[:user_id])
-      # TODO
-      user['tweets_count'] = user['tweets_count'].to_i + 1
-      $redis.push_single_user(tweet[:user_id], user)
+      # update user's tweet_count
+      $redis.incr_tweet_count(tweet[:user_id])
+
       json_result(201, 0, "Tweet sent successfully.", tweet)
     else
       pp tweet.errors
