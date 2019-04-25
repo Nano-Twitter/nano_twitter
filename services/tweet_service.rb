@@ -122,7 +122,7 @@ class TweetService
 
     name_cache = {}
     find_user_name = ->(id) do
-      if name_cache.key? id
+      if (name_cache.key? id)
         name_cache[id]
       else
         name = $redis.get_single_user(user_id)['name']
