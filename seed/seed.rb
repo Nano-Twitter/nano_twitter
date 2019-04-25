@@ -11,8 +11,8 @@ class Seed
   @tweets = File.read('./seed/tweets.csv')
 
   def self.reset
-    Tweet.destroy_all
-    User.destroy_all
+    Tweet.delete_all
+    User.delete_all
   end
 
   def self.create_user(sum = 100)
