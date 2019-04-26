@@ -122,7 +122,7 @@ class TweetService
 
     name_cache = {}
     find_user_name = ->(id) do
-      if (name_cache.key? id)
+      if name_cache.key? id
         name_cache[id]
       else
         name = $redis.get_single_user(user_id)['name']
@@ -130,9 +130,9 @@ class TweetService
         name
       end
     end
+    tweet_ids=$redis.get_timeline "timeline_#{user_id}", start, count
 
-    if $redis.cached? "timeline_#{user_id}"
-      tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
+    if tweet_ids && tweet_ids.length>0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
       tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name:find_user_name.call(user_id)})}
       json_result(200, 0, "All tweets found.", tweets)

@@ -21,18 +21,23 @@ class RedisHelper
   # timeline
   # user_id: [tweet_id1, tweet_id2, ...]
   def push_mass_tweets(key, tweets)
-    tweets.each do |t|
-      @store.lpush(key, t)
-      @store.expire(key, 24.hours.to_i)
-    end
+    @store.lpush(key, tweets)
+    @store.expire(key, 120.hours.to_i)
   end
 
   def get_timeline(key, start, count)
     @store.lrange(key, start, start + count - 1)
   end
 
+  # this is currently identical to push mass_tweets, consider drop one of them
+  #Todo
   def push_single_tweet(key, tweet)
     @store.lpush(key, tweet)
+    @store.expire(key, 120.hours.to_i)
+  end
+
+  def push_single_tweet_if_exists(key,tweet)
+    @store.lpushx(key, tweet)
     @store.expire(key, 120.hours.to_i)
   end
 
@@ -61,7 +66,6 @@ class RedisHelper
     @store.flushall
   end
 
-  # @deprecated, dont need this method
   def cached?(key)
     @store.exists(key)
   end
