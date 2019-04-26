@@ -144,7 +144,7 @@ class TweetService
         client.watch key
         lock = client.get key
         if !lock
-          client.unwatch key
+          client.unwatch
           return json_result(200, 0, "Timelines are being built,please wait", [])
         end
         client.multi
