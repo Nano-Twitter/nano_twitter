@@ -130,22 +130,39 @@ class TweetService
         name
       end
     end
-    tweet_ids=$redis.get_timeline "timeline_#{user_id}", start, count
+    tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
 
-    if tweet_ids && tweet_ids.length>0
+    if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name:find_user_name.call(user_id)})}
+      tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name.call(user_id)})}
       json_result(200, 0, "All tweets found.", tweets)
     else
-      # Consider doing it in another thread
-      tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-      # Consider doing it in another thread
-      $redis.push_mass_tweets "timeline_#{user_id}", tweets.map {|t| t.id.to_s}
-      tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name.call(user_id)})}
-      if tweets
-        json_result(200, 0, "All tweets found.", tweets[start, start + count])
+      # here begin the transaction and CAS operation
+      client = $redis.get_client
+      key = "timeline_key+#{user_id}"
+      client.watch key
+      lock = client.get key
+      if !lock
+        client.unwatch key
+        return json_result(200, 0, "Timelines are being built,please wait", [])
+      end
+      client.multi
+      client.set key, 1 # lock the item
+      lock_flag = client.exec # make sure if the lock is a success
+      if lock_flag
+        # Consider doing it in another thread
+        tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
+        # Consider doing it in another thread
+        client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
+
+        tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name.call(user_id)})}
+        if tweets
+          json_result(200, 0, "All tweets found.", tweets[start, start + count])
+        else
+          json_result(403, 1, "Tweets not found.")
+        end
       else
-        json_result(403, 1, "Tweets not found.")
+        return json_result(200, 0, "Timelines are being built,please wait", [])
       end
     end
   end

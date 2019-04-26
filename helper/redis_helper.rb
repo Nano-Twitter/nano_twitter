@@ -18,6 +18,10 @@ class RedisHelper
     end
   end
 
+  def get_client
+    @store
+  end
+
   # timeline
   # user_id: [tweet_id1, tweet_id2, ...]
   def push_mass_tweets(key, tweets)
