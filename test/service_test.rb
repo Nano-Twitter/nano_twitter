@@ -251,11 +251,11 @@ describe 'redis' do
     $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     params = {
-        user_id: @user_id,
+        user_id: @follower_id,
         content: "This is the base tweet1."
     }
     @ts.create_tweet params
-    $redis.cached?("timeline_#{@user_id}").must_equal true
+    $redis.cached?("timeline_key+#{@user_id}").must_equal true
   end
 
   after do

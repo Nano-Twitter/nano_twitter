@@ -1,6 +1,7 @@
 require_relative '../model/tweet'
 require 'set'
 class TweetService
+  
   @name_cache = {}
 
   def self.find_user_name id
@@ -15,8 +16,8 @@ class TweetService
 
   def self.create_tweet(params)
     # Create a new tweet
-    # param :parent_id; content;
-    # return: an json response
+    # param parent_id; content, user_id, root_id;
+    # return: a json response
 
     if !params[:content] && !params[:parent_id] # the tweet has no content
       return json_result(403, 7, "Your tweet should not be empty.")
@@ -105,7 +106,7 @@ class TweetService
   def self.search(params)
     page_num = params[:page_num] || 1
     page_size = params[:page_size] || 10
-    tweets = Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    tweets = Tweet.where('text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
