@@ -267,10 +267,14 @@ class App < Sinatra::Base
   # Example: `/test/reset/standard?users=100&tweets=100
   post '/test/reset' do
     number = params[:users]
+    $redis.clear
     @result = TestService.seed_user_and_related(number)
     process_result
   end
 
+  delete '/reset/redis'do
+    $redis.clear
+  end
 
   # {u} can be the user id of some user, or the keyword testuser
   # n is how many randomly generated tweets are submitted on that users behalf
@@ -311,6 +315,7 @@ class App < Sinatra::Base
   post '/create_index' do
     create_index
   end
+
 
   # following are route end point, will only be accessed when calling process_result in the previous route
 

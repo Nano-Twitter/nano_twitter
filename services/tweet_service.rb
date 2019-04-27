@@ -1,5 +1,5 @@
 require_relative '../model/tweet'
-
+require 'set'
 class TweetService
 
   def self.create_tweet(params)
@@ -102,7 +102,7 @@ class TweetService
     end
   end
 
-  def self.get_total_by_user(params)
+  def self.get_total_tweets_count_by_user(params)
     # Get a the number of tweets of a user
     # params: user_id
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).count
@@ -119,22 +119,76 @@ class TweetService
     user_id = params[:user_id]
     start = params[:start] ? params[:start].to_i : 0
     count = params[:count] ? params[:count].to_i : 50
-    if $redis.cached? "timeline_#{user_id}"
-      tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
+
+
+    tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
+
+    if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(user_id)['name']})}
+      user_ids = Set.new(tweets.map {|x| "un_#{x.user_id}"}).to_a
+      res = $redis.get_client.mget(user_ids)
+      name_cache = {}
+      user_ids.each_with_index do |id, index|
+        id = id[3..]
+        result = res[index]
+        unless result
+          result = $redis.push_single_user(id)[:name]
+        end
+        name_cache[id] = result
+      end
+      tweets = tweets.map do |tweet|
+        user_id = tweet[:user_id].to_s
+        tweet = tweet.as_json
+        tweet[:user_attr] = {id: user_id, name: name_cache[user_id]}
+      end
       json_result(200, 0, "All tweets found.", tweets)
     else
-      # 这里考虑另开一个thread
-      tweets = (User.find(BSON::ObjectId(user_id)).following).map {|f| f.tweets}
-      tweets = tweets.flatten(1)[0, 500]
-      # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
-      $redis.push_mass_tweets "timeline_#{user_id}", tweets.map {|t| t.id.to_s}
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id].to_s)['name']})}
-      if tweets
-        json_result(200, 0, "All tweets found.", tweets[start, start + count])
-      else
-        json_result(403, 1, "Tweets not found.")
+      # here begin the transaction and CAS operation
+      client_pool = $redis.get_client
+      client_pool.with do |client|
+        key = "timeline_key+#{user_id}"
+        client.watch key
+        lock = client.get key
+        if lock
+          client.unwatch
+          puts 'others building'
+          return json_result(200, 0, "Timelines are being built,please wait", [])
+        end
+        client.multi
+        client.set key, 1 # lock the item
+        lock_flag = client.exec # make sure if the lock is a success
+        if lock_flag
+          # Consider doing it in another thread
+          tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
+          tweets = tweets.sort_by {|tweet| tweet[:created_at]}.reverse
+          # Consider doing it in another thread
+          client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
+          user_ids = Set.new(tweets.map {|x| "un_#{x.user_id}}"}).to_a
+          res = client.mget(user_ids)
+          name_cache = {}
+          user_ids.each_with_index do |id, index|
+            id = id[3..]
+            result = res[index]
+            unless result
+              result = $redis.push_single_user(id)[:name]
+            end
+            name_cache[id] = result
+          end
+          tweets = tweets.map do |tweet|
+            user_id = tweet[:user_id].to_s
+            tweet = tweet.as_json
+            tweet[:user_attr] = {id: user_id, name: name_cache[user_id]}
+          end
+          if tweets
+            json_result(200, 0, "All tweets found.", tweets[start, start + count])
+          else
+            json_result(403, 1, "Tweets not found.")
+          end
+        else
+          puts 'lock taken by others'
+          puts lock_flag
+          return json_result(200, 0, "Timelines are being built,please wait", [])
+        end
       end
     end
   end
