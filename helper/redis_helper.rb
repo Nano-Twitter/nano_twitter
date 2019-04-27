@@ -45,7 +45,7 @@ class RedisHelper
   def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
     # cache the user name for mget operation
-    @store.set("un_#{user_id}",user.name)
+    #@store.set("un_#{user_id}",user.name)
     user
     #@store.expire("user_#{user_id}", 24.hours.to_i)
   end
