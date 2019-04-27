@@ -6,7 +6,7 @@ class LikeService
         like = Like.new(params)
         if like.save
             # make changes to redis
-            $redis.incr_like_count(params[:tweet_id])
+            # $redis.incr_like_count(params[:tweet_id])
             json_result(201, 0, "Like")
         else
             json_result(403, 1, "Unable to like.")
@@ -17,7 +17,7 @@ class LikeService
         like = Like.find(BSON::ObjectId(params[:like_id]))
         if like.delete
             # make changes to redis
-            $redis.decr_like_count(params[:tweet_id])
+            # $redis.decr_like_count(params[:tweet_id])
             json_result(200, 0, "Unlike.")
         else
             json_result(403, 1, "Unable to unlike.")
