@@ -106,7 +106,7 @@ class TweetService
   def self.search(params)
     page_num = params[:page_num] || 1
     page_size = params[:page_size] || 10
-    tweets = Tweet.where('text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    tweets = Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
