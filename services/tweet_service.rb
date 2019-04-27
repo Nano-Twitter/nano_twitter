@@ -7,7 +7,7 @@ class TweetService
     if @name_cache.key? id
       @name_cache[id]
     else
-      name = $redis.get_single_user(user_id)['name']
+      name = $redis.get_single_user(id)['name']
       @name_cache[id] = name
       name
     end
