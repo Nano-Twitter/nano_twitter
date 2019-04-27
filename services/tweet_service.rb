@@ -151,7 +151,7 @@ class TweetService
         if lock
           client.unwatch
           puts 'others building'
-          return json_result(200, 0, "Timelines are being built,please wait", [])
+          return json_result(200, 0, "Timelines are being built, please wait", [])
         end
         client.multi
         client.set key, 1 # lock the item
@@ -174,7 +174,7 @@ class TweetService
         else
           puts 'lock taken by others'
           puts lock_flag
-          return json_result(200, 0, "Timelines are being built,please wait", [])
+          return json_result(200, 0, "Timelines are being built, please wait", [])
         end
       end
     end

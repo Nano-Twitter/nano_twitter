@@ -9,7 +9,7 @@ class RedisHelper
     if url
       @store = ConnectionPool::Wrapper.new(size: 20, timeout: 10) {Redis.new(url: url)}
     else
-      @store = Redis.new(host: 'localhost', port: 6379)
+      @store = ConnectionPool::Wrapper.new(size: 20, timeout: 10) {Redis.new(host: 'localhost', port: 6379)}
     end
   end
 
