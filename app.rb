@@ -23,7 +23,7 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
-  use Rack::Deflater
+  use Rack::Deflater,:if => lambda { |*, body| sum=0; body.each { |i| sum += i.length }; sum > 512 },sync:false
   enable :sessions
 
   # register do
