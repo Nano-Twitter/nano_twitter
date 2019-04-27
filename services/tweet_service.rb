@@ -159,7 +159,7 @@ class TweetService
           user_ids=Set.new(tweets.map{|x|x.user_id.to_s}).to_a
           res=client.mget(user_ids)
           name_cache={}
-          user_ids.each { |id,index| name_cache[id]=res[index] }
+          user_ids.each_with_index  { |id,index| name_cache[id]=res[index] }
           tweets=tweets.map do |tweet|
             user_id=tweet[:user_id].to_s
             tweet=tweet.as_json
