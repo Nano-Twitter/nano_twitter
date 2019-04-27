@@ -159,7 +159,6 @@ class TweetService
         if lock_flag
           # Consider doing it in another thread
           tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-          tweets = tweets.sort_by {|tweet| tweet[:created_at]}.reverse
           # Consider doing it in another thread
           client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
           tweets = tweets.map do |tweet|
