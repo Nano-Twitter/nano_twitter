@@ -251,11 +251,11 @@ describe 'redis' do
     $redis.push_single_user @follower_id, @follower
     @follower.follow! @user
     params = {
-        user_id: @user_id,
+        user_id: @follower_id,
         content: "This is the base tweet1."
     }
     @ts.create_tweet params
-    $redis.cached?("timeline_#{@user_id}").must_equal true
+    $redis.cached?("timeline_key+#{@user_id}").must_equal true
   end
 
   after do
@@ -356,7 +356,7 @@ describe 'tweet_service' do
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
-    response[:payload][:data]['content'].must_equal 'I am a repost'
+    response[:payload][:data]['content'].must_match /I am a repost.*/
     response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
 
   end
