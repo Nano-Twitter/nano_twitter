@@ -55,11 +55,15 @@ class RedisHelper
   def get_single_user(user_id)
     user = @store.hgetall("user_#{user_id}")
     if user == {}
-      user = User.without(:password_hash).find(BSON::ObjectId(user_id))
-      push_single_user(user_id, user)
-      user = user.as_json
+      user = push_single_user_by_user_id user_id
     end
     user
+  end
+
+  def push_single_user_by_user_id(user_id)
+    user = User.without(:password_hash).find(BSON::ObjectId(user_id))
+    push_single_user(user_id, user)
+    user.as_json
   end
 
   def incr_tweet_count(user_id)

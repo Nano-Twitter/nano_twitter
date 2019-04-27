@@ -120,19 +120,24 @@ class TweetService
     start = params[:start] ? params[:start].to_i : 0
     count = params[:count] ? params[:count].to_i : 50
 
-
+    name_cache = {}
+    find_user_name = ->(id) do
+      if name_cache.key? id
+        name_cache[id]
+      else
+        name = $redis.get_single_user(user_id)['name']
+        name_cache[id] = name
+        name
+      end
+    end
     tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
 
     if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      user_ids=Set.new(tweets.map{|x|x.user_id.to_s}).to_a
-      res=$redis.get_client.mget(user_ids)
-      name_cache={}
-      user_ids.each_with_index{ |id,index| name_cache[id]=res[index] }
-      tweets=tweets.map do |tweet|
-        user_id=tweet[:user_id].to_s
-        tweet=tweet.as_json
-        tweet[:user_attr]={id: user_id, name: name_cache[user_id]}
+      tweets = tweets.map do |tweet|
+        user_id = tweet[:user_id].to_s
+        tweet = tweet.as_json
+        tweet[:user_attr] = {id: user_id, name: find_user_name.call(user_id)}
       end
       json_result(200, 0, "All tweets found.", tweets)
     else
@@ -153,17 +158,13 @@ class TweetService
         if lock_flag
           # Consider doing it in another thread
           tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-          tweets=tweets.sort_by { |tweet |tweet[:created_at]}.reverse
+          tweets = tweets.sort_by {|tweet| tweet[:created_at]}.reverse
           # Consider doing it in another thread
           client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-          user_ids=Set.new(tweets.map{|x|x.user_id.to_s}).to_a
-          res=client.mget(user_ids)
-          name_cache={}
-          user_ids.each_with_index  { |id,index| name_cache[id]=res[index] }
-          tweets=tweets.map do |tweet|
-            user_id=tweet[:user_id].to_s
-            tweet=tweet.as_json
-            tweet[:user_attr]={id: user_id, name: name_cache[user_id]}
+          tweets = tweets.map do |tweet|
+            user_id = tweet[:user_id].to_s
+            tweet = tweet.as_json
+            tweet[:user_attr] = {id: user_id, name: find_user_name.call(user_id)}
           end
           if tweets
             json_result(200, 0, "All tweets found.", tweets[start, start + count])
