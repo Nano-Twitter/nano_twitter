@@ -356,7 +356,7 @@ describe 'tweet_service' do
     }
     response = @service.create_tweet(params)
     response[:status].must_equal 201
-    response[:payload][:data]['content'].must_equal 'I am a repost'
+    response[:payload][:data]['content'].must_match /I am a repost.*/
     response[:payload][:data]['parent_id'].to_s.must_equal @tweet_id
 
   end
