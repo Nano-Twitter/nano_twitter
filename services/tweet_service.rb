@@ -3,7 +3,7 @@ require 'set'
 class TweetService
   @name_cache = {}
 
-  def find_user_name user_id
+  def self.find_user_name user_id
     if @name_cache.key? id
       @name_cache[id]
     else
