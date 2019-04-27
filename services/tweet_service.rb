@@ -102,7 +102,7 @@ class TweetService
     end
   end
 
-  def self.get_total_by_user(params)
+  def self.get_total_tweets_count_by_user(params)
     # Get a the number of tweets of a user
     # params: user_id
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).count
@@ -119,18 +119,29 @@ class TweetService
     user_id = params[:user_id]
     start = params[:start] ? params[:start].to_i : 0
     count = params[:count] ? params[:count].to_i : 50
+
+    name_cache = {}
+    find_user_name = ->(id) do
+      if name_cache.key? id
+        name_cache[id]
+      else
+        name = $redis.get_single_user(user_id)['name']
+        name_cache[id] = name
+        name
+      end
+    end
+
     if $redis.cached? "timeline_#{user_id}"
       tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(user_id)['name']})}
+      tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name:find_user_name.call(user_id)})}
       json_result(200, 0, "All tweets found.", tweets)
     else
-      # 这里考虑另开一个thread
-      tweets = (User.find(BSON::ObjectId(user_id)).following).map {|f| f.tweets}
-      tweets = tweets.flatten(1)[0, 500]
-      # 这里考虑另开一个thread  HIGHLIGHT using Chinese, Cool!
+      # Consider doing it in another thread
+      tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
+      # Consider doing it in another thread
       $redis.push_mass_tweets "timeline_#{user_id}", tweets.map {|t| t.id.to_s}
-      tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id].to_s)['name']})}
+      tweets.each {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name.call(user_id)})}
       if tweets
         json_result(200, 0, "All tweets found.", tweets[start, start + count])
       else
