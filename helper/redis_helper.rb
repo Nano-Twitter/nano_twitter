@@ -45,7 +45,7 @@ class RedisHelper
   def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
     # cache the user name for mget operation
-    @store.set("un_#{user_id}", user.name)
+    # @store.set("un_#{user_id}",user.name)
     user
     #@store.expire("user_#{user_id}", 24.hours.to_i)
   end
@@ -61,6 +61,22 @@ class RedisHelper
 
   def incr_tweet_count(user_id)
     @store.hincrby("user_#{user_id}", 'tweets_count', 1)
+  end
+
+  def incr_like_count(tweet_id)
+    @store.hincrby("tweet_#{tweet_id}", 'likes_count', 1)
+  end
+
+  def decr_like_count(tweet_id)
+    @store.hincrby("tweet_#{tweet_id}", 'likes_count', -1)
+  end
+
+  def incr_commt_count(tweet_id)
+    @store.hincrby("tweet_#{tweet_id}", 'comments_count', 1)
+  end
+
+  def decr_commt_count(tweet_id)
+    @store.hincrby("tweet_#{tweet_id}", 'comments_count', -1)
   end
 
   def clear
