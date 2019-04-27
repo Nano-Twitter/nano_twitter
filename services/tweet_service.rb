@@ -1,6 +1,17 @@
 require_relative '../model/tweet'
 require 'set'
 class TweetService
+  @name_cache = {}
+
+  def find_user_name user_id
+    if @name_cache.key? id
+      @name_cache[id]
+    else
+      name = $redis.get_single_user(user_id)['name']
+      @name_cache[id] = name
+      name
+    end
+  end
 
   def self.create_tweet(params)
     # Create a new tweet
@@ -120,16 +131,6 @@ class TweetService
     start = params[:start] ? params[:start].to_i : 0
     count = params[:count] ? params[:count].to_i : 50
 
-    name_cache = {}
-    find_user_name = ->(id) do
-      if name_cache.key? id
-        name_cache[id]
-      else
-        name = $redis.get_single_user(user_id)['name']
-        name_cache[id] = name
-        name
-      end
-    end
     tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
 
     if tweet_ids && tweet_ids.length > 0
@@ -137,7 +138,7 @@ class TweetService
       tweets = tweets.map do |tweet|
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json
-        tweet[:user_attr] = {id: user_id, name: find_user_name.call(user_id)}
+        tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
       end
       json_result(200, 0, "All tweets found.", tweets)
     else
@@ -164,7 +165,7 @@ class TweetService
           tweets = tweets.map do |tweet|
             user_id = tweet[:user_id].to_s
             tweet = tweet.as_json
-            tweet[:user_attr] = {id: user_id, name: find_user_name.call(user_id)}
+            tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
           end
           if tweets
             json_result(200, 0, "All tweets found.", tweets[start, start + count])
