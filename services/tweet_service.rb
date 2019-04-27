@@ -125,7 +125,7 @@ class TweetService
 
     if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-      user_ids = Set.new(tweets.map {|x| "un_#{x.user_id}"}).to_a
+      user_ids = Set.new(tweets.map {|x| "un_#{x.user_id.to_s}"}).to_a
       res = $redis.get_client.mget(user_ids)
       name_cache = {}
       user_ids.each_with_index do |id, index|
@@ -151,7 +151,6 @@ class TweetService
         lock = client.get key
         if lock
           client.unwatch
-          puts 'others building'
           return json_result(200, 0, "Timelines are being built,please wait", [])
         end
         client.multi
@@ -163,7 +162,7 @@ class TweetService
           tweets = tweets.sort_by {|tweet| tweet[:created_at]}.reverse
           # Consider doing it in another thread
           client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-          user_ids = Set.new(tweets.map {|x| "un_#{x.user_id}}"}).to_a
+          user_ids = Set.new(tweets.map {|x| "un_#{x.user_id.to_s}}"}).to_a
           res = client.mget(user_ids)
           name_cache = {}
           user_ids.each_with_index do |id, index|
@@ -185,7 +184,6 @@ class TweetService
             json_result(403, 1, "Tweets not found.")
           end
         else
-          puts 'lock taken by others'
           puts lock_flag
           return json_result(200, 0, "Timelines are being built,please wait", [])
         end
