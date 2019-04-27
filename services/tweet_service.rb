@@ -19,10 +19,10 @@ class TweetService
       parent_tweet.update_attributes!(retweet_count: parent_tweet.retweet_count + 1)
       root_id = parent_tweet.root_id || parent_tweet.id
       params[:root_id] = BSON::ObjectId(root_id)
-      if params[:root_id] != params[:parent_id]
-        root_tweet = Tweet.find(params[:root_id])
-        root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
-      end
+      # if params[:root_id] != params[:parent_id]
+      #   root_tweet = Tweet.find(params[:root_id])
+      #   root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
+      # end
 
       params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
@@ -121,7 +121,7 @@ class TweetService
     count = params[:count] ? params[:count].to_i : 50
 
 
-    tweet_ids = $redis.get_timeline "timeline_#{user_id}", start, count
+    tweet_ids = $redis.get_timeline user_id, start, count
 
     if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})

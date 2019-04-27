@@ -24,8 +24,8 @@ class RedisHelper
     #@store.expire(key, 120.hours.to_i)
   end
 
-  def get_timeline(key, start, count)
-    @store.lrange(key, start, start + count - 1)
+  def get_timeline(user_id, start, count)
+    @store.lrange("timeline_#{user_id}", start, start + count - 1)
   end
 
   # this is currently identical to push mass_tweets, consider drop one of them
@@ -35,7 +35,7 @@ class RedisHelper
     #@store.expire(key, 120.hours.to_i)
   end
 
-  def push_single_tweet_if_exists(key,tweet)
+  def push_single_tweet_if_exists(key, tweet)
     @store.lpushx(key, tweet)
     #@store.expire(key, 120.hours.to_i)
   end
@@ -45,7 +45,7 @@ class RedisHelper
   def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
     # cache the user name for mget operation
-    @store.set("un_#{user_id}",user.name)
+    @store.set("un_#{user_id}", user.name)
     user
     #@store.expire("user_#{user_id}", 24.hours.to_i)
   end
