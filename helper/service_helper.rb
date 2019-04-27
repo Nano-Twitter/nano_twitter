@@ -26,9 +26,7 @@ def fanout_helper(user_id, tweet_id)
   followers_ids = get_followers_ids(user_id)
   return if followers_ids.nil?
   followers_ids.each do |f_id|
-    if $redis.cached?(f_id)
-      $redis.push_single_tweet("timeline_#{f_id}", tweet_id)
-    end
+      $redis.push_single_tweet_if_exists("timeline_#{f_id}", tweet_id)
   end
 end
 

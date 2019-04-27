@@ -12,4 +12,3 @@ gem 'redis'
 gem 'connection_pool'
 gem 'ufo'
 gem 'bunny'
-
