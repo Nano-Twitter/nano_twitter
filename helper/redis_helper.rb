@@ -2,11 +2,6 @@ require 'json'
 require 'redis'
 require 'connection_pool'
 
-# begin
-#   $redisStore = Redis.new(url: ENV['REDIS_URL'])
-# rescue
-#   $redisStore = ConnectionPool::Wrapper.new(size: 5, timeout: 3) {Redis.new(host: 'localhost', port: 6379)}
-# end
 
 class RedisHelper
 
