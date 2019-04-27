@@ -126,7 +126,7 @@ class TweetService
     if tweet_ids && tweet_ids.length > 0
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
       user_ids=Set.new(tweets.map{|x|x.user_id.to_s}).to_a
-      res=client.mget(user_ids)
+      res=$redis.get_client.mget(user_ids)
       name_cache={}
       user_ids.each_with_index{ |id,index| name_cache[id]=res[index] }
       tweets=tweets.map do |tweet|
