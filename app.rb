@@ -23,6 +23,7 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
 
+  use Rack::Deflater
   enable :sessions
 
   # register do
