@@ -194,20 +194,23 @@ class TweetService
           # timeline = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc).limit(100).map {|t| t.content}
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
 
-          # pp " !!!#{tweets}"
+          pp " !!!#{tweets.map {|m| m.content}}"
           # pp " !!!#{self_tweets}"
           # pp "??#{following_and_self}"
-          pp "??#{tweets}"
+          # pp timeline.as_json
+          # pp "??#{timeline.count}"
 
           # Consider doing it in another thread
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-            tweets = tweets.map do |tweet|
+            # tweets = tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name(tweet[:user_id].to_s)})}
+            tweets = tweets.map {|tweet|
               user_id = tweet[:user_id].to_s
               tweet = tweet.as_json
               tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
-            end
-            pp "!!#{tweets}"
+              # pp user_id, tweet
+            }
+            pp "!!??#{tweets}"
 
             client_pool.del key
             json_result(200, 0, "All tweets found.", tweets[start, start + count])
