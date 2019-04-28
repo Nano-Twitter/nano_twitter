@@ -3,9 +3,6 @@ require 'bunny'
 class RabbitServer
 
   def initialize(host = nil)
-    # if Sinatra::Base.production?
-    #
-    # end
     @connection = Bunny.new(host, automatically_recover: false)
     @connection.start
     @channel = @connection.create_channel
@@ -45,6 +42,7 @@ begin
   $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
   $rabbit_mq.subscribe('fanout')
   pp "Rabbit online :)"
-rescue
+rescue => e
   pp "Rabbit launch failed :("
+  pp e
 end
