@@ -23,7 +23,7 @@ class RabbitServer
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
         puts "Rabbit received: #{message}"
         message = JSON.parse(message)
-        # fanout_helper(message['user_id'], message['tweet_id'])
+        fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
       end
     rescue Interrupt => _
