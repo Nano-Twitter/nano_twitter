@@ -30,6 +30,11 @@
   2. ```$ export PATH=$PATH:/usr/local/opt/rabbitmq/sbin``` 
   3. ```$ rabbitmq-server```
 
+## Using Docker
+* Build image ```docker build -t <YOUR_USERNAME>/nano-twitter .```
+* Run image ```docker run -p 8888:8000 --name nano-twitter YOUR_USERNAME/nano-twitter```
+
+
 ## Test
 Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.
 
