@@ -164,6 +164,7 @@ class TweetService
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json
         tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+        tweet
       end
       json_result(200, 0, "All tweets found.", tweets)
     else
@@ -185,36 +186,24 @@ class TweetService
         lock_flag = client.exec # make sure if the lock is a success
         if lock_flag
           # Consider doing it in another thread
-          # TODO add self tweet
 
           # tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-
           # self_tweets = Tweet.order(created_at: :desc).where(user_id: BSON::ObjectId(user_id)).map {|t| t.content}
           following_and_self = User.find(BSON::ObjectId(user_id)).following.map {|u| u.id} << BSON::ObjectId(user_id)
-          # timeline = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc).limit(100).map {|t| t.content}
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
 
-          pp " !!!#{tweets.map {|m| m.content}}"
-          # pp " !!!#{self_tweets}"
-          # pp "??#{following_and_self}"
-          # pp timeline.as_json
-          # pp "??#{timeline.count}"
+          pp "!!#{tweets.map{|t| t.content}}"
 
           # Consider doing it in another thread
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-            # tweets = tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name(tweet[:user_id].to_s)})}
-            tweets = tweets.map {|tweet| tweet}
 
-            # tweets = tweets.map do |tweet|
-            #   tweet
-            #   user_id = tweet[:user_id].to_s
-            #   tweet = tweet.as_json
-            #   tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
-            #   pp user_id, tweet
-            # end
-
-            pp "!!??#{tweets}"
+            tweets = tweets.map do |tweet|
+              user_id = tweet[:user_id].to_s
+              tweet = tweet.as_json
+              tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+              tweet
+            end
 
             client_pool.del key
             return json_result(200, 0, "All tweets found.", tweets[start, start + count])
