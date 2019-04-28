@@ -90,7 +90,8 @@ class RedisHelper
 end
 
 begin
-  if Sinatra::Base.production?
+  pp ENV['REDIS_URL']
+  if Sinatra::Base.development? || Sinatra::Base.production?
     $redis = RedisHelper.new(ENV['REDIS_URL'])
   else
     $redis = RedisHelper.new

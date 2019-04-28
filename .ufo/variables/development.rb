@@ -4,6 +4,4 @@
 @environment = helper.env_vars(%Q[
   RAILS_ENV=development
   SECRET_KEY_BASE=secret
-  REDIS_URL=rediss://nanotwitter.aouf4s.0001.use2.cache.amazonaws.com:6379
-  CLOUDAMQP_URL= 
 ])
