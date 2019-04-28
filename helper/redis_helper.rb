@@ -90,7 +90,11 @@ class RedisHelper
 end
 
 begin
-  $redis = RedisHelper.new(ENV['REDIS_URL'])
+  if Sinatra::Base.production?
+    $redis = RedisHelper.new(ENV['REDIS_URL'])
+  else
+    $redis = RedisHelper.new
+  end
   pp "Redis online :)"
 rescue
   pp "Redis launch failed :("
