@@ -298,14 +298,14 @@ class App < Sinatra::Base
   # test for search
   get '/search' do
     # for test purpose no cache for the time line to be fair
-    cache_control :public, :must_revalidate, :max_age => 1
+    cache_control :public, :max_age => 1
     @result = TweetService.search params
     process_result
   end
   # test for tweet
   get '/test/tweet' do
     # for test purpose no cache for the time line to be fair
-    cache_control :public, :must_revalidate, :max_age => 1
+    cache_control :public, :max_age => 1
     request_params = params
     request_params[:content] = Faker::TvShows::BojackHorseman.quote
     @result = TweetService.create_tweet(request_params)
@@ -314,7 +314,7 @@ class App < Sinatra::Base
   # test for timeline
   get '/timeline' do
     # for test purpose no cache for the time line to be fair
-    cache_control :public, :must_revalidate, :max_age => 1
+    cache_control :public, :max_age => 1
     @result = TweetService.get_followee_tweets(params)
     process_result
   end
