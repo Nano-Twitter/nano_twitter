@@ -22,8 +22,7 @@ Mongoid.load! "config/mongoid.yml"
 # Fail: 403
 
 class App < Sinatra::Base
-
-  use Rack::Session::Cookie, coder: Rack::Session::Cookie::Identity.new
+  use Rack::Session::Pool
   use Rack::Deflater,:if => lambda { |*, body| sum=0; body.each { |i| sum += i.length }; sum > 512 },sync:false
   #enable :sessions
 
