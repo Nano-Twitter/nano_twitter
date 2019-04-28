@@ -41,8 +41,8 @@ end
 begin
   pp ENV['CLOUDAMQP_URL']
   if Sinatra::Base.development? || Sinatra::Base.production?
-    # $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
-    $rabbit_mq = RabbitServer.new('amqp://user:wGLzrAvw8nvM@ec2-34-201-19-121.compute-1.amazonaws.com:5672')
+    $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
+    # $rabbit_mq = RabbitServer.new('amqp://user:wGLzrAvw8nvM@ec2-34-201-19-121.compute-1.amazonaws.com:5672')
     $rabbit_mq.subscribe('fanout')
   else
     $rabbit_mq = RabbitServer.new
