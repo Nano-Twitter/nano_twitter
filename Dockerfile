@@ -15,4 +15,4 @@ EXPOSE 80
 # RUN chmod a+x bin/*
 # CMD ["bin/web"]
 # CMD ["bundle", "exec", "rackup", "-p", "80", "--host", "0.0.0.0"]
-CMD [  "bundle", "exec", "passenger", "start", "-p", "80", "--max-pool-size", "3", "--max-request-queue-size", "10000000"]
+CMD [  "bundle", "exec", "passenger", "start", "-p", "80", "--max-pool-size", "8", "--max-request-queue-size", "10000000"]
