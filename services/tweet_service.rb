@@ -185,9 +185,7 @@ class TweetService
         lock_flag = client.exec # make sure if the lock is a success
         if lock_flag
           # Consider doing it in another thread
-          tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-
-          pp " !!!#{tweets}"
+          tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}
           # Consider doing it in another thread
           if tweets.length > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
