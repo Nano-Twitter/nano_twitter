@@ -204,19 +204,23 @@ class TweetService
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
             # tweets = tweets.map {|tweet| tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: find_user_name(tweet[:user_id].to_s)})}
-            tweets = tweets.map {|tweet|
-              user_id = tweet[:user_id].to_s
-              tweet = tweet.as_json
-              tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
-              # pp user_id, tweet
-            }
+            tweets = tweets.map {|tweet| tweet}
+
+            # tweets = tweets.map do |tweet|
+            #   tweet
+            #   user_id = tweet[:user_id].to_s
+            #   tweet = tweet.as_json
+            #   tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+            #   pp user_id, tweet
+            # end
+
             pp "!!??#{tweets}"
 
             client_pool.del key
-            json_result(200, 0, "All tweets found.", tweets[start, start + count])
+            return json_result(200, 0, "All tweets found.", tweets[start, start + count])
           else
             client_pool.del key
-            json_result(403, 1, "Tweets not found.")
+            return json_result(403, 1, "Tweets not found.")
           end
         else
           puts 'lock taken by others'
