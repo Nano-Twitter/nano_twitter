@@ -6,6 +6,6 @@
 # More info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html"
 @cpu = 512
 @memory = 1024
-@memory_reservation =1024
+@memory_reservation = 512
 
 @execution_role_arn = "arn:aws:iam::053803341407:role/ecsTaskExecutionRole"

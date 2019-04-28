@@ -58,26 +58,9 @@ class RedisHelper
     user
   end
 
-
   def incr_tweet_count(user_id)
     @store.hincrby("user_#{user_id}", 'tweets_count', 1)
   end
-
-  # def incr_like_count(tweet_id)
-  #   @store.hincrby("tweet_#{tweet_id}", 'likes_count', 1)
-  # end
-
-  # def decr_like_count(tweet_id)
-  #   @store.hincrby("tweet_#{tweet_id}", 'likes_count', -1)
-  # end
-
-  # def incr_commt_count(tweet_id)
-  #   @store.hincrby("tweet_#{tweet_id}", 'comments_count', 1)
-  # end
-
-  # def decr_commt_count(tweet_id)
-  #   @store.hincrby("tweet_#{tweet_id}", 'comments_count', -1)
-  # end
 
   def clear
     @store.flushall
@@ -90,7 +73,8 @@ class RedisHelper
 end
 
 begin
-  if Sinatra::Base.production?
+  pp ENV['REDIS_URL']
+  if Sinatra::Base.development? || Sinatra::Base.production?
     $redis = RedisHelper.new(ENV['REDIS_URL'])
   else
     $redis = RedisHelper.new

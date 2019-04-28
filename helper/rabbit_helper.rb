@@ -39,6 +39,7 @@ end
 
 
 begin
+  pp ENV['CLOUDAMQP_URL']
   $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
   $rabbit_mq.subscribe('fanout')
   pp "Rabbit online :)"

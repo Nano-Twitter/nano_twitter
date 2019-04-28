@@ -192,7 +192,7 @@ class TweetService
           # self_tweets = Tweet.order(created_at: :desc).where(user_id: BSON::ObjectId(user_id)).map {|t| t.content}
           following_and_self = User.find(BSON::ObjectId(user_id)).following.map {|u| u.id} << BSON::ObjectId(user_id)
           # timeline = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc).limit(100).map {|t| t.content}
-          tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc).limit(500)
+          tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
 
           # pp " !!!#{tweets}"
           # pp " !!!#{self_tweets}"
