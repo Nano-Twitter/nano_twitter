@@ -3,6 +3,15 @@ require 'set'
 class TweetService
 
   @name_cache = {}
+  @name_cache_time_stamps = Time.now.to_i
+  @name_cache_invalidate_time = 60 * 60 * 12 # expire in 12 hours
+  # method use to exprie name cache
+  def self.check_and_expire_name_cache
+    if Time.now.to_i - @name_cache_time_stamps > @name_cache_invalidate_time
+      @name_cache = {}
+      @name_cache_time_stamps = Time.now.to_i
+    end
+  end
 
   def self.find_user_name id
     if @name_cache.key? id
@@ -118,7 +127,7 @@ class TweetService
   def self.search(params)
     page_num = params[:page_num] || 1
     page_size = params[:page_size] || 10
-    tweets = Tweet.where('text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
+    tweets = Tweet.where('$text': {'$search': params[:content]}).skip(page_num * page_size - page_size).limit(page_size)
     if tweets
       json_result(200, 0, "Tweets found.", tweets)
     else
@@ -138,6 +147,7 @@ class TweetService
   end
 
   def self.get_followee_tweets(params)
+    check_and_expire_name_cache
     # Get a list of tweets of followees
     # params: user_id; start; count
     user_id = params[:user_id]
