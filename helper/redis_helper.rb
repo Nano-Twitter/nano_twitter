@@ -96,6 +96,7 @@ begin
     $redis = RedisHelper.new
   end
   pp "Redis online :)"
-rescue
+rescue => e
   pp "Redis launch failed :("
+  pp e
 end

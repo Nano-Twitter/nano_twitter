@@ -180,20 +180,27 @@ class TweetService
         end
         client.multi
         client.set key, 1 # lock the item
+        client.expire(key, 5.minutes.to_i)
+
         lock_flag = client.exec # make sure if the lock is a success
         if lock_flag
           # Consider doing it in another thread
           tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
+
+          pp " !!!#{tweets}"
           # Consider doing it in another thread
-          client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-          tweets = tweets.map do |tweet|
-            user_id = tweet[:user_id].to_s
-            tweet = tweet.as_json
-            tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
-          end
-          if tweets
+          if tweets.length > 0
+            client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
+            tweets = tweets.map do |tweet|
+              user_id = tweet[:user_id].to_s
+              tweet = tweet.as_json
+              tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+            end
+
+            client_pool.del key
             json_result(200, 0, "All tweets found.", tweets[start, start + count])
           else
+            client_pool.del key
             json_result(403, 1, "Tweets not found.")
           end
         else
