@@ -3,7 +3,7 @@
 # Yaml also directly supports merging with & and <<* syntax but doing it automatically
 # for a cleaner syntax.
 base:
-  image: nanotwitter
+  image: 053803341407.dkr.ecr.us-east-2.amazonaws.com/nt-img
   # clean_keep: 30
   # ecr_keep: 30
   # network_profile: default # .ufo/settings/network/default.yml file

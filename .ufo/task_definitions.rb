@@ -11,8 +11,8 @@
 #
 # More info: http://ufoships.com/docs/helpers/
 #
-task_definition "nt-web" do
-  source "main" # will use ufo/templates/main.json.erb
+task_definition "nanotwitter-web" do
+  source "fargate" # will use ufo/templates/fargate.json.erb
   variables(
     family: task_definition_name,
     name: "web",
@@ -26,35 +26,35 @@ task_definition "nt-web" do
     #   prefix-name/container-name/ecs-task-id
     # Here's an exmaple when you specify the prefix of "demo"
     #   demo/web/209e93b4-5523-4496-9a27-662fd151eb78
-    awslogs_group: ["ecs/nt-web", Ufo.env_extra].compact.join('-'),
-    awslogs_stream_prefix: "nt",
+    awslogs_group: ["ecs/nanotwitter-web", Ufo.env_extra].compact.join('-'),
+    awslogs_stream_prefix: "nanotwitter",
     awslogs_region: helper.current_region,
     # command: ["bin/web"] # IMPORTANT: change or create a bin/web file
   )
 end
 
-task_definition "nt-worker" do
-  source "main" # will use ufo/templates/main.json.erb
+task_definition "nanotwitter-worker" do
+  source "fargate" # will use ufo/templates/fargate.json.erb
   variables(
     family: task_definition_name,
     name: "worker",
     # Comment out awslogs_* if you do not want logs to be sent to CloudWatch.
-    awslogs_group: ["ecs/nt-worker", Ufo.env_extra].compact.join('-'),
-    awslogs_stream_prefix: "nt",
+    awslogs_group: ["ecs/nanotwitter-worker", Ufo.env_extra].compact.join('-'),
+    awslogs_stream_prefix: "nanotwitter",
     awslogs_region: helper.current_region,
     # command: ["bin/worker"] # IMPORTANT: change or create a bin/worker file
   )
 end
 
-task_definition "nt-clock" do
-  source "main" # will use ufo/templates/main.json.erb
-  variables(
-    family: task_definition_name,
-    name: "clock",
-    # Comment out awslogs_* if you do not want logs to be sent to CloudWatch.
-    awslogs_group: ["ecs/nt-clock", Ufo.env_extra].compact.join('-'),
-    awslogs_stream_prefix: "nt",
-    awslogs_region: helper.current_region,
-    # command: ["bin/clock"] # IMPORTANT: change or create a bin/clock file
-  )
-end
+# task_definition "nano_twitter-clock" do
+#   source "fargate" # will use ufo/templates/fargate.json.erb
+#   variables(
+#     family: task_definition_name,
+#     name: "clock",
+#     # Comment out awslogs_* if you do not want logs to be sent to CloudWatch.
+#     awslogs_group: ["ecs/nano_twitter-clock", Ufo.env_extra].compact.join('-'),
+#     awslogs_stream_prefix: "nano_twitter",
+#     awslogs_region: helper.current_region,
+#     # command: ["bin/clock"] # IMPORTANT: change or create a bin/clock file
+#   )
+# end

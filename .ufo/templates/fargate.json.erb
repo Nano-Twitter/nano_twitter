@@ -9,6 +9,9 @@
     {
       "name": "<%= @name %>",
       "image": "<%= @image %>",
+      <% if @memory_reservation %>
+          "memoryReservation": <%= @memory_reservation %>,
+      <% end %>
       <% if @container_port %>
       "portMappings": [
         {

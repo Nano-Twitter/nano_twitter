@@ -89,6 +89,7 @@ class RedisHelper
 end
 
 begin
+  # $redis = RedisHelper.new('rediss://nanotwitter.aouf4s.0001.use2.cache.amazonaws.com:6379')
   $redis = RedisHelper.new(ENV['REDIS_URL'])
   pp "Redis online :)"
 rescue
