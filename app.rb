@@ -22,10 +22,10 @@ Mongoid.load! "config/mongoid.yml"
 # Fail: 403
 
 class App < Sinatra::Base
-  use Rack::Session::Pool
+  #use Rack::Session::Pool
   #use Rack::Deflater, :if => lambda {|*, body| sum = 0; body.each {|i| sum += i.length}; sum > 512}, sync: false
   set :static_cache_control, [:public, :max_age => 365 * 24 * 60 * 60]
-  #enable :sessions
+  enable :sessions
 
   # register do
   #   def auth (type)
