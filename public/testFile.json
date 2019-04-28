@@ -29,6 +29,7 @@
     {
       "names": ["commands"],
       "values": [
+        ["static/js/2.2420aac0.chunk.js"],
         ["timeline?x=y"],
         ["timeline?x=y"],
         ["timeline?x=y"],
