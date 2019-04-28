@@ -1,8 +1,17 @@
 require_relative '../model/tweet'
 require 'set'
 class TweetService
-  
+
   @name_cache = {}
+  @name_cache_time_stamps = Time.now.to_i
+  @name_cache_invalidate_time = 60 * 60 * 12 # expire in 12 hours
+  # method use to exprie name cache
+  def self.check_and_expire_name_cache
+    if Time.now.to_i - @name_cache_time_stamps > @name_cache_invalidate_time
+      @name_cache = {}
+      @name_cache_time_stamps = Time.now.to_i
+    end
+  end
 
   def self.find_user_name id
     if @name_cache.key? id
@@ -45,8 +54,8 @@ class TweetService
     tweet = Tweet.new(params)
     if tweet.save
       # add to timeline
-      # TODO, this will not affect db
-      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
+
+      tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']}) # this will not affect db
 
       # send to rabbit for fanout
       $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
@@ -91,11 +100,23 @@ class TweetService
     # params: user_id, start, count
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
     tweet_arr = Array.new
+
     if tweets
       tweets.each do |tweet|
         tweet_arr.push(tweet)
         tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
       end
+
+      tweets = tweets.map do |tweet|
+
+      end
+
+      tweets = tweets.map do |tweet|
+        user_id = tweet[:user_id].to_s
+        tweet = tweet.as_json
+        tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+      end
+
       json_result(200, 0, "Tweets found.", tweet_arr)
     else
       json_result(403, 1, "Tweets not found.")
@@ -126,6 +147,7 @@ class TweetService
   end
 
   def self.get_followee_tweets(params)
+    check_and_expire_name_cache
     # Get a list of tweets of followees
     # params: user_id; start; count
     user_id = params[:user_id]
@@ -135,7 +157,9 @@ class TweetService
     tweet_ids = $redis.get_timeline user_id, start, count
 
     if tweet_ids && tweet_ids.length > 0
+      # todo get tweet from redis (maybe)
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
+
       tweets = tweets.map do |tweet|
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json

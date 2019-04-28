@@ -29,14 +29,14 @@ class RedisHelper
   end
 
   # this is currently identical to push mass_tweets, consider drop one of them
-  #Todo
-  def push_single_tweet(key, tweet)
-    @store.lpush(key, tweet)
+  # Todo
+  def push_single_tweet(user_id, tweet)
+    @store.lpush("timeline_#{user_id}", tweet)
     #@store.expire(key, 120.hours.to_i)
   end
 
-  def push_single_tweet_if_exists(key, tweet)
-    @store.lpushx(key, tweet)
+  def push_single_tweet_if_exists(user_id, tweet)
+    @store.lpushx("timeline_#{user_id}", tweet)
     #@store.expire(key, 120.hours.to_i)
   end
 
@@ -83,14 +83,18 @@ class RedisHelper
     @store.flushall
   end
 
+  # @deprecated
   def cached?(key)
     @store.exists(key)
   end
 end
 
 begin
-  # $redis = RedisHelper.new('rediss://nanotwitter.aouf4s.0001.use2.cache.amazonaws.com:6379')
-  $redis = RedisHelper.new(ENV['REDIS_URL'])
+  if Sinatra::Base.production?
+    $redis = RedisHelper.new(ENV['REDIS_URL'])
+  else
+    $redis = RedisHelper.new
+  end
   pp "Redis online :)"
 rescue
   pp "Redis launch failed :("
