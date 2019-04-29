@@ -27,7 +27,7 @@ class User
   validates_uniqueness_of :name
   validates_presence_of :email
   validates_uniqueness_of :email
-  validates_length_of :password, minimum: 12
+  validates_length_of :password, minimum: 6
   # validates_confirmation_of :password, message: "Password confirmation must be the same as the password."
 
   before_save :encrypt_password
