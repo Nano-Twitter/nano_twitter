@@ -108,8 +108,8 @@ class TweetService
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json
         tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
+        tweet
       end
-
       json_result(200, 0, "Tweets found.", tweets)
     else
       json_result(403, 1, "Tweets not found.")
