@@ -32,7 +32,7 @@ class TweetService
       return json_result(403, 7, "Your tweet should not be empty.")
     end
 
-    if params[:parent_id] # if it is a Retweet
+    unless !params[:parent_id] # if it is a Retweet
       params[:parent_id] = BSON::ObjectId(params[:parent_id])
       parent_tweet = Tweet.find(params[:parent_id])
 
@@ -45,7 +45,14 @@ class TweetService
       #   root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
       # end
 
-      params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
+      if !params[:content] || params[:content] == ""
+        params[:content] = 'Retweet'
+      end
+      # params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
+      pp "22222#{params[:content]}"
+      # if
+      #   params[:content] = ''
+      # end
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
       params[:content] += "// @#{parent_user_name}: #{parent_tweet.content}"
     end
