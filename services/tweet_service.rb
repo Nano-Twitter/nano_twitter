@@ -28,7 +28,7 @@ class TweetService
     # param parent_id; content, user_id, root_id;
     # return: a json response
 
-    if !params[:content] && !params[:parent_id] # the tweet has no content
+    if params[:content] == '' && !params[:parent_id] # the tweet has no content
       return json_result(403, 7, "Your tweet should not be empty.")
     end
 
