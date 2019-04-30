@@ -35,8 +35,9 @@ describe 'user_service' do
     follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
 
     params = {
-        followee_id: @user_id,
-        follower_id: follower.id.to_s
+        follower_id: @user_id,
+        followee_id: follower.id.to_s
+
     }
     FollowService.follow(params)
 

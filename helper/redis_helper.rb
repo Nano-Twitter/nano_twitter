@@ -44,11 +44,12 @@ class RedisHelper
   # user info cache
   # user: user obj
   def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
+    # a = user['id'].to_s
     if user["follower_ids"]
-      user["follower_ids"] = user["follower_ids"].map {|id| id.to_s}
+      user["follower_ids"] = user["follower_ids"].map {|id| id['_id'].to_s}
     end
     if user["following_ids"]
-      user["following_ids"] = user["following_ids"].map {|id| id.to_s}
+      user["following_ids"] = user["following_ids"].map {|id| id['_id'].to_s}
     end
 
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
