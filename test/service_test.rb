@@ -31,6 +31,15 @@ describe 'user_service' do
 
     @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
     @user_id = @user.id.to_s
+
+    follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
+
+    params = {
+        followee_id: @user_id,
+        follower_id: follower.id.to_s
+    }
+    FollowService.follow(params)
+
     $redis.push_single_user @user_id, @user
     @service = UserService
 
@@ -95,6 +104,8 @@ describe 'user_service' do
     # response = @service.get_profile(params)
     # response[:status].must_equal 200
     # response[:payload][:data]['name'].must_equal 'Adam Stark'
+    #
+
 
     params = {
         id: @user_id
