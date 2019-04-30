@@ -47,7 +47,7 @@ class TweetService
 
       params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
-      params[:content] += "//@#{parent_user_name}: #{parent_tweet.content}"
+      params[:content] += "// @#{parent_user_name}: #{parent_tweet.content}"
     end
 
     params[:user_id] = BSON::ObjectId(params[:user_id])
