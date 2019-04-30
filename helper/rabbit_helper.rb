@@ -39,7 +39,6 @@ end
 
 
 begin
-  pp ENV['CLOUDAMQP_URL']
   if Sinatra::Base.development? || Sinatra::Base.production?
     $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
     $rabbit_mq.subscribe('fanout')
