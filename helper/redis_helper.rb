@@ -47,10 +47,10 @@ class RedisHelper
     # x = 'BSON::ObjectId("507c7f79bcf86cd7994f6c0e")'[16...-2]
     # a = user['id'].to_s
     if user["follower_ids"]
-      user["follower_ids"] = user["follower_ids"].map {|id| id.to_s[0...24]}
+      user["follower_ids"] = user["follower_ids"].map {|id| id.to_s[8...-2]}
     end
     if user["following_ids"]
-      user["following_ids"] = user["following_ids"].map {|id| id.to_s[0...24]}
+      user["following_ids"] = user["following_ids"].map {|id| id.to_s[8...-2]}
     end
 
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
