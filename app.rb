@@ -118,17 +118,15 @@ class App < Sinatra::Base
 
   # get all followee ids
   # not so useful?
-  get '/followees/ids/:id' do
-    if params[:id] == 'c'
-      params[:id] = session[:id]
-    end
+  get '/followees/ids/:user_id' do
+    @result=FollowService.get_followees params
+    process_result
   end
 
   # get all follower ids
-  get '/followers/list/:id' do
-    if params[:id] == 'c'
-      params[:id] = session[:id]
-    end
+  get '/followers/list/:user_id' do
+    @result=FollowService.get_followers params
+    process_result
   end
 
   # get all followees
@@ -175,7 +173,7 @@ class App < Sinatra::Base
   end
 
   # retrieve a tweet
-  get '/tweeto/:id' do
+  get '/tweets/:id' do
     @result = TweetService.get_tweet(params)
     process_result
   end
