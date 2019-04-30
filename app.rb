@@ -119,8 +119,7 @@ class App < Sinatra::Base
   # get all followee ids
   # not so useful?
   get '/followees/ids/:user_id' do
-    @result=FollowService.get_followees params
-    process_result
+    # will remove in the future
   end
 
   # get all follower ids
@@ -131,9 +130,8 @@ class App < Sinatra::Base
 
   # get all followees
   get '/followees/list/:id' do
-    if params[:id] == 'c'
-      params[:id] = session[:id]
-    end
+    @result=FollowService.get_followees params
+    process_result
   end
 
   # add follower
