@@ -17,7 +17,6 @@ ReactDOM.render(
     </Provider>
     , document.getElementById('navbar')
 );
-
 ReactDOM.render(
     <Provider rootStore={rootStore}>
         <BrowserRouter>
@@ -25,8 +24,9 @@ ReactDOM.render(
                 <Switch>
                     <AuthorizedRoute exact path="/" component={Home} />
                     <JumpToHomeIfLogedInRoute path="/login" component={Login} />
-                    <Route path="/register" component={Register} />í
+                    <Route path="/register" component={Register} />
                     <AuthorizedRoute path="/home" component={Home} />
+                    <Route path="/search/:term" component={Search}/>
                 </Switch>
             </div>
         </BrowserRouter>
