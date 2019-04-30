@@ -98,26 +98,19 @@ class TweetService
   def self.get_tweets_by_user(params)
     # Get a list of tweets
     # params: user_id, start, count
-    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
-    tweet_arr = Array.new
+    # params[:start]
+    start = params[:start] ? params[:start].to_i : 0
+    count = params[:count] ? params[:count].to_i : 50
+    tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(start).limit(count)
 
     if tweets
-      tweets.each do |tweet|
-        tweet_arr.push(tweet)
-        tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']})
-      end
-
-      tweets = tweets.map do |tweet|
-
-      end
-
       tweets = tweets.map do |tweet|
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json
         tweet[:user_attr] = {id: user_id, name: find_user_name(user_id)}
       end
 
-      json_result(200, 0, "Tweets found.", tweet_arr)
+      json_result(200, 0, "Tweets found.", tweets)
     else
       json_result(403, 1, "Tweets not found.")
     end
@@ -197,7 +190,7 @@ class TweetService
           following_and_self = User.find(BSON::ObjectId(user_id)).following.map {|u| u.id} << BSON::ObjectId(user_id)
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
 
-          pp "!!#{tweets.map{|t| t.content}}"
+          pp "!!#{tweets.map {|t| t.content}}"
 
           # Consider doing it in another thread
           if tweets.count > 0
