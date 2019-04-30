@@ -129,7 +129,7 @@ class App < Sinatra::Base
   end
 
   # get all followees
-  get '/followees/list/:id' do
+  get '/followees/list/:user_id' do
     @result=FollowService.get_followees params
     process_result
   end
