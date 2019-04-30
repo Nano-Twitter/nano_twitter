@@ -45,7 +45,8 @@ class RedisHelper
   # user: user obj
   def push_single_user(user_id, user = User.without(:password_hash).find(BSON::ObjectId(user_id)))
     # x = 'BSON::ObjectId("507c7f79bcf86cd7994f6c0e")'[16...-2]
-    # a = user['id'].to_s
+    a = user['id'].to_s
+    b = BSON::ObjectId('5cc88e1903848e5e110eacbc')
     if user["follower_ids"]
       user["follower_ids"] = user["follower_ids"].map {|id| id.to_s[16...-2]}
     end
