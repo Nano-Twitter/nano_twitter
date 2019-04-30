@@ -197,8 +197,6 @@ class TweetService
           following_and_self = User.find(BSON::ObjectId(user_id)).following.map {|u| u.id} << BSON::ObjectId(user_id)
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
 
-          pp "!!#{tweets.map{|t| t.content}}"
-
           # Consider doing it in another thread
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})

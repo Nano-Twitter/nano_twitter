@@ -43,7 +43,6 @@ class UserService
     else
       return json_result(403, 1, 'Profile get failed')
     end
-
     if user
       json_result(200, 0, 'Profile get success', user)
     else

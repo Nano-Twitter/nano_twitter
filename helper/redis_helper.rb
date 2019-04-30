@@ -52,9 +52,12 @@ class RedisHelper
   end
 
   def get_single_user(user_id)
-    user = @store.hgetall("user_#{user_id}")
+    user = @store.hgetall("user_#{user_id}").as_json
     if user == {}
       user = push_single_user user_id
+    else
+      user["follower_ids"] = JSON.parse user["follower_ids"]
+      user["following_ids"] = JSON.parse user["following_ids"]
     end
     user
   end
