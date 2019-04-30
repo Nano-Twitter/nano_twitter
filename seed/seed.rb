@@ -37,14 +37,15 @@ class Seed
       key = (index + 1).to_s
       @user_hash[key] = id
     end
+    @tweets=@tweets.split(/\r\n|\n/)
+        .map {|x| x.split(',')}.select {|user_id, _content| @user_hash.key? user_id}
+        .map {|array| {content: array[1],
+                       created_at: Faker::Time.between(30.days.ago, Date.today, :all),
+                       user_id: @user_hash[array[0]]}}
     Tweet
         .collection
-        .insert_many(@tweets.split(/\r\n|\n/)
-                                    .map {|x| x.split(',')}.select {|user_id, _content| @user_hash.key? user_id}
-                                    .map {|array| {content: array[1],
-                                                   created_at: Faker::Time.between(30.days.ago, Date.today, :all),
-                                                   user_id: @user_hash[array[0]]}})
-
+        .insert_many(@tweets)
+    @tweets=@tweets.group_by{|tweet|tweet[:user_id]}.each{|key,value|User.find(key).update_attribute(:tweets_count,value.length)}
     follows = @follows.split(/\r\n|\n/).map {|x| x.split(',')}
                   .select {|follower, followee|
                     (@user_hash.key? follower) && (@user_hash.key? followee)}
