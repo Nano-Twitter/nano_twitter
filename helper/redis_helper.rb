@@ -62,8 +62,8 @@ class RedisHelper
     if user == {}
       user = push_single_user user_id
     else
-      # user["follower_ids"] = JSON.parse user["follower_ids"]
-      # user["following_ids"] = JSON.parse user["following_ids"]
+      user["follower_ids"] = JSON.parse user["follower_ids"]
+      user["following_ids"] = JSON.parse user["following_ids"]
     end
     user
   end
