@@ -51,10 +51,8 @@ class RedisHelper
     if user["following_ids"]
       user["following_ids"] = user["following_ids"].map {|id| id.to_s}
     end
-
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
     user
-    #@store.expire("user_#{user_id}", 24.hours.to_i)
   end
 
   def get_single_user(user_id)

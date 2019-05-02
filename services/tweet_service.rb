@@ -44,15 +44,9 @@ class TweetService
       #   root_tweet = Tweet.find(params[:root_id])
       #   root_tweet.update_attributes!(retweet_count: root_tweet.retweet_count + 1)
       # end
-
       if !params[:content] || params[:content] == ""
         params[:content] = 'Retweet'
       end
-      # params[:content] ||= 'Retweet' # add 'Retweet' to the tweet content if it's blank
-      pp "22222#{params[:content]}"
-      # if
-      #   params[:content] = ''
-      # end
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
       params[:content] += "// @#{parent_user_name}: #{parent_tweet.content}"
     end
@@ -61,7 +55,6 @@ class TweetService
     tweet = Tweet.new(params)
     if tweet.save
       # add to timeline
-
       tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']}) # this will not affect db
 
       # send to rabbit for fanout
@@ -162,7 +155,7 @@ class TweetService
     tweet_ids = $redis.get_timeline user_id, start, count
 
     if tweet_ids && tweet_ids.length > 0
-      # todo get tweet from redis (maybe)
+      # get tweet from redis
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
 
       tweets = tweets.map do |tweet|
@@ -173,7 +166,7 @@ class TweetService
       end
       json_result(200, 0, "All tweets found.", tweets)
     else
-      # here begin the transaction and CAS operation
+      # here begins the transaction and CAS operation
       client_pool = $redis.get_client
       client_pool.with do |client|
         key = "timeline_key+#{user_id}"
@@ -190,14 +183,8 @@ class TweetService
 
         lock_flag = client.exec # make sure if the lock is a success
         if lock_flag
-          # Consider doing it in another thread
-
-          # tweets = (User.find(BSON::ObjectId(user_id)).following).flat_map {|f| f.tweets}[0, 500]
-          # self_tweets = Tweet.order(created_at: :desc).where(user_id: BSON::ObjectId(user_id)).map {|t| t.content}
           following_and_self = User.find(BSON::ObjectId(user_id)).following.map {|u| u.id} << BSON::ObjectId(user_id)
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
-
-          # Consider doing it in another thread
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
 

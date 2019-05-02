@@ -148,7 +148,7 @@ describe 'user_service' do
         unknown_param: 'xxxx'
     }
     response = @service.update_profile(params)
-    response[:status].must_equal 403
+    response[:status].must_equal 200
   end
 
   it 'can recommend user' do
