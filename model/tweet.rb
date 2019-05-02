@@ -10,6 +10,7 @@ class Tweet
   field :retweet_count, type: Integer, default: 0
   field :comments_count, type: Integer, default: 0
   field :likes_count, type: Integer, default: 0
+  field :image_url, type:String, default:''
 
 
   belongs_to :user, counter_cache: true

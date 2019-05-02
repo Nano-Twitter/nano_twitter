@@ -1,5 +1,6 @@
 require_relative '../model/tweet'
 require 'set'
+require 'aws-sdk-s3'
 class TweetService
 
   @name_cache = {}
@@ -27,6 +28,8 @@ class TweetService
     # Create a new tweet
     # param parent_id; content, user_id, root_id;
     # return: a json response
+
+    # upload file to the amazon s3
 
     if params[:content] == '' && !params[:parent_id] # the tweet has no content
       return json_result(403, 7, "Your tweet should not be empty.")
