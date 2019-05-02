@@ -70,6 +70,18 @@ class RedisHelper
     @store.hincrby("user_#{user_id}", 'tweets_count', 1)
   end
 
+  def incr_follower_count(user_id, following_id)
+  end
+
+  def decr_follower_count(user_id, following_id)
+  end
+
+  def incr_following_count(user_id, following_id)
+  end
+
+  def decr_following_count(user_id, following_id)
+  end
+
   def clear
     @store.flushall
   end

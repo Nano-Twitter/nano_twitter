@@ -7,6 +7,8 @@ class FollowService
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.follow!(followee)
+      incr_follower_count(params[:follower_id], params[:followee_id])
+      incr_following_count(params[:follower_id], params[:followee_id])
       json_result(200, 0, 'Follow successfully')
     rescue => e
       json_result(403, 1, 'Fail to follow')
@@ -20,6 +22,8 @@ class FollowService
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.unfollow!(followee)
+      decr_follower_count(params[:follower_id], params[:followee_id])
+      decr_following_count(params[:follower_id], params[:followee_id])
       json_result(200, 0, 'Unfollow successfully')
     rescue => e
       json_result(403, 1, 'Fail to unfollow')
