@@ -65,7 +65,6 @@ class TweetService
 
       json_result(201, 0, "Tweet sent successfully.", tweet)
     else
-      pp tweet.errors
       json_result(403, 1, "Unable to send the tweet.")
     end
   end
@@ -187,7 +186,6 @@ class TweetService
           tweets = Tweet.where(:user_id.in => following_and_self).order(created_at: :desc)
           if tweets.count > 0
             client.lpush("timeline_#{user_id}", tweets.map {|t| t.id.to_s})
-
             tweets = tweets.map do |tweet|
               user_id = tweet[:user_id].to_s
               tweet = tweet.as_json
