@@ -23,11 +23,11 @@ class User
   has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers, autosave: true, index: true
   has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following, index: true
   
-  # validates_presence_of :name
-  # validates_uniqueness_of :name
-  # validates_presence_of :email
-  # validates_uniqueness_of :email
-  # validates_length_of :password, minimum: 6
+  validates_presence_of :name
+  #validates_uniqueness_of :name
+  validates_presence_of :email
+  #validates_uniqueness_of :email
+  validates_length_of :password, minimum: 6
 
   before_save :encrypt_password
 
