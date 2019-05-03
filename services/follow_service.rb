@@ -56,8 +56,8 @@ class FollowService
     page_size = params[:page_size] || 20
     if user
       # User.find(user.follower_ids)[page_num * page_size - page_size...page_num * page_size]
-      # json_result(200, 0, 'Get followers', User.where(following_ids:BSON::ObjectId(params[:user_id])).skip(page_num * page_size - page_size).limit(page_size))
-      json_result(200, 0, 'Get followers', User.find(user.followers_ids)[page_num * page_size - page_size...page_num * page_size])
+      json_result(200, 0, 'Get followers', User.where(following_ids:BSON::ObjectId(params[:user_id])).skip(page_num * page_size - page_size).limit(page_size))
+      # json_result(200, 0, 'Get followers', User.find(user.followers_ids)[page_num * page_size - page_size...page_num * page_size])
     else
       json_result(403, 1, 'Unable to get followers')
     end
@@ -68,8 +68,8 @@ class FollowService
     page_num = params[:page_num] || 1
     page_size = params[:page_size] || 20
     if user
-      # json_result(200, 0, 'Get followees', User.where(follower_ids:BSON::ObjectId(params[:user_id])).skip(page_num * page_size - page_size).limit(page_size))
-      json_result(200, 0, 'Get followees', User.find(user.following_ids)[page_num * page_size - page_size...page_num * page_size])
+      json_result(200, 0, 'Get followees', User.where(follower_ids:BSON::ObjectId(params[:user_id])).skip(page_num * page_size - page_size).limit(page_size))
+      # json_result(200, 0, 'Get followees', User.find(user.following_ids)[page_num * page_size - page_size...page_num * page_size])
 
     else
       json_result(403, 1, 'Unable to get followees')
