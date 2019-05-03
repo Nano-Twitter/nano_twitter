@@ -22,8 +22,6 @@ describe "user_model" do
   end
 
   it "can create a user" do
-    # @user = User.create!(name: "Adam Stark", gender: 0)
-    # pp @user
     User.find(@user.id).name.must_equal "Adam Stark"
   end
 

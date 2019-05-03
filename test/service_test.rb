@@ -14,14 +14,6 @@ end
 
 Mongoid.load! "config/mongoid.yml", :test
 
-# describe 'reset_db' do
-#   before do
-#     Tweet.destroy_all
-#     User.destroy_all
-#   end
-# end
-
-
 describe 'user_service' do
 
   before do
@@ -99,15 +91,6 @@ describe 'user_service' do
   end
 
   it 'can get user\'s profile' do
-    # params = {
-    #     id: @user_id,
-    # }
-    # response = @service.get_profile(params)
-    # response[:status].must_equal 200
-    # response[:payload][:data]['name'].must_equal 'Adam Stark'
-    #
-
-
     params = {
         id: @user_id
     }
@@ -317,7 +300,6 @@ describe 'tweet_service' do
 
     after_tweet_count = User.find(response[:payload][:data]['user_id']).tweets_count
     after_tweet_count.must_equal tweet_count + 1
-    # TODO user attr
     a = Tweet.find(response[:payload][:data]['_id'])
   end
 

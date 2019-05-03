@@ -15,6 +15,7 @@
 ## Documentations
 * [API](https://github.com/Nano-Twitter/nano_twitter/blob/master/doc/api.md)
 * [Loader.test file](https://nano-twitter-2019.herokuapp.com/testFile.json)
+* [Poster](https://raw.githubusercontent.com/Nano-Twitter/nano_twitter/master/poster.pdf)
 ## Contributors
 * [Ye Hong](mailto:yehong@brandeis.edu)
 * [Limian Guo](mailto:limianguo@brandeis.edu)
@@ -40,6 +41,15 @@
 * Build image ```docker build -t <YOUR_USERNAME>/nano-twitter .```
 * Run image ```docker run -p 8888:8000 --name nano-twitter YOUR_USERNAME/nano-twitter```
 
+## UFO automatic deployment
+* Install docker
+* Install aws-cli
+* Create a repository on AWS Elastic Container Repository Service
+* Docker login following the instructions of ECR
+* Call ```ufo init --app=demo --image=tongueroo/demo-ufo```
+* Set up all the settings file, finish task definitions
+* Call ```ufo ship`` to deploy your app
+* More info on ```http://ufoships.com/docs/```
 
 ## Test
 Under the root directory, enter `rake test` to run the tests: `api_test.rb`, `model_test.rb` and `service_test.rb`.
@@ -115,7 +125,7 @@ YH
 * nano_twitter client YH
 
 ### version 0.7
-* change from AmazonMQ to standalone RabbitMQ service
+* change from AmazonMQ to standalone RabbitMQ service in AWS EC2
 * Elastic Cache redis cluster replaced single Redis server
 * more counter cache is adding to MongoDB Schema
 * query optimization and anaylysis in Mongo
@@ -123,7 +133,7 @@ YH
 ### version 0.8
 * switching production web server to Passenger Standalone with native Nginx 
 * adding searching, retweeting function to the app
-* Docker and UFO automatic deploying 
+* Docker and UFO automatic deployment
 * tweet can now support image uploading
 * UI theme is now more like real twitter
 
@@ -131,10 +141,15 @@ YH
 * Finishing the main function of twitter, such as timeline, tweet, commenting, retweet, follow, user's profile and search.
 * Setting up RabbitMq for queueing all tweets to be faned out. The procedure of tweeting now become asynchronous
 * Users and timelines are now cached in Redis for better performance
-* The project is now moving to AWS using ECS.
+* The project is now moved to AWS using ECS.
 
 ## References
 * [Nano Twitter Project Outline](http://cosi105b.s3-website-us-west-2.amazonaws.com/content/topics/nt/nt_outline.md/) 
 * [Mongoid Manual](https://docs.mongodb.com/mongoid/current/)
 * [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
 * [Material-UI](https://material-ui.com/getting-started/installation/)
+* [ECS](https://aws.amazon.com/cn/ecs/), 
+[EC2](https://aws.amazon.com/cn/ec2/), 
+[ElastiCache](https://aws.amazon.com/cn/elasticache/), 
+[IAM](https://aws.amazon.com/cn/iam/)
+* [Redis Documentation](https://redis.io/documentation)
