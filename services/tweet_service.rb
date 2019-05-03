@@ -1,6 +1,5 @@
 require_relative '../model/tweet'
 require 'set'
-require 'aws-sdk-s3'
 class TweetService
 
   @name_cache = {}
