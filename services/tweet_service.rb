@@ -61,7 +61,7 @@ class TweetService
       tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s, name: $redis.get_single_user(tweet[:user_id])['name']}) # this will not affect db
 
       # send to rabbit for fanout
-      $rabbit_mq.enqueue('fanout', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
+      $rabbit_mq.enqueue('fanoutx', {user_id: tweet[:user_id].to_s, tweet_id: tweet.id.to_s}.to_json)
 
       # update user's tweet_count
       $redis.incr_tweet_count(tweet[:user_id])

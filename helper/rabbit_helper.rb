@@ -10,13 +10,15 @@ class RabbitServer
   end
 
   def enqueue(channel, message)
-    queue = @channel.queue(channel, durable: true)
-    queue.publish(message, persistent: true)
+    # queue = @channel.queue(channel, durable: true)
+    # queue.publish(message, persistent: true)
+    queue = @channel.queue(channel)
+    queue.publish(message)
     pp "Rabbit sent: #{message}"
   end
 
   def subscribe(channel)
-    queue = @channel.queue(channel, durable: true)
+    queue = @channel.queue(channel)
     begin
       pp "Rabbit subscribed to channel: #{channel}"
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
@@ -39,10 +41,10 @@ end
 begin
   if Sinatra::Base.development? || Sinatra::Base.production?
     $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])
-    $rabbit_mq.subscribe('fanout')
+    $rabbit_mq.subscribe('fanoutx')
   else
     $rabbit_mq = RabbitServer.new
-    $rabbit_mq.subscribe('fanout')
+    $rabbit_mq.subscribe('fanoutx')
   end
   pp "Rabbit online :)"
 rescue => e
