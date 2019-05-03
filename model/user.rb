@@ -36,7 +36,15 @@ class User
       raise 'Duplicate following relationship.'
     elsif self.id != user.id
       self.following << user
-      user.follow!(self)
+      user.reverse_follow!(self)
+    end
+  end
+
+  def reverse_follow!(user)
+    if self.followers.include?(user)
+      raise 'Duplicate following relationship.'
+    else
+      self.followers << user
     end
   end
 
