@@ -13,3 +13,5 @@ def create_index
   Comment.create_indexes
   Tweet.create_indexes
 end
+
+

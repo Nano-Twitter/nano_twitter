@@ -7,7 +7,6 @@ require 'mongoid'
 require_relative 'services/services'
 Mongoid.load! "config/mongoid.yml"
 
-
 # ["5cb79914f388a6008a2faa9f",
 #  "5cb79914f388a6008a2faaa0",
 #  "5cb79914f388a6008a2faaa1",
@@ -16,26 +15,18 @@ Mongoid.load! "config/mongoid.yml"
 #  "5cb79914f388a6008a2faaa4",
 #  "5cb79914f388a6008a2faaa5"].each {|id| UserService.imit_login(id)}
 
-
 # GET Success: 200
 # POST Success: 201
 # Fail: 403
 
 class App < Sinatra::Base
   #use Rack::Session::Pool
-  #use Rack::Deflater, :if => lambda {|*, body| sum = 0; body.each {|i| sum += i.length}; sum > 512}, sync: false
+  use Rack::Deflater, :if => lambda {|*, body| sum = 0; body.each {|i| sum += i.length}; sum > 512}, sync: false
   set :static_cache_control, [:public, :max_age => 365 * 24 * 60 * 60]
   enable :sessions
 
-  # register do
-  #   def auth (type)
-  #     condition do
-  #       redirect '/login' unless send("is_#{type}?")
-  #     end
-  #   end
-  # end
-
   helpers do
+    
     def is_user?
       @user != nil
     end
@@ -62,7 +53,6 @@ class App < Sinatra::Base
 
   get '/*' do
     # redirect '/login'
-
     pass
   end
   # Users
@@ -301,30 +291,6 @@ class App < Sinatra::Base
   post '/create_index' do
     create_index
   end
-
-
-  # following are route end point, will only be accessed when calling process_result in the previous route
-
-  # get '/*' do
-  #   if request.xhr?
-  #     process_result
-  #   else
-  #     process_result
-  #   end
-  # end
-
-
-  # post "/*" do
-  #   process_result
-  # end
-  #
-  # put "/*" do
-  #   process_result
-  # end
-  #
-  # delete "/*" do
-  #   process_result
-  # end
 
   get '/*' do
     send_file File.join(settings.public_dir, 'index.html')

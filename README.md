@@ -114,9 +114,22 @@ YH
 * timeline function optimization YH
 * nano_twitter client YH
 
+### version 0.7
+* change from AmazonMQ to standalone RabbitMQ service
+* Elastic Cache redis cluster replaced single Redis server
+* more counter cache is adding to MongoDB Schema
+* query optimization and anaylysis in Mongo
+
+### version 0.8
+* switching production web server to Passenger Standalone with native Nginx 
+* adding searching, retweeting function to the app
+* Docker and UFO automatic deploying 
+* tweet can now support image uploading
+* UI theme is now more like real twitter
+
 ### version 1.0
 * Finishing the main function of twitter, such as timeline, tweet, commenting, retweet, follow, user's profile and search.
-* Setting up rabbitMq for queueing all tweets to be faned out. The procedure of tweeting now become asynchronous
+* Setting up RabbitMq for queueing all tweets to be faned out. The procedure of tweeting now become asynchronous
 * Users and timelines are now cached in Redis for better performance
 * The project is now moving to AWS using ECS.
 

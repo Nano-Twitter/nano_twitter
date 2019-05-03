@@ -2,6 +2,7 @@ require_relative '../model/comment'
 
 class CommentService
 
+
     def self.create_comment(params)
         comment = Comment.new(params)
         if comment.save
@@ -22,6 +23,12 @@ class CommentService
 
     def self.get_comment_by_tweet(params)
         comments = Comment.where(tweet_id: BSON::ObjectId(params[:tweet_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
+        comments = comments.as_json.map do |c|
+            c[:username] = User.find(c["user_id"]).name
+            c
+        end
+        pp comments
+
         if comments
             json_result(200, 0, "Comments found.", comments)
         else
