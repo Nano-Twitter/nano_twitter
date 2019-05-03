@@ -87,8 +87,6 @@ class TweetService
     # Get a tweet
     # param params: a hash containing the id of a tweet
     tweet = Tweet.find(BSON::ObjectId(params[:tweet_id]))
-    # tweet.write_attribute(:user_attr, {id: tweet[:user_id].to_s,
-    #                                    name: $redis.get_single_user(tweet[:user_id])['name']})
     if tweet
       json_result(200, 0, "Tweet found.", tweet)
     else
@@ -99,7 +97,6 @@ class TweetService
   def self.get_tweets_by_user(params)
     # Get a list of tweets
     # params: user_id, start, count
-    # params[:start]
     start = params[:start] ? params[:start].to_i : 0
     count = params[:count] ? params[:count].to_i : 50
     tweets = Tweet.where(user_id: BSON::ObjectId(params[:user_id])).order(created_at: :desc).skip(start).limit(count)

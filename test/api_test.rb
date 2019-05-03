@@ -41,8 +41,6 @@ describe "users api" do
     }
     last_response.ok?
     last_response.status.must_equal 403
-    # JSON.parse()
-    # JSON.parse(last_response.body)["error"].must_equal "Username and password do not match!"
 
     post '/users/signin', {
         email: "good@gmail.com",
@@ -62,7 +60,6 @@ describe "users api" do
     }
     last_response.ok?
     last_response.status.must_equal 403
-    # JSON.parse(last_response.body)["error"].must_equal "Name Username already in use. Try another one!"
   end
 
   it "cannot create user with duplicate email" do
@@ -74,7 +71,6 @@ describe "users api" do
     }
     last_response.ok?
     last_response.status.must_equal 403
-    # JSON.parse(last_response.body)["error"].must_equal "Email Email address already in use. Forget password?"
   end
 
   it 'can get user\'s profile' do
@@ -87,11 +83,6 @@ describe "users api" do
 end
 
 describe 'test interface api' do
-  # it 'can resets all data and recreates TestUser' do
-  #   post '/test/reset/all'
-  #   last_response.ok?
-  #
-  # end
 
   it 'can reset all data and recreates users and seet tweet to the first one' do
     post '/test/reset/all'

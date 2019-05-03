@@ -26,7 +26,7 @@ class App < Sinatra::Base
   enable :sessions
 
   helpers do
-    
+
     def is_user?
       @user != nil
     end
@@ -52,7 +52,6 @@ class App < Sinatra::Base
   # # Endpoints
 
   get '/*' do
-    # redirect '/login'
     pass
   end
   # Users
@@ -104,13 +103,7 @@ class App < Sinatra::Base
     process_result
   end
 
-  # Follow
-
-  # get all followee ids
-  # not so useful?
-  get '/followees/ids/:user_id' do
-    # will remove in the future
-  end
+  # Followß
 
   # get all follower ids
   get '/followers/list/:user_id' do
@@ -180,13 +173,6 @@ class App < Sinatra::Base
 
   # Tweet: Comment
 
-  # count the number of comments
-  # not so useful
-  get '/tweets/:tweet_id/comments/count' do
-    @result = CommentService.total_comment_by_tweet(params)
-    process_result
-  end
-
   # create a comment
   post '/tweets/:tweet_id/comments' do
     @result = CommentService.create_comment(params)
@@ -207,12 +193,6 @@ class App < Sinatra::Base
 
   # Tweet: Like
 
-  # count the number of likes
-  get '/tweets/:tweet_id/likes/count' do
-    @result = LikeService.total_likes_by_tweet(params)
-    process_result
-  end
-
   # create a like of a tweet (like)
   post '/tweets/:tweet_id/likes' do
     @result = LikeService.create_like(params)
@@ -225,18 +205,7 @@ class App < Sinatra::Base
     process_result
   end
 
-  # Search (Blank for the moment)
-
-
-  # # for protected routes
-  #   get '/example_protected_route', :auth => :user do
-  #     "I am protected"
-  #   end
-
-
   # test interface
-
-
   # If needed deletes all users, tweets, follows
   # Recreates TestUser
   # Example: test/reset/all

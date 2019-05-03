@@ -10,7 +10,6 @@ class RedisHelper
       @store = ConnectionPool::Wrapper.new(size: 20, timeout: 10) {Redis.new(url: url)}
     else
       @store = ConnectionPool::Wrapper.new(size: 20, timeout: 10) {Redis.new(host: 'localhost', port: 6379)}
-      #@store = ConnectionPool::Wrapper.new(size: 20, timeout: 10) {Redis.new(url:'redis://h:p71bf5430796385942d036dfe722dedce0e9604841f8971ed7d3cf8e1840cb54a@ec2-3-213-0-112.compute-1.amazonaws.com:30129')}
     end
   end
 
@@ -22,7 +21,6 @@ class RedisHelper
   # user_id: [tweet_id1, tweet_id2, ...]
   def push_mass_tweets(key, tweets)
     @store.lpush(key, tweets)
-    #@store.expire(key, 120.hours.to_i)
   end
 
   def get_timeline(user_id, start, count)
@@ -33,12 +31,10 @@ class RedisHelper
   # Todo
   def push_single_tweet(user_id, tweet)
     @store.lpush("timeline_#{user_id}", tweet)
-    #@store.expire(key, 120.hours.to_i)
   end
 
   def push_single_tweet_if_exists(user_id, tweet)
     @store.lpushx("timeline_#{user_id}", tweet)
-    #@store.expire(key, 120.hours.to_i)
   end
 
   # user info cache

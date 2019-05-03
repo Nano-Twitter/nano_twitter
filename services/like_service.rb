@@ -22,24 +22,4 @@ class LikeService
         end
     end
 
-    # def self.total_likes_by_tweet(params)
-    #     if $redis.cached?("tweet_#{params[:tweet_id]}")
-    #         likes = 
-    #     likes = Like.where(tweet_id: BSON::ObjectId(params[:tweet_id])).count
-    #     if likes
-    #         json_result(200, 0, "Likes found.", likes)
-    #     else
-    #         json_result(403, 1, "Likes not found.")
-    #     end
-    # end
-
-    # def self.get_likes_by_tweet(params)
-    #     likes = Like.where(tweet_id: BSON::ObjectId(params[:tweet_id])).order(created_at: :desc).skip(params[:start]).limit(params[:count])
-    #     if likes
-    #         json_result(200, 0, "Likes found.", likes)
-    #     else
-    #         json_result(403, 1, "Likes not found.")
-    #     end
-    # end
-
 end
