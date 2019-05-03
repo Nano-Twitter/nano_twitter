@@ -162,7 +162,6 @@ class TweetService
     tweet_ids = $redis.get_timeline user_id, start, count
 
     if tweet_ids && tweet_ids.length > 0
-      # todo get tweet from redis (maybe)
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
 
       tweets = tweets.map do |tweet|
