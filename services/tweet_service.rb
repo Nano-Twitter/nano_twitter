@@ -51,6 +51,7 @@ class TweetService
       end
       parent_user_name = $redis.get_single_user(parent_tweet.user_id)['name']
       params[:content] += "// @#{parent_user_name}: #{parent_tweet.content}"
+      params[:image_url] = parent_tweet.image_url
     end
 
     params[:user_id] = BSON::ObjectId(params[:user_id])

@@ -57,6 +57,13 @@ class RedisHelper
 
   def get_single_user(user_id)
     user = @store.hgetall("user_#{user_id}").as_json
+
+    # if user["following_ids"].length == 2
+    #   user["following_ids"] = [user_id.to_s]
+    # else
+    #   user["following_ids"] = '[' + following_id.to_s + ',' + user["following_ids"][1...-1] + ']'
+    # end
+
     if user == {}
       user = push_single_user user_id
     else
@@ -68,6 +75,18 @@ class RedisHelper
 
   def incr_tweet_count(user_id)
     @store.hincrby("user_#{user_id}", 'tweets_count', 1)
+  end
+
+  def update_follow_relation(user_id, following_id)
+    user = @store.hgetall("user_#{user_id}").as_json
+
+    if user["following_ids"].length == 2
+      user["following_ids"] = [following_id.to_s]
+    else
+      user["following_ids"] = '[' + following_id.to_s + ',' + user["following_ids"][1...-1] + ']'
+    end
+
+    @store.hmset("user_#{user_id}", ['following_ids', user["following_ids"]])
   end
 
   def incr_follower_count(user_id, following_id)
