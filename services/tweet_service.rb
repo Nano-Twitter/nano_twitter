@@ -4,7 +4,7 @@ class TweetService
 
   @name_cache = {}
   @name_cache_time_stamps = Time.now.to_i
-  @name_cache_invalidate_time = 60 * 60 * 12 # expire in 12 hours
+  @name_cache_invalidate_time = 60 # expire in 1 minutes
   # method use to exprie name cache
   def self.check_and_expire_name_cache
     if Time.now.to_i - @name_cache_time_stamps > @name_cache_invalidate_time

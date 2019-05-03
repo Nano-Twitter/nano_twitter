@@ -25,6 +25,7 @@ class RabbitServer
         message = JSON.parse(message)
         fanout_helper(message['user_id'], message['tweet_id'])
         @channel.ack(_delivery_info.delivery_tag)
+
       end
     rescue Interrupt => _
       pp "Rabbit unsubscribed from channel: #{channel}"
