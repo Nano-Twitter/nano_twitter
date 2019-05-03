@@ -21,19 +21,12 @@ Mongoid.load! "config/mongoid.yml"
 
 class App < Sinatra::Base
   #use Rack::Session::Pool
-  #use Rack::Deflater, :if => lambda {|*, body| sum = 0; body.each {|i| sum += i.length}; sum > 512}, sync: false
+  use Rack::Deflater, :if => lambda {|*, body| sum = 0; body.each {|i| sum += i.length}; sum > 512}, sync: false
   set :static_cache_control, [:public, :max_age => 365 * 24 * 60 * 60]
   enable :sessions
 
-  # register do
-  #   def auth (type)
-  #     condition do
-  #       redirect '/login' unless send("is_#{type}?")
-  #     end
-  #   end
-  # end
-
   helpers do
+    
     def is_user?
       @user != nil
     end

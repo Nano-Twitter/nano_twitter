@@ -36,7 +36,6 @@ class RabbitServer
   end
 end
 
-
 begin
   if Sinatra::Base.development? || Sinatra::Base.production?
     $rabbit_mq = RabbitServer.new(ENV['CLOUDAMQP_URL'])

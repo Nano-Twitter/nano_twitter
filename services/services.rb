@@ -15,3 +15,5 @@ def create_index
   Like.create_indexes
   Tweet.create_indexes
 end
+
+
