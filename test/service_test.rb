@@ -148,7 +148,7 @@ describe 'user_service' do
         unknown_param: 'xxxx'
     }
     response = @service.update_profile(params)
-    response[:status].must_equal 403
+    response[:status].must_equal 200
   end
 
   it 'can recommend user' do
@@ -252,22 +252,6 @@ describe 'redis' do
     }
     @us.signup(params)
     $redis.cached?("user_#{User.find_by(email: "g@gmail.com").id.to_s}").must_equal true
-  end
-
-  it 'can cache timeline' do
-    @user = User.create!(name: "Adam Stark", email: "good@gmail.com", password: "qwer123456ty", gender: 0)
-    @user_id = @user.id.to_s
-    $redis.push_single_user @user_id, @user
-    @follower = User.create!(name: "Follower", email: "follower@gmail.com", password: "qwer123456ty", gender: 0)
-    @follower_id = @follower.id.to_s
-    $redis.push_single_user @follower_id, @follower
-    @follower.follow! @user
-    params = {
-        user_id: @follower_id,
-        content: "This is the base tweet1."
-    }
-    @ts.create_tweet params
-    $redis.cached?("timeline_key+#{@user_id}").must_equal true
   end
 
   after do
@@ -424,6 +408,7 @@ describe 'tweet_service' do
   end
 
   it 'can search' do
+    create_index
     TweetService.search(page_num: 1, page_size: 10, content: 'wireless HTTP ')
   end
 

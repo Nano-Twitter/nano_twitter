@@ -51,10 +51,8 @@ class RedisHelper
     if user["following_ids"]
       user["following_ids"] = user["following_ids"].map {|id| id.to_s}
     end
-
     @store.hmset("user_#{user_id}", user.as_json.to_a.flatten(1))
     user
-    #@store.expire("user_#{user_id}", 24.hours.to_i)
   end
 
   def get_single_user(user_id)
@@ -62,14 +60,26 @@ class RedisHelper
     if user == {}
       user = push_single_user user_id
     else
-      # user["follower_ids"] = JSON.parse user["follower_ids"]
-      # user["following_ids"] = JSON.parse user["following_ids"]
+      user["follower_ids"] = JSON.parse user["follower_ids"]
+      user["following_ids"] = JSON.parse user["following_ids"]
     end
     user
   end
 
   def incr_tweet_count(user_id)
     @store.hincrby("user_#{user_id}", 'tweets_count', 1)
+  end
+
+  def incr_follower_count(user_id, following_id)
+  end
+
+  def decr_follower_count(user_id, following_id)
+  end
+
+  def incr_following_count(user_id, following_id)
+  end
+
+  def decr_following_count(user_id, following_id)
   end
 
   def clear

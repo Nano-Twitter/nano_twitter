@@ -11,7 +11,6 @@ class UserService
       $redis.push_single_user(user.id, user)
       json_result(201, 0, "Signup success!")
     else
-      pp user.errors
       json_result(403, 1, "Signup failed!")
     end
   end
@@ -29,8 +28,6 @@ class UserService
   def self.imit_login(id)
     user = User.without(:password_hash).find(BSON::ObjectId(id))
     $redis.push_single_user(user.id, user)
-    pp "imit login succees #{user}"
-    pp $redis.get_single_user user.id
   end
 
   def self.signout(params = {})
