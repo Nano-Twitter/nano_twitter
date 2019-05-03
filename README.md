@@ -15,6 +15,7 @@
 ## Documentations
 * [API](https://github.com/Nano-Twitter/nano_twitter/blob/master/doc/api.md)
 * [Loader.test file](https://nano-twitter-2019.herokuapp.com/testFile.json)
+ * [Poster](https://raw.githubusercontent.com/Nano-Twitter/nano_twitter/master/poster.pdf)
 ## Contributors
 * [Ye Hong](mailto:yehong@brandeis.edu)
 * [Limian Guo](mailto:limianguo@brandeis.edu)
