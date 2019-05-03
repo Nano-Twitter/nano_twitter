@@ -1,5 +1,7 @@
 # Nano Twitter V 1.0
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+
 ## Deployment in AWS:
 
 [Nanotwitter](http://d2tp46yx9fbjl7.cloudfront.net/)
@@ -15,7 +17,7 @@
 ## Documentations
 * [API](https://github.com/Nano-Twitter/nano_twitter/blob/master/doc/api.md)
 * [Loader.test file](https://nano-twitter-2019.herokuapp.com/testFile.json)
-* [Poster](https://raw.githubusercontent.com/Nano-Twitter/nano_twitter/master/poster.pdf)
+* [Poster of detailed architecture and optimization](https://raw.githubusercontent.com/Nano-Twitter/nano_twitter/master/poster.pdf)
 ## Contributors
 * [Ye Hong](mailto:yehong@brandeis.edu)
 * [Limian Guo](mailto:limianguo@brandeis.edu)
@@ -48,7 +50,7 @@
 * Docker login following the instructions of ECR
 * Call ```ufo init --app=demo --image=tongueroo/demo-ufo```
 * Set up all the settings file, finish task definitions
-* Call ```ufo ship`` to deploy your app
+* Call ```ufo ship``` to deploy your app
 * More info on ```http://ufoships.com/docs/```
 
 ## Test
