@@ -17,7 +17,6 @@ class RabbitServer
 
   def subscribe(channel)
     queue = @channel.queue(channel, durable: true)
-
     begin
       pp "Rabbit subscribed to channel: #{channel}"
       queue.subscribe(manual_ack: true) do |_delivery_info, _properties, message|
