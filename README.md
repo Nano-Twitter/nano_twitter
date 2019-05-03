@@ -50,7 +50,7 @@
 * Docker login following the instructions of ECR
 * Call ```ufo init --app=demo --image=tongueroo/demo-ufo```
 * Set up all the settings file, finish task definitions
-* Call ```ufo ship`` to deploy your app
+* Call ```ufo ship``` to deploy your app
 * More info on ```http://ufoships.com/docs/```
 
 ## Test
