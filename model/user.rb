@@ -36,7 +36,7 @@ class User
       raise 'Duplicate following relationship.'
     elsif self.id != user.id
       self.following << user
-      user.followers << self
+      user.follow!(self)
     end
   end
 
