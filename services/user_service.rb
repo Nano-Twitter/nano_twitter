@@ -35,8 +35,18 @@ class UserService
   end
 
   def self.get_profile(params)
+
+
     if params.has_key?(:id)
-      user = $redis.get_single_user params[:id]
+      # user = $redis.get_single_user params[:id]
+      user = User.without(:password_hash).find(BSON::ObjectId(params[:id])).as_json
+      if user["follower_ids"]
+        user["follower_ids"] = user["follower_ids"].map {|id| id.to_s}
+      end
+      if user["following_ids"]
+        user["following_ids"] = user["following_ids"].map {|id| id.to_s}
+      end
+
     else
       return json_result(403, 1, 'Profile get failed')
     end

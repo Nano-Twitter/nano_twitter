@@ -9,7 +9,6 @@ class Tweet
   field :root_id, type: BSON::ObjectId
   field :retweet_count, type: Integer, default: 0
   field :comments_count, type: Integer, default: 0
-  field :likes_count, type: Integer, default: 0
   field :image_url, type:String, default:''
 
 
@@ -20,6 +19,5 @@ class Tweet
   index({content: 'text'})
 
   has_many :comments
-  has_many :likes
 
 end

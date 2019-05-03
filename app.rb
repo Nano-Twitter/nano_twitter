@@ -79,6 +79,7 @@ class App < Sinatra::Base
     if params[:id] == ''
       params[:id] = session[:id]
     end
+
     @result = UserService.get_profile(params)
     process_result
   end
@@ -107,13 +108,13 @@ class App < Sinatra::Base
 
   # get all follower ids
   get '/followers/list/:user_id' do
-    @result=FollowService.get_followers params
+    @result = FollowService.get_followers params
     process_result
   end
 
   # get all followees
   get '/followees/list/:user_id' do
-    @result=FollowService.get_followees params
+    @result = FollowService.get_followees params
     process_result
   end
 
@@ -188,20 +189,6 @@ class App < Sinatra::Base
   # delete a comment of a tweet
   delete '/tweets/:tweet_id/comments/:comment_id' do
     @result = CommentService.delete_comment(params)
-    process_result
-  end
-
-  # Tweet: Like
-
-  # create a like of a tweet (like)
-  post '/tweets/:tweet_id/likes' do
-    @result = LikeService.create_like(params)
-    process_result
-  end
-
-  # delete a like of a tweet (unlike)
-  delete '/tweets/:tweet_id/likes/:like_id' do
-    @result = LikeService.delete_like(params)
     process_result
   end
 
