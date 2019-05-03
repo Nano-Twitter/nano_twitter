@@ -1,5 +1,7 @@
 # Nano Twitter V 1.0
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+
 ## Deployment in AWS:
 
 [Nanotwitter](http://d2tp46yx9fbjl7.cloudfront.net/)
