@@ -6,3 +6,5 @@
 .ufo/data
 .ufo/log
 .ufo/output
+
+ecs-cli
