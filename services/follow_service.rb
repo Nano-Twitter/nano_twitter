@@ -21,6 +21,7 @@ class FollowService
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.unfollow!(followee)
+      $redis.delete_timeline("timeline_" + params[:follower_id])
       json_result(200, 0, 'Unfollow successfully')
     rescue => e
       pp e

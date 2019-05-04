@@ -78,6 +78,10 @@ class RedisHelper
     @store.hmset("user_#{user_id}", ['following_ids', user["following_ids"]])
   end
 
+  def delete_timeline(key)
+    @store.del(key)
+  end
+
   def incr_follower_count(user_id, following_id)
   end
 
