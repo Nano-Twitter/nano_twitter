@@ -156,7 +156,6 @@ class TweetService
     if tweet_ids && tweet_ids.length > 0
       # get tweet from redis
       tweets = Tweet.order(created_at: :desc).find(tweet_ids.map {|t| BSON::ObjectId(t)})
-
       tweets = tweets.map do |tweet|
         user_id = tweet[:user_id].to_s
         tweet = tweet.as_json

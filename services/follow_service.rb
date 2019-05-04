@@ -7,8 +7,6 @@ class FollowService
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.follow!(followee)
-      $redis.incr_follower_count(params[:follower_id], params[:followee_id])
-      $redis.incr_following_count(params[:follower_id], params[:followee_id])
       json_result(200, 0, 'Follow successfully')
     rescue => e
       pp e
@@ -23,8 +21,7 @@ class FollowService
     followee = User.find(BSON::ObjectId(params[:followee_id]))
     begin
       follower.unfollow!(followee)
-      $redis.decr_follower_count(params[:follower_id], params[:followee_id])
-      $redis.decr_following_count(params[:follower_id], params[:followee_id])
+      $redis.delete_timeline("timeline_" + params[:follower_id])
       json_result(200, 0, 'Unfollow successfully')
     rescue => e
       pp e
