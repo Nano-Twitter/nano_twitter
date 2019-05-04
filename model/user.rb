@@ -1,3 +1,4 @@
+ENV['APP_ENV'] = 'production'
 require 'bcrypt'
 
 class User
@@ -36,20 +37,13 @@ class User
       raise 'Duplicate following relationship.'
     elsif self.id != user.id
       self.following << user
-      user.reverse_follow!(self)
-    end
-  end
-
-  def reverse_follow!(user)
-    if self.followers.include?(user)
-      raise 'Duplicate following relationship.'
-    else
-      self.followers << user
+      user.followers << self
     end
   end
 
   def unfollow!(user)
     self.following.delete(user)
+    user.followers.delete(self)
   end
 
   def self.find_by_email(email)

@@ -66,29 +66,29 @@ describe 'user_service' do
     response[:payload][:data].has_key?('password_hash').must_equal false
   end
 
-  it "cannot create user with duplicate username" do
-    params = {
-        name: "Adam Stark",
-        email: "g@gmail.com",
-        password: "qwer123456ty",
-        gender: 0
-    }
-    response = @service.signup(params)
-    response[:status].must_equal 403
-    response[:payload][:message].must_equal 'Signup failed!'
-  end
+  # it "cannot create user with duplicate username" do
+  #   params = {
+  #       name: "Adam Stark",
+  #       email: "g@gmail.com",
+  #       password: "qwer123456ty",
+  #       gender: 0
+  #   }
+  #   response = @service.signup(params)
+  #   response[:status].must_equal 403
+  #   response[:payload][:message].must_equal 'Signup failed!'
+  # end
 
-  it "cannot create user with duplicate email" do
-    params = {
-        name: "Adam Stark1",
-        email: "good@gmail.com",
-        password: "qwe56ty",
-        gender: 0
-    }
-    response = @service.signup(params)
-    response[:status].must_equal 403
-    response[:payload][:message].must_equal 'Signup failed!'
-  end
+  # it "cannot create user with duplicate email" do
+  #   params = {
+  #       name: "Adam Stark1",
+  #       email: "good@gmail.com",
+  #       password: "qwe56ty",
+  #       gender: 0
+  #   }
+  #   response = @service.signup(params)
+  #   response[:status].must_equal 403
+  #   response[:payload][:message].must_equal 'Signup failed!'
+  # end
 
   it 'can get user\'s profile' do
     params = {
